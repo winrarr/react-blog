@@ -1,0 +1,85 @@
+.navbar {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  background: #333;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  animation: moveDown 0.5s ease-in-out;
+
+  /* sticky */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
+}
+
+@keyframes moveDown {
+  from {
+    transform: translateY(-5rem);
+  }
+  to {
+    transform: translateY(0rem);
+  }
+}
+
+.nav-list {
+  margin: 0;
+  list-style: none;
+  display: flex;
+}
+
+#toggler,
+.navbar label {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .menu {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+  }
+  .list {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  .navbar label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  #toggler:checked ~ .menu {
+    max-height: 100%;
+  }
+}
+
+$gap: 5rem;
+
+.nav-list > li {
+  min-width: $gap;
+  text-align: center;
+}
+
+.active {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  width: $gap;
+  background-color: #fff;
+  transition: transform 0.25s;
+}
+
+@for $i from 1 to 4 {
+  .nav-list > li:nth-child(#{$i+1}):hover ~ .active {
+    transform: translateX($i * $gap)
+  }
+}

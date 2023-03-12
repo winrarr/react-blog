@@ -1,11 +1,12 @@
-import { Layout } from './components/Layout'
+import Navbar from './components/navbar/Navbar'
 import { AppRouter } from './routes/AppRouter'
 
 function App() {
   return (
-    <Layout>
+    <>
+      <Navbar />
       <AppRouter />
-    </Layout>
+    </>
   )
 }
 
