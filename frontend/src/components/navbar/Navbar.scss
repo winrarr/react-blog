@@ -82,8 +82,8 @@ $gap: 5rem;
 }
 
 @for $i from 1 to 4 {
-  .nav-list > li:nth-child(#{$i+1}):hover ~ .active {
-    transform: translateX($i * $gap)
+  .nav-list > li:nth-child(#{$i + 1}):hover ~ .active {
+    transform: translateX($i * $gap);
   }
 }
 
