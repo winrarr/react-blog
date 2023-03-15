@@ -1,10 +1,3 @@
-.container {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .login-container {
   min-width: 350px;
   max-width: 525px;
@@ -71,15 +64,34 @@
     margin-top: 40px;
     position: relative;
 
-    & > div {
-      input {
-        margin-top: 30px;
+    .submit {
+      text-transform: uppercase;
+    }
+
+    .sign-in-htm {
+      position: absolute;
+    }
+
+    & > form {
+      bottom: 0;
+      transform: rotateY(180deg);
+      backface-visibility: hidden;
+      transition: all 0.4s linear;
+
+      .input,
+      .submit {
+        margin-top: 15px;
+        width: 100%;
+        padding: 15px 0px;
+        border: none;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.1);
       }
 
       label {
         position: relative;
         margin-left: 20px;
-        top: -46px;
+        top: -31px;
         width: 100%;
         font-size: 15px;
         user-select: none;
@@ -89,34 +101,9 @@
       }
 
       input:focus + label {
-        top: -82px;
+        top: -65px;
         font-size: 13px;
         color: desaturate(color(primary, base), 60%);
-      }
-    }
-
-    .submit {
-      text-transform: uppercase;
-    }
-
-    .sign-in-htm {
-      position: absolute;
-    }
-
-    & > div {
-      bottom: 0;
-      transform: rotateY(180deg);
-      backface-visibility: hidden;
-      transition: all 0.4s linear;
-
-      .input,
-      .submit {
-        width: 100%;
-        border: none;
-        padding: 15px 20px;
-        margin-bottom: 15px;
-        border-radius: 25px;
-        background: rgba(255, 255, 255, 0.1);
       }
 
       .submit {
@@ -131,10 +118,25 @@
           transition: 0.3s ease-out;
         }
       }
-    }
 
-    .sign-up-htm {
-      top: 20%;
+      .hr {
+        height: 2px;
+        margin: 40px 0;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer {
+        text-align: center;
+
+        & > a {
+          text-decoration: none;
+
+          &:hover {
+            filter: brightness(120%);
+            transition: 0.3s;
+          }
+        }
+      }
     }
   }
 
@@ -144,24 +146,5 @@
 
   .sign-up:checked ~ .login-form .sign-up-htm {
     transform: rotate(0);
-  }
-
-  .hr {
-    height: 2px;
-    margin: 40px 0;
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .footer {
-    text-align: center;
-
-    a {
-      text-decoration: none;
-
-      &:hover {
-        filter: brightness(120%);
-        transition: 0.3s;
-      }
-    }
   }
 }

@@ -6,7 +6,9 @@ function App() {
   return (
     <>
       <Navbar />
-      <Login />
+      <div className="container">
+        <Login />
+      </div>
       {/* <AppRouter /> */}
     </>
   )
