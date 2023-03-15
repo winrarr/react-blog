@@ -13,7 +13,6 @@
     text-transform: uppercase;
     color: lighten(color(primary, base), 25%);
     cursor: pointer;
-    // border-bottom: 2px solid transparent;
     padding-bottom: 5px;
     margin-right: 17px;
 
@@ -31,30 +30,48 @@
     transition: 0.25s;
   }
 
-  & > input:nth-child(1) {
-    &:checked ~ .active {
-      width: 82px;
+  & > #sign-in {
+    $displacement: 0px;
+    $width: 82px;
+
+    &:checked {
+      & ~ .active {
+        width: $width;
+      }
+
+      & ~ .login-form .sign-in-htm {
+        transform: rotate(0);
+      }
     }
 
     &:not(:checked) + label:hover ~ .active {
-      width: 82px;
-      translate: 0;
+      width: $width;
+      translate: $displacement;
     }
   }
 
-  & > input:nth-child(3) {
-    &:checked ~ .active {
-      width: 90px;
-      translate: 100px;
+  & > #sign-up {
+    $displacement: 100px;
+    $width: 90px;
+
+    &:checked {
+      & ~ .active {
+        width: $width;
+        translate: $displacement;
+      }
+
+      & ~ .login-form .sign-up-htm {
+        transform: rotate(0);
+      }
     }
 
     &:not(:checked) + label:hover ~ .active {
-      width: 90px;
-      translate: 100px;
+      width: $width;
+      translate: $displacement;
     }
   }
 
-  input:checked + .item {
+  input:checked + label {
     color: color(primary, white);
     border-color: color(primary, base);
     transition: 0.7s ease;
@@ -78,8 +95,7 @@
       backface-visibility: hidden;
       transition: all 0.4s linear;
 
-      .input,
-      .submit {
+      input {
         margin-top: 15px;
         width: 100%;
         padding: 15px 0px;
@@ -138,13 +154,5 @@
         }
       }
     }
-  }
-
-  .sign-in:checked ~ .login-form .sign-in-htm {
-    transform: rotate(0);
-  }
-
-  .sign-up:checked ~ .login-form .sign-up-htm {
-    transform: rotate(0);
   }
 }
