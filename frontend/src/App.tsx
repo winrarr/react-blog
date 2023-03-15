@@ -1,5 +1,5 @@
-import Login from './components/login/login'
 import Navbar from './components/navbar/Navbar'
+import Login from './pages/LoginPage'
 import { AppRouter } from './routes/AppRouter'
 
 function App() {

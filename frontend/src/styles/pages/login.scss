@@ -20,9 +20,9 @@
   & > label {
     font-size: 22px;
     text-transform: uppercase;
-    color: #c1aac6;
+    color: lighten(color(primary, base), 40);
     cursor: pointer;
-    border-bottom: 2px solid transparent;
+    // border-bottom: 2px solid transparent;
     padding-bottom: 5px;
     margin-right: 17px;
 
@@ -32,9 +32,39 @@
     }
   }
 
+  .active {
+    margin-top: 6px;
+    height: 2px;
+    background-color: color(primary, base);
+    transition: 0.25s;
+  }
+
+  & > input:nth-child(1) {
+    &:checked ~ .active {
+      width: 82px;
+    }
+
+    &:not(:checked) + label:hover ~ .active {
+      width: 82px;
+      translate: 0;
+    }
+  }
+
+  & > input:nth-child(3) {
+    &:checked ~ .active {
+      width: 90px;
+      translate: 100px;
+    }
+
+    &:not(:checked) + label:hover ~ .active {
+      width: 90px;
+      translate: 100px;
+    }
+  }
+
   input:checked + .item {
     color: #fff;
-    border-color: #df00ff;
+    border-color: color(primary, base);
     transition: 0.7s ease;
   }
 
@@ -68,7 +98,15 @@
 
       .submit {
         cursor: pointer;
-        background: #df00ff;
+        letter-spacing: 0.5ch;
+        border: 2px solid color(primary, base);
+        background-color: transparent;
+
+        &:hover {
+          background-color: color(primary, base);
+          box-shadow: 0 0 5px color(primary, base);
+          transition: 0.3s ease-out;
+        }
       }
     }
 

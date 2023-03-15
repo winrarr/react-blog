@@ -1,5 +1,3 @@
-import './Navbar.scss'
-
 export default function Navbar() {
   const Hamburger = () => (
     <ul className="hamburger">
