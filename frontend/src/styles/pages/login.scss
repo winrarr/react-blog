@@ -77,9 +77,10 @@
       }
 
       label {
-        position: absolute;
+        position: relative;
+        margin-left: 20px;
+        top: -46px;
         width: 100%;
-        translate: -365px 44px;
         font-size: 15px;
         user-select: none;
         pointer-events: none;
@@ -88,7 +89,7 @@
       }
 
       input:focus + label {
-        translate: -365px 10px;
+        top: -82px;
         font-size: 13px;
         color: desaturate(color(primary, base), 60%);
       }
