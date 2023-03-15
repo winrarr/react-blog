@@ -1,4 +1,17 @@
 export default function () {
+  interface FieldProps {
+    placeholder: string,
+    id: string,
+    type?: string,
+  }
+
+  const Field = ({ placeholder, id, type = "text" }: FieldProps) => (
+    <>
+      <input id={id} type={type} className="input" />
+      <label>{placeholder}</label>
+    </>
+  )
+
   return (
     <div className="container">
       <div className="login-container">
@@ -13,8 +26,8 @@ export default function () {
 
         <div className="login-form">
           <div className="sign-in-htm">
-            <input placeholder="Username" id="user" type="text" className="input" />
-            <input placeholder="Password" id="pass" type="password" className="input" data-type="password" />
+            <Field placeholder="Username" id="user" />
+            <Field placeholder="Password" id="pass" type="password" />
             <input type="submit" className="submit" value="Sign In" />
 
             <div className="hr"></div>
@@ -25,9 +38,9 @@ export default function () {
           </div>
 
           <div className="sign-up-htm">
-            <input placeholder="Username" id="user" type="text" className="input" />
-            <input placeholder="Password" id="pass" type="password" className="input" data-type="password" />
-            <input placeholder="Repeat password" id="pass" type="password" className="input" data-type="password" />
+            <Field placeholder="Username" id="user" />
+            <Field placeholder="Password" id="pass" type="password" />
+            <Field placeholder="Repeat password" id="pass" type="password" />
             <input type="submit" className="submit" value="Sign Up" />
 
             <div className="hr"></div>

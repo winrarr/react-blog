@@ -13,11 +13,16 @@ $palette: (
         success: #68d087,
     ),
     grayscale: (
-        base: hsl(0turn, 0%, 10%),
         ddark: hsl(0turn, 0%, 4%),
         dark: hsl(0turn, 0%, 6%),
+        base: hsl(0turn, 0%, 10%),
         light: hsl(0turn, 0%, 15%),
         llight: hsl(0turn, 0%, 25%),
+        lllight: hsl(0turn, 0%, 35%),
+        llllight: hsl(0turn, 0%, 45%),
+        lllllight: hsl(0turn, 0%, 55%),
+        llllllight: hsl(0turn, 0%, 65%),
+        lllllllight: hsl(0turn, 0%, 75%),
     ),
 );
 

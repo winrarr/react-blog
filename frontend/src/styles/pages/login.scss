@@ -1,5 +1,3 @@
-@import "../../styles/helpers/colours";
-
 .container {
   height: 100%;
   display: flex;
@@ -20,7 +18,7 @@
   & > label {
     font-size: 22px;
     text-transform: uppercase;
-    color: lighten(color(primary, base), 40);
+    color: lighten(color(primary, base), 25%);
     cursor: pointer;
     // border-bottom: 2px solid transparent;
     padding-bottom: 5px;
@@ -28,6 +26,7 @@
 
     &:hover {
       color: hsl(289, 20%, 82%);
+      color: lighten(color(primary, base), 40%);
       transition: 0.2s ease;
     }
   }
@@ -63,14 +62,37 @@
   }
 
   input:checked + .item {
-    color: #fff;
+    color: color(primary, white);
     border-color: color(primary, base);
     transition: 0.7s ease;
   }
 
   .login-form {
-    margin-top: 50px;
+    margin-top: 40px;
     position: relative;
+
+    & > div {
+      input {
+        margin-top: 30px;
+      }
+
+      label {
+        position: absolute;
+        width: 100%;
+        translate: -365px 44px;
+        font-size: 15px;
+        user-select: none;
+        pointer-events: none;
+        color: color(grayscale, llllight);
+        transition: 0.4s ease-out;
+      }
+
+      input:focus + label {
+        translate: -365px 10px;
+        font-size: 13px;
+        color: desaturate(color(primary, base), 60%);
+      }
+    }
 
     .submit {
       text-transform: uppercase;
@@ -134,6 +156,11 @@
 
     a {
       text-decoration: none;
+
+      &:hover {
+        filter: brightness(120%);
+        transition: 0.3s;
+      }
     }
   }
 }
