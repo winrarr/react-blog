@@ -95,7 +95,7 @@
       backface-visibility: hidden;
       transition: all 0.4s linear;
 
-      input {
+      &> input {
         margin-top: 15px;
         width: 100%;
         padding: 15px 21px;
@@ -104,7 +104,7 @@
         background: rgba(255, 255, 255, 0.1);
       }
 
-      label {
+      & > label {
         position: relative;
         margin-left: 20px;
         top: -31px;
@@ -116,14 +116,14 @@
         transition: 0.4s ease-out;
       }
 
-      input:focus + label,
-      input:valid + label {
+      & > input:focus + label,
+      & > input:valid + label {
         top: -65px;
         font-size: 13px;
         color: desaturate(color(primary, base), 60%);
       }
 
-      .submit {
+      & > .submit {
         cursor: pointer;
         letter-spacing: 0.5ch;
         border: 2px solid color(primary, base);
@@ -136,21 +136,24 @@
         }
       }
 
-      .invalid {
-        display: none;
+      & > .invalid {
+        pointer-events: none;
+        filter:brightness(0.5) saturate(0.3);
       }
 
-      .hr {
+      & > .hr {
         height: 2px;
         margin: 40px 0;
         background: rgba(255, 255, 255, 0.2);
       }
 
-      .footer {
+      & > .footer {
         text-align: center;
 
-        & > a {
+        & * {
           text-decoration: none;
+          cursor: pointer;
+          color: rgb(208, 173, 240);
 
           &:hover {
             filter: brightness(120%);

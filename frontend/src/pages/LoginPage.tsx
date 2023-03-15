@@ -1,48 +1,44 @@
 import { useState } from "react"
 
-export default function LoginPage() {
-  interface FieldProps {
-    placeholder: string,
-    type?: string,
-    value?: string,
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  }
+interface FieldProps {
+  placeholder: string,
+  type?: string,
+  name?: string,
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}
 
-  const Field = ({ placeholder, type = "text", onChange }: FieldProps) => (
-    <>
-      <input
-        type={type}
-        className="input"
-        name={placeholder.toLowerCase()}
-        required
-        onChange={onChange}
-      />
-      <label>{placeholder}</label>
-    </>
-  )
+const Field = ({ placeholder, type = "text", name, onChange }: FieldProps) => (
+  <>
+    <input
+      type={type}
+      className="input"
+      name={name}
+      required
+      onChange={onChange}
+    />
+    <label>{placeholder}</label>
+  </>
+)
+
+export default function LoginPage() {
 
   const [passwords, setPasswords] = useState({
     first: "",
     second: "",
   })
 
-  const passwordChanged1 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswords({
-      ...passwords,
-      first: e.target.value,
-    })
-  }
+  const passIsValid = () => passwords.first.length > 0 && passwords.first == passwords.second
 
-  const passwordChanged2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const passwordChanged = (variable: string) => (e: React.ChangeEvent<HTMLInputElement>) => 
     setPasswords({
       ...passwords,
-      second: e.target.value,
+      [variable]: e.target.value,
     })
-  }
 
   return (
     <div className="login-container">
-
+      
+      {/* switch buttons */}
       <input id="sign-in" type="radio" name="item" defaultChecked />
       <label htmlFor="sign-in">Sign In</label>
 
@@ -51,10 +47,13 @@ export default function LoginPage() {
 
       <div className="active"></div>
 
+      {/* form */}
       <div className="login-form">
+
+        {/* sign in */}
         <form className="sign-in-htm">
-          <Field placeholder="Username" />
-          <Field placeholder="Password" type="password" value={passwords.first} onChange={passwordChanged1} />
+          <Field placeholder="Username" name="password" />
+          <Field placeholder="Password" name="password" />
           <input type="submit" value="Sign In" className="submit" />
 
           <div className="hr"></div>
@@ -64,28 +63,17 @@ export default function LoginPage() {
           </div>
         </form>
 
+        {/* sign up */}
         <form className="sign-up-htm" action="localhost:8080/signup" method="post">
-          <Field placeholder="Username" />
-          <Field
-            placeholder="Password"
-            type="password"
-            onChange={passwordChanged1}
-          />
-          <Field
-            placeholder="Repeat password"
-            type="password"
-            onChange={passwordChanged2}
-          />
-          <input
-            type="submit"
-            value="Sign Up"
-            className="submit"
-          />
+          <Field placeholder="Username" name="username" />
+          <Field placeholder="Password" type="password" name="password" onChange={passwordChanged("first")} />
+          <Field placeholder="Repeat password" type="password" onChange={passwordChanged("second")} />
+          <input type="submit" value="Sign Up" className={`submit ${passIsValid() ? "" : "invalid"}`} />
 
           <div className="hr"></div>
 
           <div className="footer">
-            <a href="#">Already have an account?</a>
+            <label htmlFor="sign-in">Already have an account?</label>
           </div>
         </form>
       </div>
