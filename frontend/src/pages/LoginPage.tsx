@@ -27,9 +27,9 @@ export default function LoginPage() {
     second: "",
   })
 
-  const passIsValid = () => passwords.first.length > 0 && passwords.first == passwords.second
+  const passIsValid = passwords.first.length > 0 && passwords.first == passwords.second
 
-  const passwordChanged = (variable: string) => (e: React.ChangeEvent<HTMLInputElement>) => 
+  const passwordChanged = (variable: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setPasswords({
       ...passwords,
       [variable]: e.target.value,
@@ -37,7 +37,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-container">
-      
+
       {/* switch buttons */}
       <input id="sign-in" type="radio" name="item" defaultChecked />
       <label htmlFor="sign-in">Sign In</label>
@@ -68,7 +68,7 @@ export default function LoginPage() {
           <Field placeholder="Username" name="username" />
           <Field placeholder="Password" type="password" name="password" onChange={passwordChanged("first")} />
           <Field placeholder="Repeat password" type="password" onChange={passwordChanged("second")} />
-          <input type="submit" value="Sign Up" className={`submit ${passIsValid() ? "" : "invalid"}`} />
+          <input type="submit" value="Sign Up" className={`submit ${passIsValid ? "" : "invalid"}`} />
 
           <div className="hr"></div>
 
