@@ -50,6 +50,9 @@ export default function LoginPage() {
       {/* form */}
       <div className="login-form">
 
+        {/* remove form redirect */}
+        <iframe name="dummyframe" />
+
         {/* sign in */}
         <form className="sign-in-htm">
           <Field placeholder="Username" name="password" />
@@ -64,7 +67,7 @@ export default function LoginPage() {
         </form>
 
         {/* sign up */}
-        <form className="sign-up-htm" action="localhost:8080/signup" method="post">
+        <form className="sign-up-htm" action="http://localhost:8080/signup" method="post" target="dummyframe">
           <Field placeholder="Username" name="username" />
           <Field placeholder="Password" type="password" name="password" onChange={passwordChanged("first")} />
           <Field placeholder="Repeat password" type="password" onChange={passwordChanged("second")} />

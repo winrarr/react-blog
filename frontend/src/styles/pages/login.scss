@@ -81,6 +81,10 @@
     margin-top: 40px;
     position: relative;
 
+    & > iframe {
+      display: none;
+    }
+
     .submit {
       text-transform: uppercase;
     }
@@ -95,7 +99,7 @@
       backface-visibility: hidden;
       transition: all 0.4s linear;
 
-      &> input {
+      & > input {
         margin-top: 15px;
         width: 100%;
         padding: 15px 21px;
@@ -138,7 +142,7 @@
 
       & > .invalid {
         pointer-events: none;
-        filter:brightness(0.5) saturate(0.3);
+        filter: brightness(0.5) saturate(0.3);
       }
 
       & > .hr {
