@@ -56,7 +56,7 @@ export default function LoginPage() {
         {/* sign in */}
         <form className="sign-in-htm">
           <Field placeholder="Username" name="password" />
-          <Field placeholder="Password" name="password" />
+          <Field placeholder="Password" type="password" name="password" />
           <input type="submit" value="Sign In" className="submit" />
 
           <div className="hr"></div>

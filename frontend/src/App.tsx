@@ -1,15 +1,13 @@
 import Navbar from './components/navbar/Navbar'
-import Login from './pages/LoginPage'
-import { AppRouter } from './routes/AppRouter'
+import Router from './routes/Routes'
 
 function App() {
   return (
     <>
       <Navbar />
       <div className="container">
-        <Login />
+        <Router />
       </div>
-      {/* <AppRouter /> */}
     </>
   )
 }
