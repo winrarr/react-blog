@@ -1,4 +1,5 @@
-import { ChangeEvent, useReducer, useState } from "react"
+import { ChangeEvent, FormEventHandler, useReducer, useState } from "react"
+import authService from "../services/auth.service"
 
 interface FieldProps {
   placeholder: string,
@@ -54,7 +55,23 @@ export default function LoginPage() {
       value: e.target.value,
     })
 
-  const handleSignUp = (e) => 
+  const handleSignIn = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    authService.signIn(state.siu, state.sip).then(
+      () => console.log("logged in!"),
+      () => console.log("error :("),
+    )
+  }
+
+  const handleSignUp = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    authService.signUp(state.suu, state.sup1).then(
+      () => console.log("signed in!"),
+      () => console.log("error :("),
+    )
+  }
 
   return (
     <div className="login-container">
@@ -103,4 +120,4 @@ export default function LoginPage() {
       </div>
     </div>
   )
-  }
+}

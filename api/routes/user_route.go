@@ -8,6 +8,6 @@ import (
 
 func UserRoute(router *gin.Engine) {
 	router.POST("/signup", controllers.CreateUser)
-	router.POST("/login", controllers.Login)
+	router.POST("/signin", controllers.Login)
 	router.GET("/users", controllers.GetAllUsers)
 }

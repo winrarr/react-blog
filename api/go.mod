@@ -4,6 +4,8 @@ go 1.18
 
 require github.com/gin-gonic/gin v1.8.2
 
+require github.com/gin-contrib/cors v1.4.0 // indirect
+
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/form/v4 v4.2.0

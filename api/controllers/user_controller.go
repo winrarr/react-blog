@@ -51,10 +51,10 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("session_token", sessions.NewSession(user.UserLevel), 2, "/", "localhost", false, false)
+	c.String(http.StatusCreated, sessions.NewSession(user.UserLevel))
 }
 
-// POST /login
+// POST /signin
 func Login(c *gin.Context) {
 	var credentials models.Credentials
 	if err := c.Bind(&credentials); err != nil {
@@ -78,7 +78,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("session_token", sessions.NewSession(user.UserLevel), 2, "/", "localhost", false, false)
+	c.String(http.StatusCreated, sessions.NewSession(user.UserLevel))
 }
 
 // GET /users

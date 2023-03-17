@@ -8,8 +8,8 @@ const (
 )
 
 type Credentials struct {
-	Username string `binding:"required" form:"username"`
-	Password string `binding:"required" form:"password"`
+	Username string `binding:"required" json:"username"`
+	Password string `binding:"required" json:"password"`
 }
 
 type DBUser struct {
