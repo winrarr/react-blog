@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { ChangeEvent, useReducer, useState } from "react"
 
 interface FieldProps {
   placeholder: string,
@@ -22,18 +22,39 @@ const Field = ({ placeholder, type = "text", name, onChange }: FieldProps) => (
 
 export default function LoginPage() {
 
-  const [passwords, setPasswords] = useState({
-    first: "",
-    second: "",
+  interface stateType {
+    siu: string,
+    sip: string,
+    suu: string,
+    sup1: string,
+    sup2: string,
+  }
+
+  const reducer = (state: stateType, action: { variable: string, value: string }) => ({
+    ...state,
+    [action.variable]: action.value,
   })
 
-  const passIsValid = passwords.first.length > 0 && passwords.first == passwords.second
+  const initialState: stateType = {
+    siu: "",
+    sip: "",
+    suu: "",
+    sup1: "",
+    sup2: "",
+  }
 
-  const passwordChanged = (variable: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setPasswords({
-      ...passwords,
-      [variable]: e.target.value,
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  const signInValid = state.siu.length > 0 && state.sip.length > 0
+  const signUpValid = state.suu.length > 0 && state.sup1.length > 0 && state.sup1 == state.sup2
+
+  const fieldChanged = (variable: string) => (e: ChangeEvent<HTMLInputElement>) =>
+    dispatch({
+      variable,
+      value: e.target.value,
     })
+
+  const handleSignUp = (e) => 
 
   return (
     <div className="login-container">
@@ -54,10 +75,10 @@ export default function LoginPage() {
         <iframe name="dummyframe" />
 
         {/* sign in */}
-        <form className="sign-in-htm">
-          <Field placeholder="Username" name="password" />
-          <Field placeholder="Password" type="password" name="password" />
-          <input type="submit" value="Sign In" className="submit" />
+        <form className="sign-in-htm" onSubmit={handleSignIn}>
+          <Field placeholder="Username" name="password" onChange={fieldChanged("siu")} />
+          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("sip")} />
+          <input type="submit" value="Sign In" className={`submit ${signInValid ? "" : "invalid"}`} />
 
           <div className="hr"></div>
 
@@ -67,11 +88,11 @@ export default function LoginPage() {
         </form>
 
         {/* sign up */}
-        <form className="sign-up-htm" action="http://localhost:8080/signup" method="post" target="dummyframe">
-          <Field placeholder="Username" name="username" />
-          <Field placeholder="Password" type="password" name="password" onChange={passwordChanged("first")} />
-          <Field placeholder="Repeat password" type="password" onChange={passwordChanged("second")} />
-          <input type="submit" value="Sign Up" className={`submit ${passIsValid ? "" : "invalid"}`} />
+        <form className="sign-up-htm" onSubmit={handleSignUp}>
+          <Field placeholder="Username" name="username" onChange={fieldChanged("suu")} />
+          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("sup1")} />
+          <Field placeholder="Repeat password" type="password" onChange={fieldChanged("sup2")} />
+          <input type="submit" value="Sign Up" className={`submit ${signUpValid ? "" : "invalid"}`} />
 
           <div className="hr"></div>
 
@@ -82,4 +103,4 @@ export default function LoginPage() {
       </div>
     </div>
   )
-}
+  }
