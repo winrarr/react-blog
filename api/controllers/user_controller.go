@@ -24,15 +24,27 @@ func init() {
 
 // POST /signup
 func CreateUser(c *gin.Context) {
+	// bind request to model
 	var credentials models.Credentials
 	if err := c.Bind(&credentials); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
+	// check if user already exists
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err := userCollection.FindOne(ctx, bson.M{"username": credentials.Username}).Err()
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	// hash and salt password and save it in the database
 	HSPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
+		c.AbortWithStatus(http.StatusConflict)
 		return
 	}
 
@@ -42,7 +54,6 @@ func CreateUser(c *gin.Context) {
 		UserLevel:  models.Default,
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	_, err = userCollection.InsertOne(ctx, user)
@@ -51,17 +62,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	// return the session id
 	c.String(http.StatusCreated, sessions.NewSession(user.UserLevel))
 }
 
 // POST /signin
 func Login(c *gin.Context) {
+	// bind request to model
 	var credentials models.Credentials
 	if err := c.Bind(&credentials); err != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
+	// check if user exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -72,12 +86,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	// check if given password is correct
 	err = bcrypt.CompareHashAndPassword(user.HSPassword, []byte(credentials.Password))
 	if err != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
+	// return the session id
 	c.String(http.StatusCreated, sessions.NewSession(user.UserLevel))
 }
 
