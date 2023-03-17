@@ -36,15 +36,15 @@ func CreateUser(c *gin.Context) {
 	defer cancel()
 
 	err := userCollection.FindOne(ctx, bson.M{"username": credentials.Username}).Err()
-	if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+	if err == nil {
+		c.AbortWithStatus(http.StatusConflict)
 		return
 	}
 
 	// hash and salt password and save it in the database
 	HSPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
 	if err != nil {
-		c.AbortWithStatus(http.StatusConflict)
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
