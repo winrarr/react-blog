@@ -51,7 +51,7 @@ func CreateUser(c *gin.Context) {
 	user := models.DBUser{
 		Username:   credentials.Username,
 		HSPassword: HSPassword,
-		UserLevel:  models.Default,
+		UserLevel:  models.User,
 	}
 
 	defer cancel()
@@ -63,7 +63,8 @@ func CreateUser(c *gin.Context) {
 	}
 
 	// return the session id
-	c.String(http.StatusCreated, sessions.NewSession(user.UserLevel))
+	session := sessions.NewSession(user.UserLevel)
+	c.JSON(http.StatusCreated, models.NewAuth(session, user.UserLevel))
 }
 
 // POST /signin
@@ -71,7 +72,7 @@ func Login(c *gin.Context) {
 	// bind request to model
 	var credentials models.Credentials
 	if err := c.Bind(&credentials); err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
@@ -82,19 +83,20 @@ func Login(c *gin.Context) {
 	var user models.DBUser
 	err := userCollection.FindOne(ctx, bson.M{"username": credentials.Username}).Decode(&user)
 	if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	// check if given password is correct
 	err = bcrypt.CompareHashAndPassword(user.HSPassword, []byte(credentials.Password))
 	if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	// return the session id
-	c.String(http.StatusCreated, sessions.NewSession(user.UserLevel))
+	// return the session auth
+	session := sessions.NewSession(user.UserLevel)
+	c.JSON(http.StatusOK, models.NewAuth(session, user.UserLevel))
 }
 
 // GET /users

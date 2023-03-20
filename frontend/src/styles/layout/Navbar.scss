@@ -1,5 +1,7 @@
 @import "../../styles/helpers/colours";
 
+$gap: 6rem;
+
 .navbar {
   padding: 15px;
   background: color(grayscale, light);
@@ -7,7 +9,6 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  animation: moveDown 0.5s ease-in-out;
 
   /* sticky */
   position: sticky;
@@ -18,87 +19,84 @@
     text-decoration: none;
     color: #fff;
   }
-}
 
-@keyframes moveDown {
-  from {
-    transform: translateY(-5rem);
+  & > input,
+  & > label {
+    display: none;
   }
-  to {
-    transform: translateY(0rem);
+
+  & > label {
+    & > ul {
+      list-style-type: none;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 14px;
+
+      & > li {
+        width: 1rem;
+        height: 2px;
+        border-radius: 10px;
+        background-color: #fff;
+      }
+    }
   }
-}
 
-.nav-list {
-  margin: 0;
-  list-style: none;
-  display: flex;
-}
+  & > div {
+    & > ul {
+      margin: 0;
+      list-style: none;
+      display: flex;
 
-#toggler,
-.navbar label {
-  display: none;
-}
+      & > li {
+        min-width: $gap;
+        text-align: center;
+      }
 
-@media screen and (max-width: 600px) {
-  .menu {
-    width: 100%;
-    max-height: 0;
-    overflow: hidden;
+      & > div {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        width: $gap;
+        background-color: #fff;
+        transition: transform 0.25s;
+      }
+
+      @for $i from 1 to 4 {
+        & > li:nth-child(#{$i + 1}):hover ~ div {
+          transform: translateX($i * $gap);
+        }
+      }
+    }
   }
-  .nav-list {
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    gap: 15px;
+
+  @media screen and (max-width: 600px) {
+    & > label {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    input:checked ~ div {
+      max-height: 100%;
+    }
+
+    & > div {
+      width: 100%;
+      max-height: 0;
+      overflow: hidden;
+
+      & > ul {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        gap: 15px;
+
+        & > div {
+          visibility: hidden;
+        }
+      }
+    }
   }
-  .navbar label {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  #toggler:checked ~ .menu {
-    max-height: 100%;
-  }
-  .active {
-    visibility: hidden;
-  }
-}
-
-$gap: 5rem;
-
-.nav-list > li {
-  min-width: $gap;
-  text-align: center;
-}
-
-.navbar .active {
-  position: absolute;
-  bottom: 0;
-  height: 2px;
-  width: $gap;
-  background-color: #fff;
-  transition: transform 0.25s;
-}
-
-@for $i from 1 to 4 {
-  .nav-list > li:nth-child(#{$i + 1}):hover ~ .active {
-    transform: translateX($i * $gap);
-  }
-}
-
-.hamburger {
-  list-style-type: none;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 14px;
-}
-
-.hamburger li {
-  width: 1rem;
-  height: 2px;
-  border-radius: 10px;
-  background-color: #fff;
 }

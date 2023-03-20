@@ -1,10 +1,10 @@
 package models
 
-type UserLevel int
+type UserLevel string
 
 const (
-	Default UserLevel = iota
-	Moderator
+	User  UserLevel = "user"
+	Admin UserLevel = "admin"
 )
 
 type Credentials struct {
@@ -16,4 +16,16 @@ type DBUser struct {
 	Username   string
 	HSPassword []byte
 	UserLevel  UserLevel
+}
+
+type Auth struct {
+	Session   string
+	UserLevel UserLevel
+}
+
+func NewAuth(session string, userLevel UserLevel) Auth {
+	return Auth{
+		session,
+		userLevel,
+	}
 }

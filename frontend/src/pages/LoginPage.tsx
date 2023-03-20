@@ -1,6 +1,9 @@
 import { ChangeEvent, FormEventHandler, useReducer, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import useAuth from "../hooks/useAuth"
 import authService from "../services/auth.service"
 
+// field component for form
 interface FieldProps {
   placeholder: string,
   type?: string,
@@ -21,7 +24,12 @@ const Field = ({ placeholder, type = "text", name, onChange }: FieldProps) => (
   </>
 )
 
-export default function LoginPage() {
+// form
+const LoginPage = () => {
+  const { setAuth } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/"
 
   interface stateType {
     siu: string,
@@ -46,31 +54,33 @@ export default function LoginPage() {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const signInValid = state.siu.length > 0 && state.sip.length > 0
-  const signUpValid = state.suu.length > 0 && state.sup1.length > 0 && state.sup1 == state.sup2
-
   const fieldChanged = (variable: string) => (e: ChangeEvent<HTMLInputElement>) =>
     dispatch({
       variable,
       value: e.target.value,
     })
 
-  const handleSignIn = (e: React.FormEvent) => {
-    e.preventDefault()
+  const signInValid = state.siu.length > 0 && state.sip.length > 0
+  const signUpValid = state.suu.length > 0 && state.sup1.length > 0 && state.sup1 == state.sup2
 
-    authService.signIn(state.siu, state.sip).then(
-      () => console.log("logged in!"),
-      () => console.log("error :("),
-    )
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const auth = await authService.signIn(state.siu, state.sip)
+    if (auth) {
+      navigate(from, { replace: true })
+    } else {
+      alert("error signing in")
+    }
   }
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    authService.signUp(state.suu, state.sup1).then(
-      () => console.log("signed in!"),
-      () => console.log("error :("),
-    )
+    const auth = await authService.signUp(state.siu, state.sip)
+    if (auth) {
+      navigate(from, { replace: true })
+    } else {
+      alert("error signing up")
+    }
   }
 
   return (
@@ -121,3 +131,5 @@ export default function LoginPage() {
     </div>
   )
 }
+
+export default LoginPage

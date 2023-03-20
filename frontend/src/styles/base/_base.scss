@@ -1,17 +1,32 @@
+:root {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background: #131315;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
 *,
 *:before,
 *:after {
     box-sizing: border-box;
 }
 
-body {
-    font-family: "Open Sans", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+html,
+body,
+#root,
+.container {
+    height: 100%;
 }
 
 .container {
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
