@@ -3,8 +3,8 @@ package models
 type UserLevel string
 
 const (
-	User  UserLevel = "user"
-	Admin UserLevel = "admin"
+	User  UserLevel = "1"
+	Admin UserLevel = "2"
 )
 
 type Credentials struct {

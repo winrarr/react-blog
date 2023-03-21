@@ -2,14 +2,15 @@ import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { UserLevel } from "../@types/auth"
 import useAuth from "../hooks/useAuth"
 
-const RequireAuth = ({ userLevel }: { userLevel: UserLevel }) => {
-    const authContext = useAuth()
+const RequireAuth = ({ requiredUserLevel }: { requiredUserLevel: UserLevel }) => {
+    const { auth } = useAuth()
     const location = useLocation()
+    const userLevel = auth?.userLevel || UserLevel.Guest
 
     return (
-        authContext?.auth?.userLevel >= userLevel
+        userLevel >= requiredUserLevel
             ? <Outlet />
-            : authContext?.auth.userLevel >= 0
+            : userLevel >= UserLevel.User
                 ? <Navigate to="/unauthorized" state={{ from: location }} replace />
                 : <Navigate to="/login" state={{ from: location }} replace />
     )

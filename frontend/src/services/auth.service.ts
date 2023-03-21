@@ -22,7 +22,7 @@ class AuthService {
   }
 
   async signUp(username: string, password: string): Promise<IAuth | null> {
-    const { data, status } = await axios.post<IAuth>(API_URL + "signUn", {
+    const { data, status } = await axios.post<IAuth>(API_URL + "signup", {
       username,
       password,
     })

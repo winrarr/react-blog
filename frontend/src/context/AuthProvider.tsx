@@ -4,13 +4,11 @@ import { AuthContextType, IAuth } from "../@types/auth"
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: any) => {
-  const [auth, setAuth] = useState<IAuth>({
-    session: "",
-    userLevel: 0,
-  })
+  const [auth, setAuth] = useState<IAuth | null>(null)
+  const clearAuth = () => setAuth(null)
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, clearAuth }}>
       {children}
     </AuthContext.Provider>
   )

@@ -17,11 +17,11 @@ function App() {
         <Route path="/" element={<HomePage />} />
 
         {/* private routes */}
-        <Route element={<RequireAuth userLevel={UserLevel.User} />}>
+        <Route element={<RequireAuth requiredUserLevel={UserLevel.User} />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
 
-        <Route element={<RequireAuth userLevel={UserLevel.Admin} />}>
+        <Route element={<RequireAuth requiredUserLevel={UserLevel.Admin} />}>
           <Route path="/admin" element={<Admin />} />
         </Route>
 

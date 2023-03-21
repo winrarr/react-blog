@@ -1,24 +1,17 @@
-export default function Navbar() {
+import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+
+const Navbar = () => {
+  const { auth, clearAuth } = useAuth()
+
   return (
-    <nav className="navbar">
-      <a href="/homepage">LOGO</a>
-      <input type="checkbox" id="toggler" />
-      <label htmlFor="toggler">
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
-      </label>
-      <div>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/admin">Admin</a></li>
-          <li><a href="/login">Login</a></li>
-          <div></div>
-        </ul>
-      </div>
-    </nav>
+    <>
+      <Link id="home-link" to="/">Home</Link>
+      {auth
+        ? <Link onClick={() => clearAuth()} id="auth-link" to="#">Log out</Link>
+        : <Link id="auth-link" to="/login">Log in</Link>}
+    </>
   )
 }
+
+export default Navbar

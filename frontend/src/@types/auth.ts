@@ -4,8 +4,9 @@ export interface IAuth {
 }
 
 export type AuthContextType = {
-    auth: IAuth,
+    auth: IAuth | null,
     setAuth: (auth: IAuth) => void,
+    clearAuth: () => void,
 }
 
 export enum UserLevel {

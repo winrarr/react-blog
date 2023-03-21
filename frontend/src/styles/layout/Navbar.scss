@@ -1,102 +1,15 @@
-@import "../../styles/helpers/colours";
-
-$gap: 6rem;
-
-.navbar {
-  padding: 15px;
-  background: color(grayscale, light);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-
-  /* sticky */
-  position: sticky;
+#home-link {
+  position: absolute;
   top: 0;
+  left: 0;
+  padding: 14px;
   z-index: 1;
+}
 
-  a {
-    text-decoration: none;
-    color: #fff;
-  }
-
-  & > input,
-  & > label {
-    display: none;
-  }
-
-  & > label {
-    & > ul {
-      list-style-type: none;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 14px;
-
-      & > li {
-        width: 1rem;
-        height: 2px;
-        border-radius: 10px;
-        background-color: #fff;
-      }
-    }
-  }
-
-  & > div {
-    & > ul {
-      margin: 0;
-      list-style: none;
-      display: flex;
-
-      & > li {
-        min-width: $gap;
-        text-align: center;
-      }
-
-      & > div {
-        position: absolute;
-        bottom: 0;
-        height: 2px;
-        width: $gap;
-        background-color: #fff;
-        transition: transform 0.25s;
-      }
-
-      @for $i from 1 to 4 {
-        & > li:nth-child(#{$i + 1}):hover ~ div {
-          transform: translateX($i * $gap);
-        }
-      }
-    }
-  }
-
-  @media screen and (max-width: 600px) {
-    & > label {
-      display: inline-flex;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    input:checked ~ div {
-      max-height: 100%;
-    }
-
-    & > div {
-      width: 100%;
-      max-height: 0;
-      overflow: hidden;
-
-      & > ul {
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        gap: 15px;
-
-        & > div {
-          visibility: hidden;
-        }
-      }
-    }
-  }
+#auth-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 14px;
+  z-index: 1;
 }

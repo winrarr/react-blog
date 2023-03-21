@@ -4,6 +4,7 @@ import (
 	"api/configs"
 	"api/models"
 	"api/sessions"
+	"api/utils"
 	"context"
 	"net/http"
 	"time"
@@ -24,6 +25,7 @@ func init() {
 
 // POST /signup
 func CreateUser(c *gin.Context) {
+	utils.PrintBody(c)
 	// bind request to model
 	var credentials models.Credentials
 	if err := c.Bind(&credentials); err != nil {

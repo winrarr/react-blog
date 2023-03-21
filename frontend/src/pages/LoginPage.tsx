@@ -67,6 +67,7 @@ const LoginPage = () => {
     e.preventDefault()
     const auth = await authService.signIn(state.siu, state.sip)
     if (auth) {
+      setAuth(auth)
       navigate(from, { replace: true })
     } else {
       alert("error signing in")
@@ -75,8 +76,9 @@ const LoginPage = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    const auth = await authService.signUp(state.siu, state.sip)
+    const auth = await authService.signUp(state.suu, state.sup1)
     if (auth) {
+      setAuth(auth)
       navigate(from, { replace: true })
     } else {
       alert("error signing up")
