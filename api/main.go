@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/auth"
 	"api/configs"
 	"api/routes"
 
@@ -14,7 +15,9 @@ func main() {
 
 	configs.ConnectDB()
 
-	routes.UserRoute(router)
+	router.Use(auth.Authorise)
+	routes.AuthRoutes(router)
+	routes.UserRoutes(router)
 	router.Use()
 
 	router.Run("localhost:8080")

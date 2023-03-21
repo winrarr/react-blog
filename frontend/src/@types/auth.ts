@@ -1,11 +1,14 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface IAuth {
-    session: string,
+    accessToken: string,
+    refreshToken: string,
     userLevel: UserLevel,
 }
 
 export type AuthContextType = {
     auth: IAuth | null,
-    setAuth: (auth: IAuth) => void,
+    setAuth: Dispatch<SetStateAction<IAuth | null>>,
     clearAuth: () => void,
 }
 

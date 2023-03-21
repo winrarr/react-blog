@@ -32,16 +32,16 @@
     transition: 0.25s;
   }
 
-  & > #sign-in {
-    $displacement: 0px;
-    $width: 82px;
+  & > #login {
+    $displacement: -2px;
+    $width: 79px;
 
     &:checked {
       & ~ .active {
         width: $width;
       }
 
-      & ~ .login-form .sign-in-htm {
+      & ~ .login-form .login-htm {
         transform: rotate(0);
       }
     }
@@ -52,9 +52,9 @@
     }
   }
 
-  & > #sign-up {
-    $displacement: 100px;
-    $width: 90px;
+  & > #signup {
+    $displacement: 90px;
+    $width: 94px;
 
     &:checked {
       & ~ .active {
@@ -62,7 +62,7 @@
         translate: $displacement;
       }
 
-      & ~ .login-form .sign-up-htm {
+      & ~ .login-form .signup-htm {
         transform: rotate(0);
       }
     }
@@ -91,7 +91,7 @@
       text-transform: uppercase;
     }
 
-    .sign-in-htm {
+    .login-htm {
       position: absolute;
     }
 

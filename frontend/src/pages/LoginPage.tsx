@@ -1,7 +1,9 @@
 import { ChangeEvent, FormEventHandler, useReducer, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { IAuth } from "../@types/auth"
+import axios from "../axios/axios"
 import useAuth from "../hooks/useAuth"
-import authService from "../services/auth.service"
+import { HttpStatusCode } from "axios"
 
 // field component for form
 interface FieldProps {
@@ -32,11 +34,11 @@ const LoginPage = () => {
   const from = location.state?.from?.pathname || "/"
 
   interface stateType {
-    siu: string,
-    sip: string,
-    suu: string,
-    sup1: string,
-    sup2: string,
+    loginUsername: string,
+    loginPassword: string,
+    signupUsername: string,
+    signupPassword1: string,
+    signupPassword2: string,
   }
 
   const reducer = (state: stateType, action: { variable: string, value: string }) => ({
@@ -45,11 +47,11 @@ const LoginPage = () => {
   })
 
   const initialState: stateType = {
-    siu: "",
-    sip: "",
-    suu: "",
-    sup1: "",
-    sup2: "",
+    loginUsername: "",
+    loginPassword: "",
+    signupUsername: "",
+    signupPassword1: "",
+    signupPassword2: "",
   }
 
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -60,28 +62,38 @@ const LoginPage = () => {
       value: e.target.value,
     })
 
-  const signInValid = state.siu.length > 0 && state.sip.length > 0
-  const signUpValid = state.suu.length > 0 && state.sup1.length > 0 && state.sup1 == state.sup2
+  const signInValid = state.loginUsername.length > 0 && state.loginPassword.length > 0
+  const signUpValid = state.signupUsername.length > 0 && state.signupPassword1.length > 0 && state.signupPassword1 == state.signupPassword2
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const auth = await authService.signIn(state.siu, state.sip)
-    if (auth) {
-      setAuth(auth)
+
+    const { data, status } = await axios.post<IAuth>("/login", {
+      username: state.loginUsername,
+      password: state.loginPassword,
+    })
+
+    if (status == HttpStatusCode.Ok) {
+      setAuth(data)
       navigate(from, { replace: true })
     } else {
       alert("error signing in")
     }
   }
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    const auth = await authService.signUp(state.suu, state.sup1)
-    if (auth) {
-      setAuth(auth)
+
+    const { data, status } = await axios.post<IAuth>("/signup", {
+      username: state.signupUsername,
+      password: state.signupPassword1,
+    })
+
+    if (status == HttpStatusCode.Created) {
+      setAuth(data)
       navigate(from, { replace: true })
     } else {
-      alert("error signing up")
+      alert("error signing in")
     }
   }
 
@@ -89,11 +101,11 @@ const LoginPage = () => {
     <div className="login-container">
 
       {/* switch buttons */}
-      <input id="sign-in" type="radio" name="item" defaultChecked />
-      <label htmlFor="sign-in">Sign In</label>
+      <input id="login" type="radio" name="item" defaultChecked />
+      <label htmlFor="login">Log In</label>
 
-      <input id="sign-up" type="radio" name="item" />
-      <label htmlFor="sign-up">Sign Up</label>
+      <input id="signup" type="radio" name="item" />
+      <label htmlFor="signup">Sign Up</label>
 
       <div className="active"></div>
 
@@ -104,9 +116,9 @@ const LoginPage = () => {
         <iframe name="dummyframe" />
 
         {/* sign in */}
-        <form className="sign-in-htm" onSubmit={handleSignIn}>
-          <Field placeholder="Username" name="password" onChange={fieldChanged("siu")} />
-          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("sip")} />
+        <form className="login-htm" onSubmit={handleLogin}>
+          <Field placeholder="Username" name="password" onChange={fieldChanged("loginUsername")} />
+          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("loginPassword")} />
           <input type="submit" value="Sign In" className={`submit ${signInValid ? "" : "invalid"}`} />
 
           <div className="hr"></div>
@@ -117,10 +129,10 @@ const LoginPage = () => {
         </form>
 
         {/* sign up */}
-        <form className="sign-up-htm" onSubmit={handleSignUp}>
-          <Field placeholder="Username" name="username" onChange={fieldChanged("suu")} />
-          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("sup1")} />
-          <Field placeholder="Repeat password" type="password" onChange={fieldChanged("sup2")} />
+        <form className="signup-htm" onSubmit={handleSignup}>
+          <Field placeholder="Username" name="username" onChange={fieldChanged("signupUsername")} />
+          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("signupPassword1")} />
+          <Field placeholder="Repeat password" type="password" onChange={fieldChanged("signupPassword2")} />
           <input type="submit" value="Sign Up" className={`submit ${signUpValid ? "" : "invalid"}`} />
 
           <div className="hr"></div>

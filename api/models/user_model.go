@@ -3,6 +3,7 @@ package models
 type UserLevel string
 
 const (
+	Guest UserLevel = "0"
 	User  UserLevel = "1"
 	Admin UserLevel = "2"
 )
@@ -13,19 +14,8 @@ type Credentials struct {
 }
 
 type DBUser struct {
-	Username   string
-	HSPassword []byte
-	UserLevel  UserLevel
-}
-
-type Auth struct {
-	Session   string
-	UserLevel UserLevel
-}
-
-func NewAuth(session string, userLevel UserLevel) Auth {
-	return Auth{
-		session,
-		userLevel,
-	}
+	Username     string
+	HSPassword   []byte
+	UserLevel    UserLevel
+	RefreshToken string
 }

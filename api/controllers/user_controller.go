@@ -1,18 +1,17 @@
 package controllers
 
 import (
+	"api/auth"
 	"api/configs"
 	"api/models"
-	"api/sessions"
-	"api/utils"
 	"context"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
@@ -25,7 +24,6 @@ func init() {
 
 // POST /signup
 func CreateUser(c *gin.Context) {
-	utils.PrintBody(c)
 	// bind request to model
 	var credentials models.Credentials
 	if err := c.Bind(&credentials); err != nil {
@@ -33,43 +31,31 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	// check if user already exists
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	auth, createdStatus := auth.NewUser(credentials.Username, credentials.Password)
+	httpStatus, created := createStatusToHttpStatus(createdStatus)
 
-	err := userCollection.FindOne(ctx, bson.M{"username": credentials.Username}).Err()
-	if err == nil {
-		c.AbortWithStatus(http.StatusConflict)
-		return
+	if created {
+		c.JSON(httpStatus, auth)
+	} else {
+		c.AbortWithStatus(httpStatus)
 	}
-
-	// hash and salt password and save it in the database
-	HSPassword, err := bcrypt.GenerateFromPassword([]byte(credentials.Password), bcrypt.DefaultCost)
-	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-
-	user := models.DBUser{
-		Username:   credentials.Username,
-		HSPassword: HSPassword,
-		UserLevel:  models.User,
-	}
-
-	defer cancel()
-
-	_, err = userCollection.InsertOne(ctx, user)
-	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-
-	// return the session id
-	session := sessions.NewSession(user.UserLevel)
-	c.JSON(http.StatusCreated, models.NewAuth(session, user.UserLevel))
 }
 
-// POST /signin
+func createStatusToHttpStatus(status auth.CreateStatus) (int, bool) {
+	switch status {
+	case auth.Success:
+		return http.StatusCreated, true
+	case auth.InternalError:
+		return http.StatusInternalServerError, false
+	case auth.UserAlreadyExists:
+		return http.StatusConflict, false
+	default:
+		log.Fatal("unexpected auth create status")
+	}
+	return -1, false
+}
+
+// POST /login
 func Login(c *gin.Context) {
 	// bind request to model
 	var credentials models.Credentials
@@ -78,27 +64,30 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// check if user exists
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	auth, checkStatus := auth.CheckUser(credentials.Username, credentials.Password)
+	httpStatus, authed := checkStatusToHttpStatus(checkStatus)
 
-	var user models.DBUser
-	err := userCollection.FindOne(ctx, bson.M{"username": credentials.Username}).Decode(&user)
-	if err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
+	if authed {
+		c.JSON(httpStatus, auth)
+	} else {
+		c.AbortWithStatus(httpStatus)
 	}
+}
 
-	// check if given password is correct
-	err = bcrypt.CompareHashAndPassword(user.HSPassword, []byte(credentials.Password))
-	if err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
+func checkStatusToHttpStatus(status auth.CheckStatus) (int, bool) {
+	switch status {
+	case auth.Success:
+		return http.StatusOK, true
+	case auth.InternalError:
+		return http.StatusInternalServerError, false
+	case auth.UserDoesNotExist:
+		return http.StatusBadRequest, false
+	case auth.IncorrectPassword:
+		return http.StatusBadRequest, false
+	default:
+		log.Fatal("unexpected auth check status")
 	}
-
-	// return the session auth
-	session := sessions.NewSession(user.UserLevel)
-	c.JSON(http.StatusOK, models.NewAuth(session, user.UserLevel))
+	return -1, false
 }
 
 // GET /users
