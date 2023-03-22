@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func CreateStatusToHttpStatus(status auth.CreateStatus) (int, bool) {
+func CreateStatusToHttpStatus(status auth.StatusMessage) (int, bool) {
 	switch status {
 	case auth.Success:
 		return http.StatusCreated, true
@@ -20,7 +20,7 @@ func CreateStatusToHttpStatus(status auth.CreateStatus) (int, bool) {
 	return -1, false
 }
 
-func CheckStatusToHttpStatus(status auth.CheckStatus) (int, bool) {
+func CheckStatusToHttpStatus(status auth.StatusMessage) (int, bool) {
 	switch status {
 	case auth.Success:
 		return http.StatusOK, true
@@ -30,6 +30,22 @@ func CheckStatusToHttpStatus(status auth.CheckStatus) (int, bool) {
 		return http.StatusBadRequest, false
 	case auth.IncorrectPassword:
 		return http.StatusBadRequest, false
+	default:
+		log.Fatal("unexpected auth check status")
+	}
+	return -1, false
+}
+
+func RefreshStatusToHttpStatus(status auth.StatusMessage) (int, bool) {
+	switch status {
+	case auth.Success:
+		return http.StatusOK, true
+	case auth.InternalError:
+		return http.StatusInternalServerError, false
+	case auth.UserDoesNotExist:
+		return http.StatusBadRequest, false
+	case auth.InvalidToken:
+		return http.StatusUnauthorized, false
 	default:
 		log.Fatal("unexpected auth check status")
 	}

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api/auth"
+	"api/middleware"
 	"api/routes"
 
 	"github.com/gin-contrib/cors"
@@ -10,9 +10,10 @@ import (
 
 func main() {
 	router := gin.Default()
-	router.Use(cors.Default())
 
-	router.Use(auth.Authorise)
+	router.Use(cors.Default())
+	router.Use(middleware.VerifyAccessToken)
+
 	routes.AuthRoutes(router)
 	routes.UserRoutes(router)
 

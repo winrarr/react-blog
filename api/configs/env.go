@@ -27,20 +27,11 @@ func EnvGinMode() string {
 	return os.Getenv("MONGOURI")
 }
 
-func EnvRefreshTroken() string {
+func EnvSecret(secretName string) string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	return os.Getenv("REFRESH_TOKEN_SECRET")
-}
-
-func EnvAccessTroken() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	return os.Getenv("ACCESS_TOKEN_SECRET")
+	return os.Getenv(secretName)
 }

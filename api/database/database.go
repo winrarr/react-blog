@@ -1,6 +1,7 @@
-package configs
+package database
 
 import (
+	"api/configs"
 	"context"
 	"log"
 	"time"
@@ -9,8 +10,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// Client instance
+var DB *mongo.Client = ConnectDB()
+var UserCollection *mongo.Collection = GetCollection(DB, "users")
+
 func ConnectDB() *mongo.Client {
-	client, err := mongo.NewClient(options.Client().ApplyURI(EnvMongoURI()))
+	client, err := mongo.NewClient(options.Client().ApplyURI(configs.EnvMongoURI()))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,9 +36,6 @@ func ConnectDB() *mongo.Client {
 
 	return client
 }
-
-// Client instance
-var DB *mongo.Client = ConnectDB()
 
 // getting database collections
 func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {

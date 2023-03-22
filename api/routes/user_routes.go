@@ -7,7 +7,5 @@ import (
 )
 
 func UserRoutes(router *gin.Engine) {
-	router.POST("/signup", controllers.CreateUser)
-	router.POST("/login", controllers.Login)
 	router.GET("/users", controllers.GetAllUsers)
 }

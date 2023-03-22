@@ -17,5 +17,5 @@ type DBUser struct {
 	Username     string
 	HSPassword   []byte
 	UserLevel    UserLevel
-	RefreshToken RefreshToken
+	RefreshToken string
 }
