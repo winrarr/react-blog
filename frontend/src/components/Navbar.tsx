@@ -6,7 +6,7 @@ const Navbar = () => {
 
   return (
     <>
-      <Link id="home-link" to="/">Home</Link>
+      <Link id="home-link" to="/dashboard">Home</Link>
       {auth
         ? <Link onClick={() => clearAuth()} id="auth-link" to="#">Log out</Link>
         : <Link id="auth-link" to="/login">Log in</Link>}

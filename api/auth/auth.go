@@ -3,7 +3,6 @@ package auth
 import (
 	"api/configs"
 	"api/models"
-	"api/utils"
 	"context"
 	"time"
 
@@ -22,7 +21,7 @@ type accessTokenInfo struct {
 var accessTokens = map[string]accessTokenInfo{}
 
 func Authorise(c *gin.Context) {
-	utils.PrintBody(c)
+	// utils.PrintBody(c)
 }
 
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")

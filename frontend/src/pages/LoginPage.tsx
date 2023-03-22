@@ -29,48 +29,26 @@ const Field = ({ placeholder, type = "text", name, onChange }: FieldProps) => (
 // form
 const LoginPage = () => {
   const { setAuth } = useAuth()
+
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || "/"
 
-  interface stateType {
-    loginUsername: string,
-    loginPassword: string,
-    signupUsername: string,
-    signupPassword1: string,
-    signupPassword2: string,
-  }
+  const [loginUsername, setloginUsername] = useState("")
+  const [loginPassword, setloginPassword] = useState("")
+  const [signupUsername, setsignupUsername] = useState("")
+  const [signupPassword1, setsignupPassword1] = useState("")
+  const [signupPassword2, setsignupPassword2] = useState("")
 
-  const reducer = (state: stateType, action: { variable: string, value: string }) => ({
-    ...state,
-    [action.variable]: action.value,
-  })
-
-  const initialState: stateType = {
-    loginUsername: "",
-    loginPassword: "",
-    signupUsername: "",
-    signupPassword1: "",
-    signupPassword2: "",
-  }
-
-  const [state, dispatch] = useReducer(reducer, initialState)
-
-  const fieldChanged = (variable: string) => (e: ChangeEvent<HTMLInputElement>) =>
-    dispatch({
-      variable,
-      value: e.target.value,
-    })
-
-  const signInValid = state.loginUsername.length > 0 && state.loginPassword.length > 0
-  const signUpValid = state.signupUsername.length > 0 && state.signupPassword1.length > 0 && state.signupPassword1 == state.signupPassword2
+  const signInValid = loginUsername.length > 0 && loginPassword.length > 0
+  const signUpValid = signupUsername.length > 0 && signupPassword1.length > 0 && signupPassword1 == signupPassword2
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const { data, status } = await axios.post<IAuth>("/login", {
-      username: state.loginUsername,
-      password: state.loginPassword,
+      username: loginUsername,
+      password: loginPassword,
     })
 
     if (status == HttpStatusCode.Ok) {
@@ -85,8 +63,8 @@ const LoginPage = () => {
     e.preventDefault()
 
     const { data, status } = await axios.post<IAuth>("/signup", {
-      username: state.signupUsername,
-      password: state.signupPassword1,
+      username: signupUsername,
+      password: signupPassword1,
     })
 
     if (status == HttpStatusCode.Created) {
@@ -115,10 +93,10 @@ const LoginPage = () => {
         {/* remove form redirect */}
         <iframe name="dummyframe" />
 
-        {/* sign in */}
+        {/* log in */}
         <form className="login-htm" onSubmit={handleLogin}>
-          <Field placeholder="Username" name="password" onChange={fieldChanged("loginUsername")} />
-          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("loginPassword")} />
+          <Field placeholder="Username" name="password" onChange={e => setloginUsername(e.target.value)} />
+          <Field placeholder="Password" type="password" name="password" onChange={e => setloginPassword(e.target.value)} />
           <input type="submit" value="Sign In" className={`submit ${signInValid ? "" : "invalid"}`} />
 
           <div className="hr"></div>
@@ -130,9 +108,9 @@ const LoginPage = () => {
 
         {/* sign up */}
         <form className="signup-htm" onSubmit={handleSignup}>
-          <Field placeholder="Username" name="username" onChange={fieldChanged("signupUsername")} />
-          <Field placeholder="Password" type="password" name="password" onChange={fieldChanged("signupPassword1")} />
-          <Field placeholder="Repeat password" type="password" onChange={fieldChanged("signupPassword2")} />
+          <Field placeholder="Username" name="username" onChange={e => setsignupUsername(e.target.value)} />
+          <Field placeholder="Password" type="password" name="password" onChange={e => setsignupPassword1(e.target.value)} />
+          <Field placeholder="Repeat password" type="password" onChange={e => setsignupPassword2(e.target.value)} />
           <input type="submit" value="Sign Up" className={`submit ${signUpValid ? "" : "invalid"}`} />
 
           <div className="hr"></div>

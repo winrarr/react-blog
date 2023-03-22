@@ -9,7 +9,7 @@ const RequireAuth = ({ requiredUserLevel }: { requiredUserLevel: UserLevel }) =>
     return (
         !auth
             ? <Navigate to="/login" state={{ from: location }} replace />
-            : auth.userLevel >= requiredUserLevel
+            : auth.UserLevel >= requiredUserLevel
                 ? <Outlet />
                 : <Navigate to="/unauthorized" state={{ from: location }} replace />
     )
