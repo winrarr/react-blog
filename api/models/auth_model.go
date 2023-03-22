@@ -1,7 +1,14 @@
 package models
 
-type Auth struct {
-	AccessToken  string
-	RefreshToken string
-	UserLevel    UserLevel
+type AuthResponse struct {
+	AccessToken string
+	UserLevel   UserLevel
 }
+
+type RefreshTokenResponse struct {
+	Username     string
+	RefreshToken RefreshToken
+}
+
+type RefreshToken string
+type AccessToken string

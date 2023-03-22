@@ -13,32 +13,26 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
+
+type Auth struct {
+	RefreshToken models.RefreshToken
+	AccessToken  models.AccessToken
+	UserLevel    models.UserLevel
+}
+
 type accessTokenInfo struct {
 	expires   time.Time
 	userLevel models.UserLevel
 }
 
-var accessTokens = map[string]accessTokenInfo{}
+var accessTokens = map[models.AccessToken]accessTokenInfo{}
 
 func Authorise(c *gin.Context) {
 	// utils.PrintBody(c)
 }
 
-var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
-
-const (
-	Success = iota
-	InternalError
-	Specified
-)
-
-type CreateStatus int
-
-const (
-	UserAlreadyExists CreateStatus = iota + Specified
-)
-
-func NewUser(username string, password string) (*models.Auth, CreateStatus) {
+func NewUser(username string, password string) (*Auth, CreateStatus) {
 	// check if user already exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -48,14 +42,14 @@ func NewUser(username string, password string) (*models.Auth, CreateStatus) {
 		return nil, UserAlreadyExists
 	}
 
-	// hash and salt password and save it in the database
+	// hash and salt password
 	HSPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, InternalError
 	}
 
+	// save in database and return auth
 	auth := NewAuth(models.User)
-
 	user := models.DBUser{
 		Username:     username,
 		HSPassword:   HSPassword,
@@ -71,14 +65,7 @@ func NewUser(username string, password string) (*models.Auth, CreateStatus) {
 	return &auth, Success
 }
 
-type CheckStatus int
-
-const (
-	UserDoesNotExist CheckStatus = iota + Specified
-	IncorrectPassword
-)
-
-func CheckUser(username string, password string) (*models.Auth, CheckStatus) {
+func CheckUser(username string, password string) (*Auth, CheckStatus) {
 	// check if user exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -95,7 +82,7 @@ func CheckUser(username string, password string) (*models.Auth, CheckStatus) {
 		return nil, IncorrectPassword
 	}
 
-	// update refresh token
+	// update refresh token and return auth
 	auth := NewAuth(user.UserLevel)
 	user.RefreshToken = auth.RefreshToken
 	_, err = userCollection.InsertOne(ctx, user)
@@ -106,22 +93,22 @@ func CheckUser(username string, password string) (*models.Auth, CheckStatus) {
 	return &auth, Success
 }
 
-func NewAuth(userLevel models.UserLevel) models.Auth {
-	return models.Auth{
-		AccessToken:  NewAccessToken(userLevel),
+func NewAuth(userLevel models.UserLevel) Auth {
+	return Auth{
 		RefreshToken: NewRefreshToken(),
+		AccessToken:  NewAccessToken(userLevel),
 		UserLevel:    userLevel,
 	}
 }
 
-func NewRefreshToken() string {
-	return uuid.NewString()
+func NewRefreshToken() models.RefreshToken {
+	return models.RefreshToken(uuid.NewString())
 }
 
-func NewAccessToken(userLevel models.UserLevel) string {
-	accessToken := uuid.NewString()
+func NewAccessToken(userLevel models.UserLevel) models.AccessToken {
+	accessToken := models.AccessToken(uuid.NewString())
 	accessTokens[accessToken] = accessTokenInfo{
-		time.Now(),
+		time.Now().Add(time.Hour),
 		userLevel,
 	}
 	return accessToken

@@ -4,8 +4,8 @@ import (
 	"api/auth"
 	"api/configs"
 	"api/models"
+	"api/utils"
 	"context"
-	"log"
 	"net/http"
 	"time"
 
@@ -32,27 +32,13 @@ func CreateUser(c *gin.Context) {
 	}
 
 	auth, createdStatus := auth.NewUser(credentials.Username, credentials.Password)
-	httpStatus, created := createStatusToHttpStatus(createdStatus)
+	httpStatus, created := utils.CreateStatusToHttpStatus(createdStatus)
 
 	if created {
-		c.JSON(httpStatus, auth)
+		sendAuth(auth, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)
 	}
-}
-
-func createStatusToHttpStatus(status auth.CreateStatus) (int, bool) {
-	switch status {
-	case auth.Success:
-		return http.StatusCreated, true
-	case auth.InternalError:
-		return http.StatusInternalServerError, false
-	case auth.UserAlreadyExists:
-		return http.StatusConflict, false
-	default:
-		log.Fatal("unexpected auth create status")
-	}
-	return -1, false
 }
 
 // POST /login
@@ -65,29 +51,23 @@ func Login(c *gin.Context) {
 	}
 
 	auth, checkStatus := auth.CheckUser(credentials.Username, credentials.Password)
-	httpStatus, authed := checkStatusToHttpStatus(checkStatus)
+	httpStatus, authed := utils.CheckStatusToHttpStatus(checkStatus)
 
 	if authed {
-		c.JSON(httpStatus, auth)
+		sendAuth(auth, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)
 	}
 }
 
-func checkStatusToHttpStatus(status auth.CheckStatus) (int, bool) {
-	switch status {
-	case auth.Success:
-		return http.StatusOK, true
-	case auth.InternalError:
-		return http.StatusInternalServerError, false
-	case auth.UserDoesNotExist:
-		return http.StatusBadRequest, false
-	case auth.IncorrectPassword:
-		return http.StatusBadRequest, false
-	default:
-		log.Fatal("unexpected auth check status")
+func sendAuth(auth *auth.Auth, httpStatus int, c *gin.Context) {
+	c.SetCookie("refreshToken", auth.RefreshToken, int(time.Hour)*24*365, "/", "localhost", true, true)
+
+	authResponse := models.AuthResponse{
+		AccessToken: auth.AccessToken,
+		UserLevel:   auth.UserLevel,
 	}
-	return -1, false
+	c.JSON(httpStatus, authResponse)
 }
 
 // GET /users
