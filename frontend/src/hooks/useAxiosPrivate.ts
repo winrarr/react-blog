@@ -13,6 +13,7 @@ const useAxiosPrivate = () => {
             // try null coalescence or something
             config => {
                 if (!config.headers['Authorization']) {
+                    // check this
                     config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
                 }
                 return config

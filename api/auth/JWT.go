@@ -81,6 +81,7 @@ func newAccessToken(username string, userLevel models.UserLevel) AccessToken {
 }
 
 func ParseAccessToken(authHeader string) (*AccessTokenClaims, error) {
+	println(authHeader)
 	tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
 	if !found {
 		return nil, errors.New("access token auth header should start with \"Bearer \"")
