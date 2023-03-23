@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 export interface IAuth {
     accessToken: string,
     refreshToken: string,
-    UserLevel: UserLevel,
+    userLevel: UserLevel,
 }
 
 export type AuthContextType = {

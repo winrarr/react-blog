@@ -1,11 +1,11 @@
 package models
 
-type UserLevel string
+type UserLevel int
 
 const (
-	Guest UserLevel = "0"
-	User  UserLevel = "1"
-	Admin UserLevel = "2"
+	Guest UserLevel = iota
+	User
+	Admin
 )
 
 type Credentials struct {

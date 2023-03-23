@@ -12,8 +12,10 @@ const useAxiosPrivate = () => {
         const requestInterceptor = axiosPrivate.interceptors.request.use(
             // try null coalescence or something
             config => {
+                config.headers['Authorization'] ??= `Bearer ${auth?.accessToken}`
                 if (!config.headers['Authorization']) {
                     // check this
+                    console.log(auth?.accessToken)
                     config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
                 }
                 return config

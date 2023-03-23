@@ -3,14 +3,12 @@ package main
 import (
 	"api/configs"
 	"api/routes"
-
-	"github.com/gin-contrib/cors"
 )
 
 func main() {
 	r := configs.GinEngine()
 
-	r.Use(cors.New(configs.Cors()))
+	r.Use(configs.Cors())
 
 	routes.AuthRoutes(r)
 	routes.UserRoutes(r)
