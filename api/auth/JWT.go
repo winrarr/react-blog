@@ -44,9 +44,9 @@ func newRefreshToken(username string) string {
 		Subject:   username,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(configs.EnvSecret("REFRESH_TOKEN_SECRET"))
+	tokenString, err := token.SignedString([]byte(configs.EnvSecret("REFRESH_TOKEN_SECRET")))
 	if err != nil {
-		log.Fatal("unable to create refresh token")
+		log.Fatal("unable to create refresh token: ", err)
 	}
 	return tokenString
 }
@@ -70,9 +70,9 @@ func newAccessToken(username string, userLevel models.UserLevel) AccessToken {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(configs.EnvSecret("ACCESS_TOKEN_SECRET"))
+	tokenString, err := token.SignedString([]byte(configs.EnvSecret("ACCESS_TOKEN_SECRET")))
 	if err != nil {
-		log.Fatal("unable to create access token token")
+		log.Fatal("unable to create access token token: ", err)
 	}
 	return AccessToken{
 		Token:     tokenString,
