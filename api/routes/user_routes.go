@@ -9,5 +9,6 @@ import (
 )
 
 func UserRoutes(router *gin.Engine) {
-	router.GET("/users", middleware.VerifyAccessToken(models.Admin), controllers.GetAllUsers)
+	router.Use(middleware.Authenticate(models.User))
+	router.GET("/users", controllers.GetAllUsers)
 }

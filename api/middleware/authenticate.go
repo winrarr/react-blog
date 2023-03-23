@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func VerifyAccessToken(requiredUserLevel models.UserLevel) gin.HandlerFunc {
+func Authenticate(requiredUserLevel models.UserLevel) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !auth.VerifyAccessToken(c.Request.Header.Get("Authorization"), requiredUserLevel) {
 			c.AbortWithStatus(http.StatusUnauthorized)

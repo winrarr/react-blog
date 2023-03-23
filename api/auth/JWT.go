@@ -44,7 +44,7 @@ func newRefreshToken(username string) string {
 		Subject:   username,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(configs.EnvSecret("REFRESH_TOKEN_SECRET")))
+	tokenString, err := token.SignedString(configs.EnvSecret("REFRESH_TOKEN"))
 	if err != nil {
 		log.Fatal("unable to create refresh token: ", err)
 	}
@@ -70,7 +70,7 @@ func newAccessToken(username string, userLevel models.UserLevel) AccessToken {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(configs.EnvSecret("ACCESS_TOKEN_SECRET")))
+	tokenString, err := token.SignedString(configs.EnvSecret("ACCESS_TOKEN"))
 	if err != nil {
 		log.Fatal("unable to create access token token: ", err)
 	}
@@ -81,23 +81,22 @@ func newAccessToken(username string, userLevel models.UserLevel) AccessToken {
 }
 
 func ParseAccessToken(authHeader string) (*AccessTokenClaims, error) {
-	println(authHeader)
 	tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
 	if !found {
 		return nil, errors.New("access token auth header should start with \"Bearer \"")
 	}
 
-	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaims{}, keyFunc("ACCESS_TOKEN_SECRET"))
+	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaims{}, keyFunc("ACCESS_TOKEN"))
 	if err != nil {
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(AccessTokenClaims)
+	claims, ok := token.Claims.(*AccessTokenClaims)
 	if !ok {
 		return nil, errors.New("incorrect format for claims")
 	}
 
-	return &claims, nil
+	return claims, nil
 }
 
 func keyFunc(secretName string) jwt.Keyfunc {

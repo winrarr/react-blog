@@ -10,14 +10,8 @@ const useAxiosPrivate = () => {
     useEffect(() => {
         
         const requestInterceptor = axiosPrivate.interceptors.request.use(
-            // try null coalescence or something
             config => {
-                config.headers['Authorization'] ??= `Bearer ${auth?.accessToken}`
-                if (!config.headers['Authorization']) {
-                    // check this
-                    console.log(auth?.accessToken)
-                    config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
-                }
+                config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
                 return config
             }, (error) => Promise.reject(error)
         )
@@ -30,7 +24,7 @@ const useAxiosPrivate = () => {
                     prevRequest.sent = true
                     const newAccessToken = await refresh()
                     prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-                    return axiosPrivate
+                    return axiosPrivate(prevRequest)
                 }
                 return Promise.reject(error)
             }
