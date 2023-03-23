@@ -154,7 +154,7 @@ func RefreshToken(tokenString string) (*Auth, StatusMessage) {
 	return &auth, Success
 }
 
-func VerifyAccessToken(authHeader string) bool {
+func VerifyAccessToken(authHeader string, requiredUserLevel models.UserLevel) bool {
 	claims, err := ParseAccessToken(authHeader)
 	if err != nil {
 		return false
@@ -168,6 +168,10 @@ func VerifyAccessToken(authHeader string) bool {
 	}
 
 	if sessionInfo.expiresAt.Before(time.Now()) {
+		return false
+	}
+
+	if sessionInfo.userLevel < requiredUserLevel {
 		return false
 	}
 
