@@ -5,16 +5,15 @@ import (
 	"api/routes"
 
 	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := gin.Default()
+	r := configs.GinEngine()
 
-	router.Use(cors.New(configs.Cors()))
+	r.Use(cors.New(configs.Cors()))
 
-	routes.AuthRoutes(router)
-	routes.UserRoutes(router)
+	routes.AuthRoutes(r)
+	routes.UserRoutes(r)
 
-	router.Run("localhost:8080")
+	r.Run("localhost:8080")
 }

@@ -10,16 +10,7 @@ import (
 // TODO: make env variables constants instead of loading every time
 
 func EnvMongoURI() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	return os.Getenv("MONGOURI")
-}
-
-func EnvGinMode() string {
-	err := godotenv.Load()
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -28,10 +19,19 @@ func EnvGinMode() string {
 }
 
 func EnvSecret(secretName string) string {
-	err := godotenv.Load()
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
 	return os.Getenv(secretName)
+}
+
+func EnvIsReleaseMode() bool {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("MODE") == "release"
 }
