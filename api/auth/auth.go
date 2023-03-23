@@ -64,6 +64,8 @@ func NewUser(username string, password string) (*Auth, StatusMessage) {
 
 	auth := Auth{
 		RefreshToken: refreshToken,
+		AccessToken:  accessToken.Token,
+		UserLevel:    DBUser.UserLevel,
 	}
 
 	return &auth, Success

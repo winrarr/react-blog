@@ -54,9 +54,11 @@ func sendAuth(authObj *auth.Auth, httpStatus int, c *gin.Context) {
 		AccessToken: authObj.AccessToken,
 		UserLevel:   authObj.UserLevel,
 	}
+
 	c.JSON(httpStatus, authResponse)
 }
 
+// GET /refresh
 func Refresh(c *gin.Context) {
 	tokenString, err := c.Cookie("refreshToken")
 	if err != nil {
