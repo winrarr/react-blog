@@ -5,9 +5,10 @@ import App from './App'
 import { AuthProvider } from './context/AuthProvider'
 import './styles/main.scss'
 import dotenv from 'dotenv'
+import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
 dotenv.config({ path: "../.env" })
-const isProduction = process.env.MODE === "production"
+if (process.env.MODE === "production") disableReactDevTools()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
