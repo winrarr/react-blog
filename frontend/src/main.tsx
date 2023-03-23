@@ -7,8 +7,9 @@ import './styles/main.scss'
 import dotenv from 'dotenv'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
-dotenv.config({ path: "../.env" })
-if (process.env.MODE === "production") disableReactDevTools()
+if (import.meta.env.PROD) {
+  disableReactDevTools()
+}
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
