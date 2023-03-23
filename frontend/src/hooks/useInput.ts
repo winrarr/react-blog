@@ -1,9 +1,14 @@
-import { ChangeEvent } from "react"
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
 import useLocalStorage from "./useLocalStorage"
 
-const useInput = (key: string, initValue: string | Function) => {
-    const [value, setValue] = useLocalStorage(key, initValue)
-    const reset = () => setValue(initValue)
+type attr = {
+    value: string,
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void,
+}
+
+const useInput = (): [string, Dispatch<SetStateAction<string>>, attr] => {
+    const [value, setValue] = useState("")
+    const reset = () => setValue("")
 
     const attributeObj = {
         value,

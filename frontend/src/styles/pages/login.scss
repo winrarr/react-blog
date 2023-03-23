@@ -83,11 +83,7 @@
     margin-top: 40px;
     position: relative;
 
-    & > iframe {
-      display: none;
-    }
-
-    .submit {
+    input[type="submit"] {
       text-transform: uppercase;
     }
 
@@ -129,7 +125,7 @@
         color: desaturate(color(primary, base), 60%);
       }
 
-      & > .submit {
+      & > input[type="submit"] {
         cursor: pointer;
         letter-spacing: 0.5ch;
         border: 2px solid color(primary, base);
