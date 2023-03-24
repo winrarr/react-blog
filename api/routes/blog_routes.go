@@ -9,5 +9,5 @@ import (
 
 func BlogRoutes(router *gin.Engine) {
 	router.GET("/blogs", controllers.GetAllBlogs)
-	router.POST("/newblog", protect(controllers.NewBlog, models.Admin)...)
+	router.POST("/newblog", protect(controllers.NewBlog, models.Admin))
 }

@@ -8,5 +8,5 @@ import (
 )
 
 func UserRoutes(router *gin.Engine) {
-	router.GET("/users", protect(controllers.GetAllUsers, models.Admin)...)
+	router.GET("/users", protect(controllers.GetAllUsers, models.Admin))
 }

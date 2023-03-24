@@ -9,3 +9,4 @@
 - Make sure structs in backend are properly json encoded
 - Clean up structs in backend
 - Maybe make AccessToken, RequestToken types (string) in backend
+- Look into git submodules for project structure
