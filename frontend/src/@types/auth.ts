@@ -1,21 +1,22 @@
 import { JwtPayload } from "jwt-decode";
 import { Dispatch, SetStateAction } from "react";
 
+export type AuthResponse = {
+    accessToken: string,
+    userLevel: UserLevel,
+}
+
 export interface AccessTokenClaims {
     standardClaims: JwtPayload,
     userLevel: UserLevel,
 }
 
-export interface IAuth {
-    accessToken: string,
-    refreshToken: string,
-    userLevel: UserLevel,
-}
-
 export type AuthContextType = {
-    auth: IAuth | null,
-    setAuth: Dispatch<SetStateAction<IAuth | null>>,
+    auth: AuthResponse | null,
+    setAuth: Dispatch<SetStateAction<AuthResponse | null>>,
     clearAuth: () => void,
+    persist: boolean,
+    setPersist: (dispatcher: (prev: boolean) => boolean) => void,
 }
 
 export enum UserLevel {

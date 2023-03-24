@@ -85,7 +85,7 @@ func Refresh(c *gin.Context) {
 	}
 
 	auth, status := auth.RefreshToken(tokenString)
-	httpStatus, authed := utils.CheckStatusToHttpStatus(status)
+	httpStatus, authed := utils.RefreshStatusToHttpStatus(status)
 
 	if authed {
 		sendAuth(auth, httpStatus, c)

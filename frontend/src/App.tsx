@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage'
 import { NoMatch } from './pages/NoMatch'
 import { Unauthorized } from './pages/Unauthorised'
 import NewBlogPost from './pages/NewBlogPost'
+import PersistLogin from './components/PersistLogin'
 
 function App() {
   return (
@@ -21,12 +22,14 @@ function App() {
         <Route path="newblog" element={<NewBlogPost />} />
 
         {/* private routes */}
-        <Route element={<RequireAuth requiredUserLevel={UserLevel.User} />}>
-          <Route path="dashboard" element={<Dashboard />} />
-        </Route>
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth requiredUserLevel={UserLevel.User} />}>
+            <Route path="dashboard" element={<Dashboard />} />
+          </Route>
 
-        <Route element={<RequireAuth requiredUserLevel={UserLevel.Admin} />}>
-          <Route path="admin" element={<Admin />} />
+          <Route element={<RequireAuth requiredUserLevel={UserLevel.Admin} />}>
+            <Route path="admin" element={<Admin />} />
+          </Route>
         </Route>
 
         {/* catch all */}

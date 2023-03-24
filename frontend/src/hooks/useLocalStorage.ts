@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react"
 
-const getLocalValue = (key: string, initValue: string | Function) => {
-    // SSR
-    if (typeof window === 'undefined') return initValue
-
+const getLocalValue = <T>(key: string, initValue: T): T => {
     // value already exists
     const value = localStorage.getItem(key)
-    if (value) return JSON.parse(value)
+    if (value) return JSON.parse(value) as T
 
     // return result of a function
-    if (initValue instanceof Function) return initValue()
+    if (initValue instanceof Function) return initValue() as T
 
     return initValue
 }
 
-const useLocalStorage = (key: string, initValue: string | Function) => {
+const useLocalStorage = <T>(key: string, initValue: T): [T, React.Dispatch<React.SetStateAction<T>>] => {
     const [value, setValue] = useState(() => {
         return getLocalValue(key, initValue)
     })

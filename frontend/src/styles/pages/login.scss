@@ -106,7 +106,11 @@
         background: rgba(255, 255, 255, 0.1);
       }
 
-      & > label {
+      & label {
+        color: color(grayscale, llllight);
+      }
+
+      & > .form-field-label {
         position: relative;
         margin-left: 20px;
         top: -31px;
@@ -114,12 +118,11 @@
         font-size: 15px;
         user-select: none;
         pointer-events: none;
-        color: color(grayscale, llllight);
         transition: 0.4s ease-out;
       }
 
-      & > input:focus + label,
-      & > input:valid + label {
+      & > .form-field-input:focus + .form-field-label,
+      & > .form-field-input:valid + .form-field-label {
         top: -65px;
         font-size: 13px;
         color: desaturate(color(primary, base), 60%);
@@ -164,5 +167,77 @@
         }
       }
     }
+  }
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 3px;
+  background-color: color(grayscale, lllight);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+$switch-color: hsl(293, 100%, 15%);
+
+input:checked + .slider {
+  background-color: $switch-color;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px $switch-color;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(30px);
+  -ms-transform: translateX(30px);
+  transform: translateX(30px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.hej {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+
+  & > label:last-child {
+    margin-left: 20px;
   }
 }

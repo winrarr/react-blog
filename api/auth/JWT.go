@@ -5,7 +5,6 @@ import (
 	"api/models"
 	"errors"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -80,12 +79,21 @@ func newAccessToken(username string, userLevel models.UserLevel) AccessToken {
 	}
 }
 
-func ParseAccessToken(authHeader string) (*AccessTokenClaims, error) {
-	tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
-	if !found {
-		return nil, errors.New("access token auth header should start with \"Bearer \"")
+func ParseRefreshToken(tokenString string) (*jwt.StandardClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyFunc("REFRESH_TOKEN"))
+	if err != nil {
+		return nil, err
 	}
 
+	claims, ok := token.Claims.(*jwt.StandardClaims)
+	if !ok {
+		return nil, errors.New("incorrect format for claims")
+	}
+
+	return claims, nil
+}
+
+func ParseAccessToken(tokenString string) (*AccessTokenClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaims{}, keyFunc("ACCESS_TOKEN"))
 	if err != nil {
 		return nil, err

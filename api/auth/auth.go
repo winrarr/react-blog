@@ -4,9 +4,9 @@ import (
 	"api/database"
 	"api/models"
 	"context"
+	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -113,15 +113,11 @@ func CheckUser(username string, password string) (*Auth, StatusMessage) {
 }
 
 func RefreshToken(tokenString string) (*Auth, StatusMessage) {
-	token, err := jwt.Parse(tokenString, keyFunc("REFRESH_TOKEN_SECRET"))
+	claims, err := ParseRefreshToken(tokenString)
 	if err != nil {
 		return nil, InvalidToken
 	}
 
-	claims, ok := token.Claims.(jwt.StandardClaims)
-	if !ok {
-		return nil, InvalidToken
-	}
 	username := claims.Subject
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -157,7 +153,12 @@ func RefreshToken(tokenString string) (*Auth, StatusMessage) {
 }
 
 func VerifyAccessToken(authHeader string, requiredUserLevel models.UserLevel) bool {
-	claims, err := ParseAccessToken(authHeader)
+	tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
+	if !found {
+		return false
+	}
+
+	claims, err := ParseAccessToken(tokenString)
 	if err != nil {
 		return false
 	}

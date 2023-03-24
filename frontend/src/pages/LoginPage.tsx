@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEventHandler, InputHTMLAttributes, useReducer, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { IAuth } from "../@types/auth"
+import { AuthResponse } from "../@types/auth"
 import axios from "../axios/axios"
 import useAuth from "../hooks/useAuth"
 import { HttpStatusCode } from "axios"
@@ -12,13 +12,13 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 
 const FormField = ({ placeholder, ...props }: Props) => (
   <>
-    <input className="input" required {...props} />
-    <label>{placeholder}</label>
+    <input className="form-field-input" required {...props} />
+    <label className="form-field-label">{placeholder}</label>
   </>
 )
 
 const LoginPage = () => {
-  const { setAuth } = useAuth()
+  const { setAuth, persist, setPersist } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -42,9 +42,11 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<IAuth>("/login", {
+    const { data, status } = await axios.post<AuthResponse>("/login", {
       username: loginUsername,
       password: loginPassword,
+    }, {
+      withCredentials: true,
     })
 
     if (status === HttpStatusCode.Ok) {
@@ -58,9 +60,11 @@ const LoginPage = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<IAuth>("/signup", {
+    const { data, status } = await axios.post<AuthResponse>("/signup", {
       username: signupUsername,
       password: signupPassword1,
+    }, {
+      withCredentials: true,
     })
 
     if (status === HttpStatusCode.Created) {
@@ -69,6 +73,10 @@ const LoginPage = () => {
     } else {
       alert("error signing in")
     }
+  }
+
+  const togglePersist = () => {
+    setPersist(prev => !prev)
   }
 
   return (
@@ -88,6 +96,13 @@ const LoginPage = () => {
 
         {/* log in */}
         <form className="login-htm" onSubmit={handleLogin}>
+          <div className="hej">
+            <label className="switch">
+              <input type="checkbox" onChange={togglePersist} checked={persist} />
+              <span className="slider round" />
+            </label>
+            <label>Remember me</label>
+          </div>
           <FormField placeholder="Username" name="password" {...loginUsernameAttr} />
           <FormField placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
           <input type="submit" value="Sign In" className={`${signInValid() ? "" : "invalid"}`} />
