@@ -14,8 +14,8 @@ import (
 // claims
 
 type AccessTokenClaims struct {
-	UserLevel      models.UserLevel
-	StandardClaims jwt.StandardClaims
+	UserLevel      models.UserLevel   `json:"userLevel"`
+	StandardClaims jwt.StandardClaims `json:"standardClaims"`
 }
 
 func (c AccessTokenClaims) Valid() error {

@@ -2,12 +2,30 @@ package controllers
 
 import (
 	"api/auth"
+	"api/database"
 	"api/models"
 	"api/utils"
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
+
+func init() {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	database.UserCollection.Drop(ctx)
+	bytes, _ := bcrypt.GenerateFromPassword([]byte("a"), bcrypt.DefaultCost)
+	user := models.DBUser{
+		Username:     "a",
+		HSPassword:   bytes,
+		UserLevel:    models.Admin,
+		RefreshToken: "refresh",
+	}
+	database.UserCollection.InsertOne(ctx, user)
+}
 
 // POST /signup
 func Signup(c *gin.Context) {

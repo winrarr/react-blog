@@ -11,12 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func init() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	database.UserCollection.Drop(ctx)
-}
-
 // GET /users
 func GetAllUsers(c *gin.Context) {
 	var users []models.DBUser

@@ -13,6 +13,7 @@ import (
 // Client instance
 var DB *mongo.Client = ConnectDB()
 var UserCollection *mongo.Collection = GetCollection(DB, "users")
+var BlogCollection *mongo.Collection = GetCollection(DB, "blogs")
 
 func ConnectDB() *mongo.Client {
 	client, err := mongo.NewClient(options.Client().ApplyURI(configs.EnvMongoURI()))

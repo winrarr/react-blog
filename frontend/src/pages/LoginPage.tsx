@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEventHandler, useReducer, useState } from "react"
+import { ChangeEvent, FormEventHandler, InputHTMLAttributes, useReducer, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { IAuth } from "../@types/auth"
 import axios from "../axios/axios"
@@ -6,22 +6,17 @@ import useAuth from "../hooks/useAuth"
 import { HttpStatusCode } from "axios"
 import useInput from "../hooks/useInput"
 
-// field component for form
-interface FieldProps {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   placeholder: string,
-  type?: string,
-  name?: string,
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
-const Field = ({ placeholder, ...props }: any) => (
+const FormField = ({ placeholder, ...props }: Props) => (
   <>
     <input className="input" required {...props} />
     <label>{placeholder}</label>
   </>
 )
 
-// form
 const LoginPage = () => {
   const { setAuth } = useAuth()
 
@@ -29,11 +24,11 @@ const LoginPage = () => {
   const location = useLocation()
   const from = location.state?.from?.pathname || "/"
 
-  const [loginUsername, setloginUsername, loginUsernameAttr] = useInput()
-  const [loginPassword, setloginPassword, loginPasswordAttr] = useInput()
-  const [signupUsername, setsignupUsername, signupUsernameAttr] = useInput()
-  const [signupPassword1, setsignupPassword1, signupPassword1Attr] = useInput()
-  const [signupPassword2, setsignupPassword2, signupPassword2Attr] = useInput()
+  const [loginUsername, loginUsernameAttr] = useInput()
+  const [loginPassword, loginPasswordAttr] = useInput()
+  const [signupUsername, signupUsernameAttr] = useInput()
+  const [signupPassword1, signupPassword1Attr] = useInput()
+  const [signupPassword2, signupPassword2Attr] = useInput()
 
   const signInValid = () =>
     loginUsername.length > 0 &&
@@ -52,7 +47,7 @@ const LoginPage = () => {
       password: loginPassword,
     })
 
-    if (status == HttpStatusCode.Ok) {
+    if (status === HttpStatusCode.Ok) {
       setAuth(data)
       navigate(from, { replace: true })
     } else {
@@ -68,7 +63,7 @@ const LoginPage = () => {
       password: signupPassword1,
     })
 
-    if (status == HttpStatusCode.Created) {
+    if (status === HttpStatusCode.Created) {
       setAuth(data)
       navigate(from, { replace: true })
     } else {
@@ -93,8 +88,8 @@ const LoginPage = () => {
 
         {/* log in */}
         <form className="login-htm" onSubmit={handleLogin}>
-          <Field placeholder="Username" name="password" {...loginUsernameAttr} />
-          <Field placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
+          <FormField placeholder="Username" name="password" {...loginUsernameAttr} />
+          <FormField placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
           <input type="submit" value="Sign In" className={`${signInValid() ? "" : "invalid"}`} />
 
           <div className="hr"></div>
@@ -106,9 +101,9 @@ const LoginPage = () => {
 
         {/* sign up */}
         <form className="signup-htm" onSubmit={handleSignup}>
-          <Field placeholder="Username" name="username" {...signupUsernameAttr} />
-          <Field placeholder="Password" name="password" type="password" {...signupPassword1Attr} />
-          <Field placeholder="Repeat password" type="password" {...signupPassword2Attr} />
+          <FormField placeholder="Username" name="username" {...signupUsernameAttr} />
+          <FormField placeholder="Password" name="password" type="password" {...signupPassword1Attr} />
+          <FormField placeholder="Repeat password" type="password" {...signupPassword2Attr} />
           <input type="submit" value="Sign Up" className={`${signUpValid() ? "" : "invalid"}`} />
 
           <div className="hr"></div>

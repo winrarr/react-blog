@@ -8,6 +8,7 @@ import { HomePage } from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import { NoMatch } from './pages/NoMatch'
 import { Unauthorized } from './pages/Unauthorised'
+import NewBlogPost from './pages/NewBlogPost'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="unauthorised" element={<Unauthorized />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="newblog" element={<NewBlogPost />} />
 
         {/* private routes */}
         <Route element={<RequireAuth requiredUserLevel={UserLevel.User} />}>

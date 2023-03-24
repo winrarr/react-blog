@@ -1,4 +1,10 @@
+import { JwtPayload } from "jwt-decode";
 import { Dispatch, SetStateAction } from "react";
+
+export interface AccessTokenClaims {
+    standardClaims: JwtPayload,
+    userLevel: UserLevel,
+}
 
 export interface IAuth {
     accessToken: string,

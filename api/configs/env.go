@@ -27,11 +27,11 @@ func EnvSecret(secretName string) []byte {
 	return []byte(os.Getenv(secretName + "_SECRET"))
 }
 
-func EnvIsReleaseMode() bool {
+func EnvIsProductionMode() bool {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	return os.Getenv("MODE") == "release"
+	return os.Getenv("MODE") == "production"
 }
