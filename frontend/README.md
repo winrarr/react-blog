@@ -1,6 +1,6 @@
 # Frontend
 
-Written in [node/react-ts](https://react.dev/). Created with [vite](https://vitejs.dev/) using `npm create vite@latest react-blog --template react-ts`. Runs on an unspecified port on localhost.
+Written in [node/react-ts](https://react.dev/). Created with [vite](https://vitejs.dev/) using `npm create vite@latest react-blog --template react-ts`. Runs on http://localhost:5173.
 
 ## Available scripts
 
