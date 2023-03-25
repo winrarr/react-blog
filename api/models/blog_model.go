@@ -1,5 +1,6 @@
 package models
 
+// response
 type Blog struct {
 	Title  string `binding:"required" form:"title"`
 	Author string `binding:"required" form:"author"`

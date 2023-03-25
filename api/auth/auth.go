@@ -11,12 +11,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Auth struct {
-	RefreshToken string
-	AccessToken  string
-	UserLevel    models.UserLevel
-}
-
 type sessionInfo struct {
 	accessToken string
 	expiresAt   int64
@@ -25,7 +19,7 @@ type sessionInfo struct {
 
 var sessions = map[string]sessionInfo{}
 
-func NewUser(username string, password string) (*Auth, StatusMessage) {
+func NewUser(username string, password string) (*models.Auth, StatusMessage) {
 	// check if user already exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -55,7 +49,7 @@ func NewUser(username string, password string) (*Auth, StatusMessage) {
 	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
 }
 
-func CheckUser(username string, password string) (*Auth, StatusMessage) {
+func CheckUser(username string, password string) (*models.Auth, StatusMessage) {
 	// check if user exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -79,7 +73,7 @@ func CheckUser(username string, password string) (*Auth, StatusMessage) {
 	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
 }
 
-func RefreshAccessToken(tokenString string) (*Auth, StatusMessage) {
+func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 	claims, err := ParseRefreshToken(tokenString)
 	if err != nil {
 		return nil, InvalidToken
@@ -103,7 +97,7 @@ func RefreshAccessToken(tokenString string) (*Auth, StatusMessage) {
 	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
 }
 
-func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessTokenExp, refreshToken string) (*Auth, StatusMessage) {
+func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessTokenExp, refreshToken string) (*models.Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -118,7 +112,7 @@ func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessToken
 		userLevel:   DBUser.UserLevel,
 	}
 
-	auth := Auth{
+	auth := models.Auth{
 		RefreshToken: refreshToken,
 		AccessToken:  accessTokenExp.Token,
 		UserLevel:    DBUser.UserLevel,

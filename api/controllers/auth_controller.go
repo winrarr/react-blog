@@ -69,7 +69,7 @@ func Login(c *gin.Context) {
 	}
 }
 
-func sendAuth(authObj *auth.Auth, httpStatus int, c *gin.Context) {
+func sendAuth(authObj *models.Auth, httpStatus int, c *gin.Context) {
 	c.SetCookie("refreshToken", authObj.RefreshToken, int(auth.RefreshTokenExpirationTime), "/", "localhost", true, true)
 
 	authResponse := models.AuthResponse{
