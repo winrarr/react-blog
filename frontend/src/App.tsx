@@ -15,13 +15,13 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {/* public routes */}
-        <Route index element={<HomePage />} />
-        <Route path="login" element={<AuthPage />} />
-        <Route path="unauthorised" element={<Unauthorized />} />
-
-        {/* private routes */}
         <Route element={<PersistLogin />}>
+          {/* public routes */}
+          <Route index element={<HomePage />} />
+          <Route path="login" element={<AuthPage />} />
+          <Route path="unauthorised" element={<Unauthorized />} />
+
+          {/* private routes */}
           <Route element={<RequireAuth requiredUserLevel={UserLevel.USER} />}>
             <Route path="dashboard" element={<Dashboard />} />
           </Route>

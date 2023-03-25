@@ -14,13 +14,17 @@ import (
 )
 
 func init() {
+	createAdminUser("a", "a")
+}
+
+func createAdminUser(username string, password string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	database.UserCollection.Drop(ctx)
 	bytes, _ := bcrypt.GenerateFromPassword([]byte("a"), bcrypt.DefaultCost)
 	refreshTokenExp := models.RefreshTokenExp{
-		Token:     "refresh",
-		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+		Token:     "",
+		ExpiresAt: 0,
 	}
 	user := models.DBUser{
 		Username:        "a",
@@ -59,7 +63,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	auth, status := auth.CheckUser(credentials.Username, credentials.Password)
+	auth, status := auth.FindUser(credentials.Username, credentials.Password)
 	httpStatus, authed := utils.CheckStatusToHttpStatus(status)
 
 	if authed {
@@ -77,6 +81,11 @@ func sendAuth(authObj *models.Auth, httpStatus int, c *gin.Context) {
 	}
 
 	c.JSON(httpStatus, authResponse)
+}
+
+// GET /logout
+func Logout(c *gin.Context) {
+
 }
 
 // GET /refresh
