@@ -17,7 +17,6 @@ export function Dashboard() {
       const response = await axiosPrivate.get<User[]>("/users")
 
       if (response.status == HttpStatusCode.Ok) {
-        console.log(response.data)
         isMounted && setUsers(response.data)
       } else {
         navigate('/login', { state: { from: location }, replace: true })
