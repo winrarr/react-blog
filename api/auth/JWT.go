@@ -11,18 +11,16 @@ import (
 )
 
 // claims
-
-type AccessTokenClaims struct {
+type accessTokenClaims struct {
 	UserLevel      models.UserLevel   `json:"userLevel"`
 	StandardClaims jwt.StandardClaims `json:"standardClaims"`
 }
 
-func (c AccessTokenClaims) Valid() error {
+func (c accessTokenClaims) Valid() error {
 	return c.StandardClaims.Valid()
 }
 
 // expiration times
-
 const (
 	RefreshTokenExpirationTime time.Duration = time.Hour * 24
 	AccessTokenExpirationTime  time.Duration = time.Minute * 2
@@ -55,7 +53,7 @@ func newRefreshToken(username string) models.RefreshTokenExp {
 func newAccessToken(username string, userLevel models.UserLevel) models.AccessTokenExp {
 	issuedAt := time.Now()
 	expiresAt := issuedAt.Add(AccessTokenExpirationTime).Unix()
-	claims := AccessTokenClaims{
+	claims := accessTokenClaims{
 		UserLevel: userLevel,
 
 		StandardClaims: jwt.StandardClaims{
@@ -90,13 +88,13 @@ func ParseRefreshToken(tokenString string) (*jwt.StandardClaims, error) {
 	return claims, nil
 }
 
-func ParseAccessToken(tokenString string) (*AccessTokenClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaims{}, keyFunc("ACCESS_TOKEN"))
+func ParseAccessToken(tokenString string) (*accessTokenClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &accessTokenClaims{}, keyFunc("ACCESS_TOKEN"))
 	if err != nil {
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*AccessTokenClaims)
+	claims, ok := token.Claims.(*accessTokenClaims)
 	if !ok {
 		return nil, errors.New("incorrect format for access token claims")
 	}
