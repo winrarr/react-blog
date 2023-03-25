@@ -4,7 +4,6 @@ import (
 	"api/database"
 	"api/models"
 	"context"
-	"strings"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,12 +11,29 @@ import (
 )
 
 type sessionInfo struct {
-	accessToken string
-	expiresAt   int64
-	userLevel   models.UserLevel
+	expiresAt int64
+	userLevel models.UserLevel
 }
 
 var sessions = map[string]sessionInfo{}
+
+func init() {
+	go cleanupSessions()
+}
+
+func cleanupSessions() {
+	batchIndex := 0
+	for token, sessionInfo := range sessions {
+		if batchIndex > 10000 {
+			batchIndex = 0
+			time.Sleep(time.Hour)
+		}
+		if sessionInfo.expiresAt < time.Now().Unix() {
+			delete(sessions, token)
+		}
+		batchIndex++
+	}
+}
 
 func NewUser(username string, password string) (*models.Auth, StatusMessage) {
 	// check if user already exists
@@ -46,7 +62,7 @@ func NewUser(username string, password string) (*models.Auth, StatusMessage) {
 		RefreshTokenExp: refreshTokenExp,
 	}
 
-	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
+	return updateDBAndSessions(DBUser, accessTokenExp)
 }
 
 func CheckUser(username string, password string) (*models.Auth, StatusMessage) {
@@ -70,7 +86,7 @@ func CheckUser(username string, password string) (*models.Auth, StatusMessage) {
 	refreshTokenExp, accessTokenExp := newTokens(username, DBUser.UserLevel)
 
 	DBUser.RefreshTokenExp = refreshTokenExp
-	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
+	return updateDBAndSessions(DBUser, accessTokenExp)
 }
 
 func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
@@ -90,14 +106,18 @@ func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 		return nil, UserDoesNotExist
 	}
 
+	if DBUser.RefreshTokenExp.ExpiresAt < time.Now().Unix() {
+		return nil, RefreshTokenExpired
+	}
+
 	refreshTokenExp, accessTokenExp := newTokens(username, DBUser.UserLevel)
 
 	// update refresh token and return auth
 	DBUser.RefreshTokenExp = refreshTokenExp
-	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
+	return updateDBAndSessions(DBUser, accessTokenExp)
 }
 
-func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessTokenExp, refreshToken string) (*models.Auth, StatusMessage) {
+func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessTokenExp) (*models.Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -106,14 +126,13 @@ func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessToken
 		return nil, InternalError
 	}
 
-	sessions[DBUser.Username] = sessionInfo{
-		accessToken: accessTokenExp.Token,
-		expiresAt:   accessTokenExp.ExpiresAt,
-		userLevel:   DBUser.UserLevel,
+	sessions[accessTokenExp.Token] = sessionInfo{
+		expiresAt: accessTokenExp.ExpiresAt,
+		userLevel: DBUser.UserLevel,
 	}
 
 	auth := models.Auth{
-		RefreshToken: refreshToken,
+		RefreshToken: DBUser.RefreshTokenExp.Token,
 		AccessToken:  accessTokenExp.Token,
 		UserLevel:    DBUser.UserLevel,
 	}
@@ -121,29 +140,19 @@ func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessToken
 	return &auth, Success
 }
 
-func VerifyAccessToken(authHeader string, requiredUserLevel models.UserLevel) bool {
-	tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
-	if !found {
-		return false
-	}
-
-	claims, err := ParseAccessToken(tokenString)
+func VerifyAccessToken(tokenString string, requiredUserLevel models.UserLevel) bool {
+	_, err := ParseAccessToken(tokenString)
 	if err != nil {
 		return false
 	}
 
-	username := claims.StandardClaims.Subject
-
-	sessionInfo, ok := sessions[username]
+	sessionInfo, ok := sessions[tokenString]
 	if !ok {
 		return false
 	}
 
-	if tokenString != sessionInfo.accessToken {
-		return false
-	}
-
 	if sessionInfo.expiresAt < time.Now().Unix() {
+		delete(sessions, tokenString)
 		return false
 	}
 

@@ -46,6 +46,8 @@ func RefreshStatusToHttpStatus(status auth.StatusMessage) (int, bool) {
 		return http.StatusBadRequest, false
 	case auth.InvalidToken:
 		return http.StatusUnauthorized, false
+	case auth.RefreshTokenExpired:
+		return http.StatusUnauthorized, false
 	default:
 		log.Fatal("unexpected auth refresh status")
 	}

@@ -9,4 +9,5 @@ const (
 	UserDoesNotExist
 	IncorrectPassword
 	InvalidToken
+	RefreshTokenExpired
 )

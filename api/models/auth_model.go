@@ -1,6 +1,21 @@
 package models
 
 // internal
+type UserLevel int
+
+const (
+	Guest UserLevel = iota
+	User
+	Admin
+)
+
+type DBUser struct {
+	Username        string
+	HSPassword      []byte
+	UserLevel       UserLevel
+	RefreshTokenExp RefreshTokenExp
+}
+
 type RefreshTokenExp struct {
 	Token     string
 	ExpiresAt int64
