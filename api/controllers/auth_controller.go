@@ -18,15 +18,15 @@ func init() {
 	defer cancel()
 	database.UserCollection.Drop(ctx)
 	bytes, _ := bcrypt.GenerateFromPassword([]byte("a"), bcrypt.DefaultCost)
-	refreshTokenWithExpiration := models.RefreshTokenWithExpiration{
+	refreshTokenExp := models.RefreshTokenExp{
 		Token:     "refresh",
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	}
 	user := models.DBUser{
-		Username:                   "a",
-		HSPassword:                 bytes,
-		UserLevel:                  models.Admin,
-		RefreshTokenWithExpiration: refreshTokenWithExpiration,
+		Username:        "a",
+		HSPassword:      bytes,
+		UserLevel:       models.Admin,
+		RefreshTokenExp: refreshTokenExp,
 	}
 	database.UserCollection.InsertOne(ctx, user)
 }

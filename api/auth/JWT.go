@@ -28,11 +28,11 @@ const (
 	AccessTokenExpirationTime  time.Duration = time.Minute * 2
 )
 
-func newTokens(username string, userLevel models.UserLevel) (models.RefreshTokenWithExpiration, models.AccessTokenWithExpiration) {
+func newTokens(username string, userLevel models.UserLevel) (models.RefreshTokenExp, models.AccessTokenExp) {
 	return newRefreshToken(username), newAccessToken(username, userLevel)
 }
 
-func newRefreshToken(username string) models.RefreshTokenWithExpiration {
+func newRefreshToken(username string) models.RefreshTokenExp {
 	issuedAt := time.Now()
 	expiresAt := issuedAt.Add(RefreshTokenExpirationTime).Unix()
 	claims := jwt.StandardClaims{
@@ -46,13 +46,13 @@ func newRefreshToken(username string) models.RefreshTokenWithExpiration {
 	if err != nil {
 		log.Fatal("unable to create refresh token: ", err)
 	}
-	return models.RefreshTokenWithExpiration{
+	return models.RefreshTokenExp{
 		Token:     tokenString,
 		ExpiresAt: expiresAt,
 	}
 }
 
-func newAccessToken(username string, userLevel models.UserLevel) models.AccessTokenWithExpiration {
+func newAccessToken(username string, userLevel models.UserLevel) models.AccessTokenExp {
 	issuedAt := time.Now()
 	expiresAt := issuedAt.Add(AccessTokenExpirationTime).Unix()
 	claims := AccessTokenClaims{
@@ -70,7 +70,7 @@ func newAccessToken(username string, userLevel models.UserLevel) models.AccessTo
 	if err != nil {
 		log.Fatal("unable to create access token token: ", err)
 	}
-	return models.AccessTokenWithExpiration{
+	return models.AccessTokenExp{
 		Token:     tokenString,
 		ExpiresAt: expiresAt,
 	}

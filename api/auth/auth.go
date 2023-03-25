@@ -43,15 +43,16 @@ func NewUser(username string, password string) (*Auth, StatusMessage) {
 
 	// save in database and return auth
 	userLevel := models.User
-	refreshTokenWithExpiration, accessTokenWithExpiration := newTokens(username, userLevel)
+	refreshTokenExp, accessTokenExp := newTokens(username, userLevel)
+
 	DBUser := models.DBUser{
-		Username:                   username,
-		HSPassword:                 HSPassword,
-		UserLevel:                  userLevel,
-		RefreshTokenWithExpiration: refreshTokenWithExpiration,
+		Username:        username,
+		HSPassword:      HSPassword,
+		UserLevel:       userLevel,
+		RefreshTokenExp: refreshTokenExp,
 	}
 
-	return updateUserAndSessions(DBUser, accessTokenWithExpiration, refreshTokenWithExpiration.Token)
+	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
 }
 
 func CheckUser(username string, password string) (*Auth, StatusMessage) {
@@ -72,10 +73,10 @@ func CheckUser(username string, password string) (*Auth, StatusMessage) {
 	}
 
 	// update refresh token and return auth
-	refreshTokenWithExpiration, accessTokenWithExpiration := newTokens(username, DBUser.UserLevel)
+	refreshTokenExp, accessTokenExp := newTokens(username, DBUser.UserLevel)
 
-	DBUser.RefreshTokenWithExpiration = refreshTokenWithExpiration
-	return updateUserAndSessions(DBUser, accessTokenWithExpiration, refreshTokenWithExpiration.Token)
+	DBUser.RefreshTokenExp = refreshTokenExp
+	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
 }
 
 func RefreshAccessToken(tokenString string) (*Auth, StatusMessage) {
@@ -95,13 +96,14 @@ func RefreshAccessToken(tokenString string) (*Auth, StatusMessage) {
 		return nil, UserDoesNotExist
 	}
 
-	refreshTokenWithExpiration, accessTokenWithExpiration := newTokens(username, DBUser.UserLevel)
+	refreshTokenExp, accessTokenExp := newTokens(username, DBUser.UserLevel)
 
-	DBUser.RefreshTokenWithExpiration = refreshTokenWithExpiration
-	return updateUserAndSessions(DBUser, accessTokenWithExpiration, refreshTokenWithExpiration.Token)
+	// update refresh token and return auth
+	DBUser.RefreshTokenExp = refreshTokenExp
+	return updateDBAndSessions(DBUser, accessTokenExp, refreshTokenExp.Token)
 }
 
-func updateUserAndSessions(DBUser models.DBUser, accessTokenWithExpiration models.AccessTokenWithExpiration, refreshToken string) (*Auth, StatusMessage) {
+func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessTokenExp, refreshToken string) (*Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -111,14 +113,14 @@ func updateUserAndSessions(DBUser models.DBUser, accessTokenWithExpiration model
 	}
 
 	sessions[DBUser.Username] = sessionInfo{
-		accessToken: accessTokenWithExpiration.Token,
-		expiresAt:   accessTokenWithExpiration.ExpiresAt,
+		accessToken: accessTokenExp.Token,
+		expiresAt:   accessTokenExp.ExpiresAt,
 		userLevel:   DBUser.UserLevel,
 	}
 
 	auth := Auth{
 		RefreshToken: refreshToken,
-		AccessToken:  accessTokenWithExpiration.Token,
+		AccessToken:  accessTokenExp.Token,
 		UserLevel:    DBUser.UserLevel,
 	}
 

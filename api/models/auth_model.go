@@ -1,11 +1,11 @@
 package models
 
-type RefreshTokenWithExpiration struct {
+type RefreshTokenExp struct {
 	Token     string
 	ExpiresAt int64
 }
 
-type AccessTokenWithExpiration struct {
+type AccessTokenExp struct {
 	Token     string
 	ExpiresAt int64
 }
