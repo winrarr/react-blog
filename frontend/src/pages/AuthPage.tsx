@@ -17,7 +17,7 @@ const FormField = ({ placeholder, ...props }: Props) => (
   </>
 )
 
-const LoginPage = () => {
+const AuthPage = () => {
   const { setAuth, persist, setPersist } = useAuth()
 
   const navigate = useNavigate()
@@ -132,4 +132,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default AuthPage

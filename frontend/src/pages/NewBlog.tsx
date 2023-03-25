@@ -6,7 +6,7 @@ import jwt_decode from 'jwt-decode'
 import { AccessTokenClaims } from "../@types/auth"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 
-const NewBlogPost = () => {
+const NewBlog = () => {
     const { auth } = useAuth()
 
     const axiosPrivate = useAxiosPrivate()
@@ -49,4 +49,4 @@ const NewBlogPost = () => {
     )
 }
 
-export default NewBlogPost
+export default NewBlog

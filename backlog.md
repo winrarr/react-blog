@@ -5,6 +5,7 @@
 
 # Side quests
 
+- Make frontend refresh token on reload no matter which page they go to
 - Maybe make axios implementation better
 - Look into git submodules for project structure
 

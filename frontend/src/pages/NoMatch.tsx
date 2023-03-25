@@ -1,5 +1,5 @@
-export function NoMatch() {
-    return (
-        <div className="page">No match!</div>
-    )
+const NoMatch = () => {
+    return <div>No match</div>
 }
+
+export default NoMatch

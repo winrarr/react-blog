@@ -2,13 +2,13 @@ import { Route, Routes } from 'react-router-dom'
 import { UserLevel } from './@types/auth'
 import Layout from './components/Layout'
 import RequireAuth from './components/RequireAuth'
-import { Admin } from './pages/Admin'
-import { Dashboard } from './pages/Dashboard'
-import { HomePage } from './pages/HomePage'
-import LoginPage from './pages/LoginPage'
-import { NoMatch } from './pages/NoMatch'
-import { Unauthorized } from './pages/Unauthorised'
-import NewBlogPost from './pages/NewBlogPost'
+import Admin from './pages/Admin'
+import Dashboard from './pages/Dashboard'
+import HomePage from './pages/HomePage'
+import AuthPage from './pages/AuthPage'
+import NoMatch from './pages/NoMatch'
+import Unauthorized from './pages/Unauthorized'
+import NewBlog from './pages/NewBlog'
 import PersistLogin from './components/PersistLogin'
 
 function App() {
@@ -16,10 +16,9 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         {/* public routes */}
-        <Route path="/" element={<HomePage />} />
+        <Route index element={<HomePage />} />
+        <Route path="login" element={<AuthPage />} />
         <Route path="unauthorised" element={<Unauthorized />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="newblog" element={<NewBlogPost />} />
 
         {/* private routes */}
         <Route element={<PersistLogin />}>
@@ -29,6 +28,7 @@ function App() {
 
           <Route element={<RequireAuth requiredUserLevel={UserLevel.ADMIN} />}>
             <Route path="admin" element={<Admin />} />
+            <Route path="newblog" element={<NewBlog />} />
           </Route>
         </Route>
 

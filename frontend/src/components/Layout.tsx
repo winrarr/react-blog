@@ -1,14 +1,13 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "./Navbar";
+import { Outlet } from "react-router-dom"
+import Navbar from "./Navbar/Navbar"
 
 const Layout = () => {
-  // try using main instead of div
   return (
     <>
       <Navbar />
-      <div className="container">
+      <main>
         <Outlet />
-      </div>
+      </main>
     </>
   )
 }
