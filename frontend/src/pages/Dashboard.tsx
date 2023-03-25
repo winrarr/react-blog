@@ -12,20 +12,14 @@ export function Dashboard() {
 
   useEffect(() => {
     let isMounted = true
-    // const controller = new AbortController()
 
     const getUsers = async () => {
-      // const response = await axiosPrivate.get<User[]>("/users", {
-      //   signal: controller.signal
-      // })
       const response = await axiosPrivate.get<User[]>("/users")
-      console.log("hej")
 
       if (response.status == HttpStatusCode.Ok) {
-        console.log("a")
+        console.log(response.data)
         isMounted && setUsers(response.data)
       } else {
-        console.log("b")
         navigate('/login', { state: { from: location }, replace: true })
       }
     }
@@ -34,7 +28,6 @@ export function Dashboard() {
 
     return () => {
       isMounted = false
-      // controller.abort()
     }
   }, [])
 

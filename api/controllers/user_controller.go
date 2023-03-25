@@ -13,7 +13,7 @@ import (
 
 // GET /users
 func GetAllUsers(c *gin.Context) {
-	var users []models.DBUser
+	var users = []models.DBUser{}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

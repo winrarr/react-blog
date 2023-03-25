@@ -101,7 +101,7 @@ func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessToken
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err := database.UserCollection.InsertOne(ctx, DBUser)
+	_, err := database.UserCollection.UpdateOne(ctx, bson.M{"username": DBUser.Username}, bson.M{"$set": bson.M{"refreshtokenexp": DBUser.RefreshTokenExp}})
 	if err != nil {
 		return nil, InternalError
 	}
