@@ -14,8 +14,8 @@ type Credentials struct {
 }
 
 type DBUser struct {
-	Username     string
-	HSPassword   []byte
-	UserLevel    UserLevel
-	RefreshToken string
+	Username                   string
+	HSPassword                 []byte
+	UserLevel                  UserLevel
+	RefreshTokenWithExpiration RefreshTokenWithExpiration
 }

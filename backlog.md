@@ -1,12 +1,11 @@
 # Main quest
 
-- Make login persistent
 - Add Google login
 - Make proper logout
 
 # Side quests
 
-- I think remove userLvel from AuthResponse?
+- I think remove userLevel from AuthResponse?
 - Look into abort controller with axios
 - Check return types of RefreshToken in backend
 - Check type/interface conventions and clean up imports in frontend
@@ -14,3 +13,7 @@
 - Clean up structs in backend
 - Maybe make AccessToken, RequestToken types (string) in backend
 - Look into git submodules for project structure
+
+# Completed quests
+
+- Make login persistent

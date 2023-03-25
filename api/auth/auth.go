@@ -18,8 +18,8 @@ type Auth struct {
 }
 
 type sessionInfo struct {
-	accessToken AccessToken
-	expiresAt   time.Time
+	accessToken string
+	expiresAt   int64
 	userLevel   models.UserLevel
 }
 
@@ -42,12 +42,13 @@ func NewUser(username string, password string) (*Auth, StatusMessage) {
 	}
 
 	// save in database and return auth
-	refreshToken := newRefreshToken(username)
+	userLevel := models.User
+	refreshTokenWithExpiration, accessTokenWithExpiration := newTokens(username, userLevel)
 	DBUser := models.DBUser{
-		Username:     username,
-		HSPassword:   HSPassword,
-		UserLevel:    models.User,
-		RefreshToken: refreshToken,
+		Username:                   username,
+		HSPassword:                 HSPassword,
+		UserLevel:                  userLevel,
+		RefreshTokenWithExpiration: refreshTokenWithExpiration,
 	}
 
 	_, err = database.UserCollection.InsertOne(ctx, DBUser)
@@ -55,16 +56,15 @@ func NewUser(username string, password string) (*Auth, StatusMessage) {
 		return nil, InternalError
 	}
 
-	refreshToken, accessToken := newTokens(username, DBUser.UserLevel)
 	sessions[username] = sessionInfo{
-		accessToken: accessToken,
-		expiresAt:   accessToken.ExpiresAt,
+		accessToken: accessTokenWithExpiration.Token,
+		expiresAt:   accessTokenWithExpiration.ExpiresAt,
 		userLevel:   DBUser.UserLevel,
 	}
 
 	auth := Auth{
-		RefreshToken: refreshToken,
-		AccessToken:  accessToken.Token,
+		RefreshToken: refreshTokenWithExpiration.Token,
+		AccessToken:  accessTokenWithExpiration.Token,
 		UserLevel:    DBUser.UserLevel,
 	}
 
@@ -89,30 +89,30 @@ func CheckUser(username string, password string) (*Auth, StatusMessage) {
 	}
 
 	// update refresh token and return auth
-	refreshToken, accessToken := newTokens(username, DBUser.UserLevel)
+	refreshTokenWithExpiration, accessTokenWithExpiration := newTokens(username, DBUser.UserLevel)
 
-	DBUser.RefreshToken = refreshToken
+	DBUser.RefreshTokenWithExpiration = refreshTokenWithExpiration
 	_, err = database.UserCollection.InsertOne(ctx, DBUser)
 	if err != nil {
 		return nil, InternalError
 	}
 
 	sessions[username] = sessionInfo{
-		accessToken: accessToken,
-		expiresAt:   accessToken.ExpiresAt,
+		accessToken: accessTokenWithExpiration.Token,
+		expiresAt:   accessTokenWithExpiration.ExpiresAt,
 		userLevel:   DBUser.UserLevel,
 	}
 
 	auth := Auth{
-		RefreshToken: refreshToken,
-		AccessToken:  accessToken.Token,
+		RefreshToken: refreshTokenWithExpiration.Token,
+		AccessToken:  accessTokenWithExpiration.Token,
 		UserLevel:    DBUser.UserLevel,
 	}
 
 	return &auth, Success
 }
 
-func RefreshToken(tokenString string) (*Auth, StatusMessage) {
+func RefreshAccessToken(tokenString string) (*Auth, StatusMessage) {
 	claims, err := ParseRefreshToken(tokenString)
 	if err != nil {
 		return nil, InvalidToken
@@ -129,23 +129,47 @@ func RefreshToken(tokenString string) (*Auth, StatusMessage) {
 		return nil, UserDoesNotExist
 	}
 
-	refreshToken, accessToken := newTokens(username, DBUser.UserLevel)
+	refreshTokenWithExpiration, accessTokenWithExpiration := newTokens(username, DBUser.UserLevel)
 
-	DBUser.RefreshToken = refreshToken
+	DBUser.RefreshTokenWithExpiration = refreshTokenWithExpiration
 	_, err = database.UserCollection.InsertOne(ctx, DBUser)
 	if err != nil {
 		return nil, InternalError
 	}
 
 	sessions[username] = sessionInfo{
-		accessToken: accessToken,
-		expiresAt:   accessToken.ExpiresAt,
+		accessToken: accessTokenWithExpiration.Token,
+		expiresAt:   accessTokenWithExpiration.ExpiresAt,
+		userLevel:   DBUser.UserLevel,
+	}
+
+	auth := Auth{
+		RefreshToken: refreshTokenWithExpiration.Token,
+		AccessToken:  accessTokenWithExpiration.Token,
+		UserLevel:    DBUser.UserLevel,
+	}
+
+	return &auth, Success
+}
+
+func updateUserAndSessions(DBUser models.DBUser, accessTokenWithExpiration models.AccessTokenWithExpiration, refreshToken string) (*Auth, StatusMessage) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	_, err := database.UserCollection.InsertOne(ctx, DBUser)
+	if err != nil {
+		return nil, InternalError
+	}
+
+	sessions[DBUser.Username] = sessionInfo{
+		accessToken: accessTokenWithExpiration.Token,
+		expiresAt:   accessTokenWithExpiration.ExpiresAt,
 		userLevel:   DBUser.UserLevel,
 	}
 
 	auth := Auth{
 		RefreshToken: refreshToken,
-		AccessToken:  accessToken.Token,
+		AccessToken:  accessTokenWithExpiration.Token,
 		UserLevel:    DBUser.UserLevel,
 	}
 
@@ -170,7 +194,11 @@ func VerifyAccessToken(authHeader string, requiredUserLevel models.UserLevel) bo
 		return false
 	}
 
-	if sessionInfo.expiresAt.Before(time.Now()) {
+	if tokenString != sessionInfo.accessToken {
+		return false
+	}
+
+	if sessionInfo.expiresAt < time.Now().Unix() {
 		return false
 	}
 

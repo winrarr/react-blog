@@ -21,24 +21,23 @@ func (c AccessTokenClaims) Valid() error {
 	return c.StandardClaims.Valid()
 }
 
-// tokens
+// expiration times
 
 const (
-	RefreshTokenExpiresIn time.Duration = time.Hour * 24
-	AccessTokenExpiresIn  time.Duration = time.Minute * 2
+	RefreshTokenExpirationTime time.Duration = time.Hour * 24
+	AccessTokenExpirationTime  time.Duration = time.Minute * 2
 )
 
-func newTokens(username string, userLevel models.UserLevel) (string, AccessToken) {
-	refreshToken := newRefreshToken(username)
-	accessToken := newAccessToken(username, userLevel)
-	return refreshToken, accessToken
+func newTokens(username string, userLevel models.UserLevel) (models.RefreshTokenWithExpiration, models.AccessTokenWithExpiration) {
+	return newRefreshToken(username), newAccessToken(username, userLevel)
 }
 
-func newRefreshToken(username string) string {
-	currentTime := time.Now()
+func newRefreshToken(username string) models.RefreshTokenWithExpiration {
+	issuedAt := time.Now()
+	expiresAt := issuedAt.Add(RefreshTokenExpirationTime).Unix()
 	claims := jwt.StandardClaims{
-		ExpiresAt: currentTime.Add(RefreshTokenExpiresIn).Unix(),
-		IssuedAt:  currentTime.Unix(),
+		ExpiresAt: expiresAt,
+		IssuedAt:  issuedAt.Unix(),
 		Issuer:    "api",
 		Subject:   username,
 	}
@@ -47,23 +46,21 @@ func newRefreshToken(username string) string {
 	if err != nil {
 		log.Fatal("unable to create refresh token: ", err)
 	}
-	return tokenString
+	return models.RefreshTokenWithExpiration{
+		Token:     tokenString,
+		ExpiresAt: expiresAt,
+	}
 }
 
-type AccessToken struct {
-	Token     string
-	ExpiresAt time.Time
-}
-
-func newAccessToken(username string, userLevel models.UserLevel) AccessToken {
-	currentTime := time.Now()
-	expiresAt := currentTime.Add(AccessTokenExpiresIn)
+func newAccessToken(username string, userLevel models.UserLevel) models.AccessTokenWithExpiration {
+	issuedAt := time.Now()
+	expiresAt := issuedAt.Add(AccessTokenExpirationTime).Unix()
 	claims := AccessTokenClaims{
 		UserLevel: userLevel,
 
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expiresAt.Unix(),
-			IssuedAt:  currentTime.Unix(),
+			ExpiresAt: expiresAt,
+			IssuedAt:  issuedAt.Unix(),
 			Issuer:    "api",
 			Subject:   username,
 		},
@@ -73,7 +70,7 @@ func newAccessToken(username string, userLevel models.UserLevel) AccessToken {
 	if err != nil {
 		log.Fatal("unable to create access token token: ", err)
 	}
-	return AccessToken{
+	return models.AccessTokenWithExpiration{
 		Token:     tokenString,
 		ExpiresAt: expiresAt,
 	}
@@ -86,6 +83,20 @@ func ParseRefreshToken(tokenString string) (*jwt.StandardClaims, error) {
 	}
 
 	claims, ok := token.Claims.(*jwt.StandardClaims)
+	if !ok {
+		return nil, errors.New("incorrect format for refresh token claims")
+	}
+
+	return claims, nil
+}
+
+func ParseToken[T *jwt.Claims](tokenString string, claims T, secretName string) (T, error) {
+	token, err := jwt.ParseWithClaims(tokenString, *claims, keyFunc(secretName))
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := token.Claims.(T)
 	if !ok {
 		return nil, errors.New("incorrect format for claims")
 	}
@@ -101,7 +112,7 @@ func ParseAccessToken(tokenString string) (*AccessTokenClaims, error) {
 
 	claims, ok := token.Claims.(*AccessTokenClaims)
 	if !ok {
-		return nil, errors.New("incorrect format for claims")
+		return nil, errors.New("incorrect format for access token claims")
 	}
 
 	return claims, nil

@@ -18,11 +18,15 @@ func init() {
 	defer cancel()
 	database.UserCollection.Drop(ctx)
 	bytes, _ := bcrypt.GenerateFromPassword([]byte("a"), bcrypt.DefaultCost)
+	refreshTokenWithExpiration := models.RefreshTokenWithExpiration{
+		Token:     "refresh",
+		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+	}
 	user := models.DBUser{
-		Username:     "a",
-		HSPassword:   bytes,
-		UserLevel:    models.Admin,
-		RefreshToken: "refresh",
+		Username:                   "a",
+		HSPassword:                 bytes,
+		UserLevel:                  models.Admin,
+		RefreshTokenWithExpiration: refreshTokenWithExpiration,
 	}
 	database.UserCollection.InsertOne(ctx, user)
 }
@@ -66,7 +70,7 @@ func Login(c *gin.Context) {
 }
 
 func sendAuth(authObj *auth.Auth, httpStatus int, c *gin.Context) {
-	c.SetCookie("refreshToken", authObj.RefreshToken, int(auth.RefreshTokenExpiresIn), "/", "localhost", true, true)
+	c.SetCookie("refreshToken", authObj.RefreshToken, int(auth.RefreshTokenExpirationTime), "/", "localhost", true, true)
 
 	authResponse := models.AuthResponse{
 		AccessToken: authObj.AccessToken,
@@ -84,7 +88,7 @@ func Refresh(c *gin.Context) {
 		return
 	}
 
-	auth, status := auth.RefreshToken(tokenString)
+	auth, status := auth.RefreshAccessToken(tokenString)
 	httpStatus, authed := utils.RefreshStatusToHttpStatus(status)
 
 	if authed {
