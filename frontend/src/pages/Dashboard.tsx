@@ -1,29 +1,32 @@
-import { HttpStatusCode } from "axios";
+import axios, { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { User } from "../@types/users";
+import { Blog } from "../@types/blog";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export function Dashboard() {
-  const [users, setUsers] = useState<User[]>([])
+  const [blogs, setBlogs] = useState<Blog[]>([])
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
     let isMounted = true
+    let source = axios.CancelToken.source()
 
-    const getUsers = async () => {
-      const response = await axiosPrivate.get<User[]>("/users")
+    const getBlogs = async () => {
+      const response = await axiosPrivate.get<Blog[]>("/blogs", {
+        cancelToken: source.token,
+      })
 
       if (response.status == HttpStatusCode.Ok) {
-        isMounted && setUsers(response.data)
+        isMounted && setBlogs(response.data)
       } else {
         navigate('/login', { state: { from: location }, replace: true })
       }
     }
 
-    getUsers()
+    getBlogs()
 
     return () => {
       isMounted = false
@@ -32,13 +35,13 @@ export function Dashboard() {
 
   return (
     <article>
-      <h2>Users List</h2>
-      {users.length
+      <h2>Blog posts</h2>
+      {blogs
         ? (
           <ul>
-            {users.map((user, i) => <li key={i}>{user.Username}</li>)}
+            {blogs.map((blog, i) => <li key={i}>{JSON.stringify(blog)}</li>)}
           </ul>
-        ) : <p>No users to display</p>
+        ) : <p>No blogs to display</p>
       }
     </article>
   )

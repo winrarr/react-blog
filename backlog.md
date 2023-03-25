@@ -5,8 +5,7 @@
 
 # Side quests
 
-- Look into abort controller with axios
-- Check type/interface conventions and clean up imports in frontend
+- Maybe make axios implementation better
 - Look into git submodules for project structure
 
 # Completed main quests

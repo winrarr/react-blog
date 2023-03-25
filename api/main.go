@@ -15,6 +15,5 @@ func main() {
 
 func addRoutes(r *gin.Engine) {
 	routes.AuthRoutes(r)
-	routes.UserRoutes(r)
 	routes.BlogRoutes(r)
 }

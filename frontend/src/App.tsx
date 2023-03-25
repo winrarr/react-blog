@@ -23,11 +23,11 @@ function App() {
 
         {/* private routes */}
         <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth requiredUserLevel={UserLevel.User} />}>
+          <Route element={<RequireAuth requiredUserLevel={UserLevel.USER} />}>
             <Route path="dashboard" element={<Dashboard />} />
           </Route>
 
-          <Route element={<RequireAuth requiredUserLevel={UserLevel.Admin} />}>
+          <Route element={<RequireAuth requiredUserLevel={UserLevel.ADMIN} />}>
             <Route path="admin" element={<Admin />} />
           </Route>
         </Route>

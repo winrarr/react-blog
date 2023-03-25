@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
+import { ChangeEvent, useState } from "react"
 
 type attr = {
     value: string,

@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <Link id="home-link" to="/dashboard">Home</Link>
-      {auth && jwtDecode<AccessTokenClaims>(auth.accessToken).userLevel >= UserLevel.Admin &&
+      {auth && jwtDecode<AccessTokenClaims>(auth.accessToken).userLevel >= UserLevel.ADMIN &&
         <Link id="new-blog-link" to="/newblog">New blog</Link>}
       {authLink}
     </nav>

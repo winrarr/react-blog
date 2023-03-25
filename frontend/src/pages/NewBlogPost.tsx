@@ -1,9 +1,8 @@
 import { HttpStatusCode } from "axios"
-import { blog } from "../@types/blog"
-import axios from "../axios/axios"
+import { Blog } from "../@types/blog"
 import useAuth from "../hooks/useAuth"
 import useInput from "../hooks/useInput"
-import jwt_decode, { JwtPayload } from 'jwt-decode'
+import jwt_decode from 'jwt-decode'
 import { AccessTokenClaims } from "../@types/auth"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 
@@ -23,7 +22,7 @@ const NewBlogPost = () => {
             return
         }
 
-        const { status } = await axiosPrivate.post<blog>("/newblog", {
+        const { status } = await axiosPrivate.post<Blog>("/newblog", {
             title,
             author: jwt_decode<AccessTokenClaims>(auth.accessToken).standardClaims.sub,
             body,

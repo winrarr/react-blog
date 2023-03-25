@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import App from './App'
 import { AuthProvider } from './context/AuthProvider'
 import './styles/main.scss'
-import dotenv from 'dotenv'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
 if (import.meta.env.PROD) {

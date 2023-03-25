@@ -5,7 +5,7 @@ export type Auth = {
     accessToken: string,
 }
 
-export interface AccessTokenClaims {
+export type AccessTokenClaims = {
     standardClaims: JwtPayload,
     userLevel: UserLevel,
 }
@@ -19,7 +19,7 @@ export type AuthContextType = {
 }
 
 export enum UserLevel {
-    Guest,
-    User,
-    Admin,
+    GUEST,
+    USER,
+    ADMIN,
 }
