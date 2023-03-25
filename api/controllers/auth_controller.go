@@ -74,7 +74,6 @@ func sendAuth(authObj *models.Auth, httpStatus int, c *gin.Context) {
 
 	authResponse := models.AuthResponse{
 		AccessToken: authObj.AccessToken,
-		UserLevel:   authObj.UserLevel,
 	}
 
 	c.JSON(httpStatus, authResponse)

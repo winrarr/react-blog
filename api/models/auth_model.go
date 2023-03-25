@@ -34,6 +34,5 @@ type Auth struct {
 
 // response
 type AuthResponse struct {
-	AccessToken string    `json:"accessToken"`
-	UserLevel   UserLevel `json:"userLevel"`
+	AccessToken string `json:"accessToken"`
 }

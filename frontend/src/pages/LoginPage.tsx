@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEventHandler, InputHTMLAttributes, useReducer, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { AuthResponse } from "../@types/auth"
+import { Auth } from "../@types/auth"
 import axios from "../axios/axios"
 import useAuth from "../hooks/useAuth"
 import { HttpStatusCode } from "axios"
@@ -42,7 +42,7 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<AuthResponse>("/login", {
+    const { data, status } = await axios.post<Auth>("/login", {
       username: loginUsername,
       password: loginPassword,
     }, {
@@ -60,7 +60,7 @@ const LoginPage = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<AuthResponse>("/signup", {
+    const { data, status } = await axios.post<Auth>("/signup", {
       username: signupUsername,
       password: signupPassword1,
     }, {

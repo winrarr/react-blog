@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useState } from "react"
-import { AuthContextType, AuthResponse } from "../@types/auth"
+import { AuthContextType, Auth } from "../@types/auth"
 import useLocalStorage from "../hooks/useLocalStorage"
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [auth, setAuth] = useState<AuthResponse | null>(null)
+  const [auth, setAuth] = useState<Auth | null>(null)
   const clearAuth = () => setAuth(null)
 
   const [persist, setPersist] = useLocalStorage("persist", false)

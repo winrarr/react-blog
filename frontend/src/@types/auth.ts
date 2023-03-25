@@ -1,9 +1,8 @@
 import { JwtPayload } from "jwt-decode";
 import { Dispatch, SetStateAction } from "react";
 
-export type AuthResponse = {
+export type Auth = {
     accessToken: string,
-    userLevel: UserLevel,
 }
 
 export interface AccessTokenClaims {
@@ -12,8 +11,8 @@ export interface AccessTokenClaims {
 }
 
 export type AuthContextType = {
-    auth: AuthResponse | null,
-    setAuth: Dispatch<SetStateAction<AuthResponse | null>>,
+    auth: Auth | null,
+    setAuth: Dispatch<SetStateAction<Auth | null>>,
     clearAuth: () => void,
     persist: boolean,
     setPersist: (dispatcher: (prev: boolean) => boolean) => void,
