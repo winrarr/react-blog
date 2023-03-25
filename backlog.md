@@ -1,3 +1,7 @@
+# IMPORTANT
+
+- Delete expired sessions
+
 # Main quest
 
 - Add Google login
