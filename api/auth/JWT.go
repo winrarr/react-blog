@@ -90,20 +90,6 @@ func ParseRefreshToken(tokenString string) (*jwt.StandardClaims, error) {
 	return claims, nil
 }
 
-func ParseToken[T *jwt.Claims](tokenString string, claims T, secretName string) (T, error) {
-	token, err := jwt.ParseWithClaims(tokenString, *claims, keyFunc(secretName))
-	if err != nil {
-		return nil, err
-	}
-
-	claims, ok := token.Claims.(T)
-	if !ok {
-		return nil, errors.New("incorrect format for claims")
-	}
-
-	return claims, nil
-}
-
 func ParseAccessToken(tokenString string) (*AccessTokenClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaims{}, keyFunc("ACCESS_TOKEN"))
 	if err != nil {
