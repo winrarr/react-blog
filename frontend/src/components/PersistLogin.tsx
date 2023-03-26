@@ -4,31 +4,13 @@ import useAuth from '../hooks/useAuth'
 import useRefreshToken from '../hooks/useRefreshToken'
 
 export const PersistLogin = () => {
-    const [isLoading, setIsLoading] = useState(true)
     const refreshToken = useRefreshToken()
     const { auth, persist } = useAuth()
 
-    useEffect(() => {
-        let isMounted = true
-
-        const refresh = async () => {
-            await refreshToken()
-            isMounted && setIsLoading(false)
-        }
-
-        !auth && persist ? refresh() : setIsLoading(false)
-
-        return () => { isMounted = false }
-    }, [])
+    !auth && persist && refreshToken()
 
     return (
-        <>
-            {!persist
-                ? <Outlet />
-                : isLoading
-                    ? <p>Loading...</p>
-                    : <Outlet />}
-        </>
+        <Outlet />
     )
 }
 

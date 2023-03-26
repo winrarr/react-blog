@@ -135,6 +135,8 @@ func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 	}
 
 	if DBUser.RefreshTokenExp.Token != tokenString {
+		println(DBUser.RefreshTokenExp.Token)
+		println(tokenString)
 		return nil, InvalidToken
 	}
 

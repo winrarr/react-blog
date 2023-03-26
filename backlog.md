@@ -1,3 +1,8 @@
+# IMPORTANT
+
+- Make sure backend checks if refresh token is blank when user refreshes
+- Figure out why refresh tokens are not working
+
 # Main quest
 
 - Add Google login
