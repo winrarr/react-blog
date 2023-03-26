@@ -129,14 +129,16 @@ func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 		return nil, UserDoesNotExist
 	}
 
+	if DBUser.RefreshTokenExp.Token == "" {
+		return nil, InvalidToken
+	}
+
 	// check that refresh token is valid
 	if DBUser.RefreshTokenExp.ExpiresAt < time.Now().Unix() {
 		return nil, RefreshTokenExpired
 	}
 
 	if DBUser.RefreshTokenExp.Token != tokenString {
-		println(DBUser.RefreshTokenExp.Token)
-		println(tokenString)
 		return nil, InvalidToken
 	}
 
