@@ -98,13 +98,10 @@ const AuthPage = () => {
         <form className="login-htm" onSubmit={handleLogin}>
           <FormField placeholder="Username" name="password" {...loginUsernameAttr} />
           <FormField placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
-          <div className="remember-me">
-            <label className="switch">
-              <input type="checkbox" onChange={togglePersist} checked={persist} />
-              <span className="slider round" />
-            </label>
-            <label>Remember me</label>
-          </div>
+          <label className="remember-me">Remember me
+            <input type="checkbox" defaultChecked onChange={togglePersist} />
+            <span className="checkmark"></span>
+          </label>
           <input type="submit" value="Sign In" className={`${signInValid() ? "" : "invalid"}`} />
 
           <div className="hr"></div>
