@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -10,28 +9,16 @@ import (
 // TODO: make env variables constants instead of loading every time
 
 func EnvMongoURI() string {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
+	_ = godotenv.Load("../.env")
 	return os.Getenv("MONGOURI")
 }
 
 func EnvSecret(secretName string) []byte {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
+	_ = godotenv.Load("../.env")
 	return []byte(os.Getenv(secretName + "_SECRET"))
 }
 
 func EnvIsProductionMode() bool {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
+	_ = godotenv.Load("../.env")
 	return os.Getenv("MODE") == "production"
 }
