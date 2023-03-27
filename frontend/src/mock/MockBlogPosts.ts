@@ -6,12 +6,12 @@ const blogPosts = () => {
     {
       title: "Introduction",
       author: "Rasmus",
-      body: "Below is some basic information about the project. The post right below includes login credentials for testing the app. Below that, there is a short explanation of the project followed by a comment on the current state of the project."
+      body: "This website is the React frontend of the project running on mock data. The point is to have something concrete to look at without having to clone and run the entire repo. The post right below includes login credentials for testing the app in its mock state. Below that, there is a short explanation of the project followed by a comment on the current state of the project."
     },
     {
       title: "Mock Users",
       author: "Rasmus",
-      body: "The backend is fully functional with authentication and authorisation through JWT refresh and access tokens, however, it is not deployed so the frontend runs on mock data. Logging in with\n\nUsername: admin\nPassword: admin\n\ngives you admin privileges while any other login will give you regular user privileges. Note that creating a new blog is only possible as admin in the live version, but for the mock, this feature does not work. Furthermore, persistent login does not work in the moce version since it uses a secure HTTP-only cookie."
+      body: "The backend is fully functional with authentication and authorisation through JWT refresh and access tokens, however, it is not deployed so the frontend runs on mock data. Logging in with\n\nUsername: admin\nPassword: admin\n\ngives you admin privileges while any other login will give you regular user privileges. Note that creating a new blog is only possible as admin in the live version, but for the mock, this feature does not work. Furthermore, persistent login does not work in the mock version since it uses a secure HTTP-only cookie."
     },
     {
       title: "React Blog",
