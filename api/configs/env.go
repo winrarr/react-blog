@@ -1,8 +1,6 @@
 package configs
 
 import (
-	"os"
-
 	"github.com/joho/godotenv"
 )
 
@@ -10,15 +8,17 @@ import (
 
 func EnvMongoURI() string {
 	_ = godotenv.Load("../.env")
-	return os.Getenv("MONGOURI")
+	return "mongodb+srv://api:fadervor123@survey.gdlc0m1.mongodb.net/?retryWrites=true&w=majority"
 }
 
 func EnvSecret(secretName string) []byte {
-	_ = godotenv.Load("../.env")
-	return []byte(os.Getenv(secretName + "_SECRET"))
+	if secretName == "REFRESH_TOKEN" {
+		return []byte("refreshsecret")
+	} else {
+		return []byte("accesssecret")
+	}
 }
 
 func EnvIsProductionMode() bool {
-	_ = godotenv.Load("../.env")
-	return os.Getenv("MODE") == "production"
+	return true
 }
