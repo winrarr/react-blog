@@ -36,16 +36,16 @@ const HomePage = () => {
       <h1>Blog posts</h1>
       {blogs
         ? (
-          <ul>
-            {blogs.map((blog, i) =>
-              <li key={i}>
-                <article className="blog-post">
-                  <h2>{blog.title}</h2>
-                  <p>{blog.body}</p>
-                </article>
-              </li>)}
-          </ul>
-          // <MockBlogPosts />
+          // <ul>
+          //   {blogs.map((blog, i) =>
+          //     <li key={i}>
+          //       <article className="blog-post">
+          //         <h2>{blog.title}</h2>
+          //         <p>{blog.body}</p>
+          //       </article>
+          //     </li>)}
+          // </ul>
+          <MockBlogPosts />
         ) : <p>No blogs posts yet</p>
       }
     </div>

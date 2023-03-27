@@ -32,37 +32,19 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<Auth>("/login", {
-      username: loginUsername,
-      password: loginPassword,
-    }, {
-      withCredentials: true,
+    setAuth({
+      accessToken: "mockAccessToken"
     })
-
-    if (status === HttpStatusCode.Ok) {
-      setAuth(data)
-      navigate(from, { replace: true })
-    } else {
-      alert("error logging in")
-    }
+    navigate(from, { replace: true })
   }
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<Auth>("/signup", {
-      username: signupUsername,
-      password: signupPassword1,
-    }, {
-      withCredentials: true,
+    setAuth({
+      accessToken: "mockAccessToken"
     })
-
-    if (status === HttpStatusCode.Created) {
-      setAuth(data)
-      navigate(from, { replace: true })
-    } else {
-      alert("error signing in")
-    }
+    navigate(from, { replace: true })
   }
 
   const togglePersist = () => {
