@@ -32,8 +32,12 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    const accessToken = loginUsername == "admin" && loginPassword == "admin"
+      ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTGV2ZWwiOjIsInN0YW5kYXJkQ2xhaW1zIjp7ImV4cCI6MTY3OTk1ODI2NiwiaWF0IjoxNjc5OTU4MTQ2LCJpc3MiOiJhcGkiLCJzdWIiOiJhIn19.jUqeoWPZx06NXzqpTezj9b6sPqJMsQK4gT1wiv6Om2Q"
+      : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTGV2ZWwiOjEsInN0YW5kYXJkQ2xhaW1zIjp7ImV4cCI6MTY3OTk1ODM1MCwiaWF0IjoxNjc5OTU4MjMwLCJpc3MiOiJhcGkiLCJzdWIiOiJiIn19._Yv8QwQc1J6Sy7ROQOh77GgH1jeHVjxVSHql2KZwoYY"
+
     setAuth({
-      accessToken: "mockAccessToken"
+      accessToken,
     })
     navigate(from, { replace: true })
   }
@@ -41,10 +45,7 @@ const AuthPage = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    setAuth({
-      accessToken: "mockAccessToken"
-    })
-    navigate(from, { replace: true })
+    alert("Unfortunately, registering does not work with the mock data")
   }
 
   const togglePersist = () => {

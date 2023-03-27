@@ -24,7 +24,9 @@ const HomePage = () => {
       }
     }
 
-    getBlogs()
+    // getBlogs()
+
+    setBlogs(MockBlogPosts)
 
     return () => {
       isMounted = false
@@ -45,7 +47,15 @@ const HomePage = () => {
           //       </article>
           //     </li>)}
           // </ul>
-          <MockBlogPosts />
+          <ul>
+            {blogs.map((blog, i) =>
+              <li key={1000 * i}>
+                <article key={1000 * i + 1} className="blog-post">
+                  <h2 key={1000 * i + 2}>{blog.title}</h2>
+                  {blog.body.split("\n").map((s, j) => s ? <p key={1000 * i + 3 + j * 2}>{s}</p> : <br key={1000 * i + 3 + j * 2 + 1} />)}
+                </article>
+              </li>)}
+          </ul>
         ) : <p>No blogs posts yet</p>
       }
     </div>

@@ -11,7 +11,7 @@ const blogPosts = () => {
     {
       title: "Mock Users",
       author: "Rasmus",
-      body: "The backend is fully functional with authentication and authorisation through JWT refresh and access tokens, however, it is not deployed so the frontend runs on mock data. There are two active users in the mock:\n\nStandard user\nUsername: user\nPassword: user\n\n Admin user\nUsername: admin\nPassword: admin\n\nNote that creating a new blog is only possible as admin in the live version, but for the mock, this feature does not work."
+      body: "The backend is fully functional with authentication and authorisation through JWT refresh and access tokens, however, it is not deployed so the frontend runs on mock data. Logging in with\n\nUsername: admin\nPassword: admin\n\ngives you admin privileges while any other login will give you regular user privileges. Note that creating a new blog is only possible as admin in the live version, but for the mock, this feature does not work. Furthermore, persistent login does not work in the moce version since it uses a secure HTTP-only cookie."
     },
     {
       title: "React Blog",
@@ -25,17 +25,7 @@ const blogPosts = () => {
     },
   ]
 
-  return (
-    <ul>
-      {blogs.map((blog, i) =>
-        <li key={i}>
-          <article className="blog-post">
-            <h2>{blog.title}</h2>
-            {blog.body.split("\n").map(s => s ? <p>{s}</p> : <br />)}
-          </article>
-        </li>)}
-    </ul>
-  )
+  return blogs
 }
 
 export default blogPosts
