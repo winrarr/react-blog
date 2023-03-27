@@ -12,12 +12,9 @@ const HomePage = () => {
 
   useEffect(() => {
     let isMounted = true
-    let source = axios.CancelToken.source()
 
     const getBlogs = async () => {
-      const response = await axiosPrivate.get<Blog[]>("/blogs", {
-        cancelToken: source.token,
-      })
+      const response = await axiosPrivate.get<Blog[]>("/blogs")
 
       if (response.status == HttpStatusCode.Ok) {
         isMounted && setBlogs(response.data)
@@ -34,16 +31,22 @@ const HomePage = () => {
   }, [])
 
   return (
-    <article>
-      <h2>Blog posts</h2>
+    <div className="home-page">
+      <h1>Blog posts</h1>
       {blogs
         ? (
           <ul>
-            {blogs.map((blog, i) => <li key={i}>{JSON.stringify(blog)}</li>)}
+            {blogs.map((blog, i) =>
+              <li key={i}>
+                <article className="blog-post">
+                  <h2>{blog.title}</h2>
+                  <p>{blog.body}</p>
+                </article>
+              </li>)}
           </ul>
-        ) : <p>No blogs to display</p>
+        ) : <p>No blogs posts yet</p>
       }
-    </article>
+    </div>
   )
 }
 

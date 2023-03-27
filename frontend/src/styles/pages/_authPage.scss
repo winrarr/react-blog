@@ -1,26 +1,25 @@
 @import "../helpers/colours";
 
-.login-container {
+.auth-container {
   min-width: 350px;
   max-width: 525px;
-  box-shadow: 0 12px 15px 5px color(grayscale, ddark), 0 17px 50px 0 color(grayscale, dark);
+  box-shadow: 0 0 15px 5px color(grayscale, ddark), 0 17px 50px 0 color(grayscale, dark);
   padding: 90px 70px;
 
-  & > input {
+  > input {
     display: none;
   }
 
-  & > label {
+  > label {
     font-size: 22px;
     text-transform: uppercase;
-    color: lighten(color(primary, base), 25%);
+    color: hsl(292, 100%, 50%);
     cursor: pointer;
     padding-bottom: 5px;
     margin-right: 17px;
 
     &:hover {
-      color: hsl(289, 20%, 82%);
-      color: lighten(color(primary, base), 40%);
+      color: hsl(292, 100%, 70%);
       transition: 0.2s ease;
     }
   }
@@ -28,20 +27,21 @@
   .active {
     margin-top: 6px;
     height: 2px;
-    background-color: color(primary, base);
+    background-color: hsl(292, 100%, 50%);
     transition: 0.25s;
   }
 
-  & > #login {
+  > #login-button {
     $displacement: -2px;
     $width: 79px;
 
     &:checked {
-      & ~ .active {
+      ~ .active {
         width: $width;
+        translate: $displacement;
       }
 
-      & ~ .login-form .login-htm {
+      ~ .login-form .login-htm {
         transform: rotate(0);
       }
     }
@@ -52,17 +52,17 @@
     }
   }
 
-  & > #signup {
+  > #signup-button {
     $displacement: 90px;
     $width: 94px;
 
     &:checked {
-      & ~ .active {
+      ~ .active {
         width: $width;
         translate: $displacement;
       }
 
-      & ~ .login-form .signup-htm {
+      ~ .login-form .signup-htm {
         transform: rotate(0);
       }
     }
@@ -74,9 +74,7 @@
   }
 
   input:checked + label {
-    color: color(primary, white);
-    border-color: color(primary, base);
-    transition: 0.7s ease;
+    color: hsl(292, 100%, 85%);
   }
 
   .login-form {
@@ -84,6 +82,7 @@
     position: relative;
 
     input[type="submit"] {
+      margin-top: 30px;
       text-transform: uppercase;
     }
 
@@ -91,26 +90,26 @@
       position: absolute;
     }
 
-    & > form {
+    > form {
       bottom: 0;
       transform: rotateY(180deg);
       backface-visibility: hidden;
       transition: all 0.4s linear;
 
-      & > input {
+      > input {
         margin-top: 15px;
         width: 100%;
-        padding: 15px 21px;
+        padding: 15px;
         border: none;
         border-radius: 25px;
-        background: rgba(255, 255, 255, 0.1);
+        background: hsla(0, 0%, 100%, 0.1);
       }
 
-      & label {
-        color: color(grayscale, llllight);
+      label {
+        color: hsla(0, 0%, 100%, 0.35);
       }
 
-      & > .form-field-label {
+      > .form-field-label {
         position: relative;
         margin-left: 20px;
         top: -31px;
@@ -121,47 +120,47 @@
         transition: 0.4s ease-out;
       }
 
-      & > .form-field-input:focus + .form-field-label,
-      & > .form-field-input:valid + .form-field-label {
+      > .form-field-input:focus + .form-field-label,
+      > .form-field-input:valid + .form-field-label {
         top: -65px;
         font-size: 13px;
-        color: desaturate(color(primary, base), 60%);
+        color: hsl(292, 100%, 70%);
       }
 
-      & > input[type="submit"] {
+      > input[type="submit"] {
         cursor: pointer;
         letter-spacing: 0.5ch;
-        border: 2px solid color(primary, base);
+        border: 2px solid hsl(292, 100%, 50%);
         background-color: transparent;
 
         &:hover {
-          background-color: color(primary, base);
-          box-shadow: 0 0 5px color(primary, base);
-          transition: 0.3s ease-out;
+          background-color: hsla(292, 100%, 50%, 0.03);
+          box-shadow: 0 0 3px hsl(292, 100%, 50%);
+          transition: 0.2s ease-out;
+        }
+
+        &.invalid {
+          pointer-events: none;
+          // border-color: hsl(292, 100%, 18%);
+          filter: brightness(0.45);
         }
       }
 
-      & > .invalid {
-        pointer-events: none;
-        filter: brightness(0.5) saturate(0.3);
-      }
-
-      & > .hr {
+      > .hr {
         height: 2px;
         margin: 40px 0;
-        background: rgba(255, 255, 255, 0.2);
+        background: hsla(0, 0%, 100%, 0.2);
       }
 
-      & > .footer {
+      > .footer {
         text-align: center;
 
-        & * {
-          text-decoration: none;
+        > a {
           cursor: pointer;
-          color: rgb(208, 173, 240);
+          color: hsla(0, 0%, 100%, 0.4);
 
           &:hover {
-            filter: brightness(120%);
+            color: hsla(0, 0%, 100%, 0.5);
             transition: 0.3s;
           }
         }
@@ -207,14 +206,8 @@
   transition: 0.4s;
 }
 
-$switch-color: hsl(293, 100%, 15%);
-
 input:checked + .slider {
-  background-color: $switch-color;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px $switch-color;
+  box-shadow: 0 0 2px 1px hsl(293, 100%, 50%);
 }
 
 input:checked + .slider:before {
@@ -232,8 +225,10 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.hej {
-  margin-bottom: 16px;
+.remember-me {
+  margin-top: 16px;
+  margin-left: 8px;
+  margin-bottom: 26px;
   display: flex;
   align-items: center;
 

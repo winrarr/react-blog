@@ -11,11 +11,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func init() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	database.BlogCollection.Drop(ctx)
-}
+// func init() {
+// 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+// 	defer cancel()
+// 	database.BlogCollection.Drop(ctx)
+// }
 
 // GET /blogs
 func GetAllBlogs(c *gin.Context) {

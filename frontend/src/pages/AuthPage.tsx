@@ -80,14 +80,14 @@ const AuthPage = () => {
   }
 
   return (
-    <div className="login-container">
+    <div className="auth-container">
 
       {/* switch buttons */}
-      <input id="login" type="radio" name="item" defaultChecked />
-      <label htmlFor="login">Log In</label>
+      <input id="login-button" type="radio" name="item" defaultChecked />
+      <label htmlFor="login-button">Log In</label>
 
-      <input id="signup" type="radio" name="item" />
-      <label htmlFor="signup">Sign Up</label>
+      <input id="signup-button" type="radio" name="item" />
+      <label htmlFor="signup-button">Sign Up</label>
 
       <div className="active"></div>
 
@@ -96,15 +96,15 @@ const AuthPage = () => {
 
         {/* log in */}
         <form className="login-htm" onSubmit={handleLogin}>
-          <div className="hej">
+          <FormField placeholder="Username" name="password" {...loginUsernameAttr} />
+          <FormField placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
+          <div className="remember-me">
             <label className="switch">
               <input type="checkbox" onChange={togglePersist} checked={persist} />
               <span className="slider round" />
             </label>
             <label>Remember me</label>
           </div>
-          <FormField placeholder="Username" name="password" {...loginUsernameAttr} />
-          <FormField placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
           <input type="submit" value="Sign In" className={`${signInValid() ? "" : "invalid"}`} />
 
           <div className="hr"></div>
