@@ -1,0 +1,22 @@
+$palette: (
+    base: hsl(267, 73%, 87%),
+    selected: hsl(267, 73%, 77%),
+);
+
+@function color($color, $alpha: 100%) {
+    @if map-has-key($palette, $color) {
+        $color: map-get($palette, $color);
+        @return rgba($color, $alpha);
+    }
+
+    @error "unknown color `#{$color}` in palette";
+    @return null;
+}
+
+@function black($alpha) {
+    @return rgba(0, 0, 0, $alpha);
+}
+
+@function white($alpha) {
+    @return rgba(255, 255, 255, $alpha);
+}

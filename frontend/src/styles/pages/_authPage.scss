@@ -1,10 +1,15 @@
-@import "../helpers/colours";
+@import "../helpers/colors";
 
 .auth-container {
   min-width: 350px;
   max-width: 525px;
-  box-shadow: 0 0 15px 5px color(grayscale, ddark), 0 17px 50px 0 color(grayscale, dark);
+  box-shadow: 0 0 15px 5px hsla(0, 0%, 0%, 90%);
+  background-color: hsla(0, 0%, 0%, 20%);
   padding: 90px 70px;
+
+  * {
+    color: white(0.6);
+  }
 
   > input {
     display: none;
@@ -13,13 +18,13 @@
   > label {
     font-size: 22px;
     text-transform: uppercase;
-    color: hsl(292, 100%, 50%);
+    color: color(base);
     cursor: pointer;
     padding-bottom: 5px;
     margin-right: 17px;
 
     &:hover {
-      color: hsl(292, 100%, 70%);
+      color: color(selected);
       transition: 0.2s ease;
     }
   }
@@ -27,7 +32,7 @@
   .active {
     margin-top: 6px;
     height: 2px;
-    background-color: hsl(292, 100%, 50%);
+    background-color: color(base);
     transition: 0.25s;
   }
 
@@ -74,7 +79,7 @@
   }
 
   input:checked + label {
-    color: hsl(292, 100%, 85%);
+    color: color(selected);
   }
 
   .login-form {
@@ -102,14 +107,11 @@
         padding: 15px;
         border: none;
         border-radius: 25px;
-        background: hsla(0, 0%, 100%, 0.1);
-      }
-
-      label {
-        color: hsla(0, 0%, 100%, 0.35);
+        background: white(0.1);
       }
 
       > .form-field-label {
+        color: white(0.35);
         position: relative;
         margin-left: 20px;
         top: -31px;
@@ -124,32 +126,31 @@
       > .form-field-input:valid + .form-field-label {
         top: -65px;
         font-size: 13px;
-        color: hsl(292, 100%, 70%);
+        color: color(base);
       }
 
       > input[type="submit"] {
         cursor: pointer;
         letter-spacing: 0.5ch;
-        border: 2px solid hsl(292, 100%, 50%);
+        border: 2px solid color(selected);
         background-color: transparent;
 
         &:hover {
-          background-color: hsla(292, 100%, 50%, 0.03);
-          box-shadow: 0 0 3px hsl(292, 100%, 50%);
+          background-color: color(selected, 0.03);
+          box-shadow: 0 0 3px color(selected);
           transition: 0.2s ease-out;
         }
 
         &.invalid {
           pointer-events: none;
-          // border-color: hsl(292, 100%, 18%);
-          filter: brightness(0.45);
+          filter: brightness(0.6);
         }
       }
 
       > .hr {
         height: 2px;
         margin: 40px 0;
-        background: hsla(0, 0%, 100%, 0.2);
+        background: white(0.3);
       }
 
       > .footer {
@@ -157,11 +158,10 @@
 
         > a {
           cursor: pointer;
-          color: hsla(0, 0%, 100%, 0.4);
 
           &:hover {
-            color: hsla(0, 0%, 100%, 0.5);
-            transition: 0.3s;
+            color: white(0.3);
+            transition: 0.2s;
           }
         }
       }
@@ -189,7 +189,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: white(0.1);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -201,7 +201,7 @@
   width: 22px;
   left: 4px;
   bottom: 3px;
-  background-color: color(grayscale, lllight);
+  background-color: black;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
