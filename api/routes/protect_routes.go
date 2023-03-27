@@ -12,8 +12,8 @@ import (
 func protect(handle gin.HandlerFunc, requiredUserLevel models.UserLevel) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.Request.Header.Get("Authorization")
-		tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
-		if !found {
+		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+		if tokenString == authHeader {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
