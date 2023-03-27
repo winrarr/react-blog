@@ -1,6 +1,6 @@
 $palette: (
-    base: hsl(267, 73%, 87%),
-    selected: hsl(267, 73%, 77%),
+    base: hsl(267, 23%, 87%),
+    secondary: hsl(267, 23%, 75%),
 );
 
 @function color($color, $alpha: 100%) {

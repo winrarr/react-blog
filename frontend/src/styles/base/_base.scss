@@ -1,3 +1,5 @@
+@import "../helpers/colors";
+
 :root {
     font-family: "Poppins", sans-serif;
 
@@ -14,7 +16,7 @@
 *:before,
 *:after {
     box-sizing: border-box;
-    color: hsla(0, 0%, 100%, 70%);
+    color: color(base);
 }
 
 html,

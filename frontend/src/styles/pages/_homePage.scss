@@ -12,11 +12,11 @@
   .blog-post {
     margin-top: 50px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
+    background: white(0.05);
     border-radius: 16px;
     backdrop-filter: blur(3.1px);
     -webkit-backdrop-filter: blur(3.1px);
-    box-shadow: 0 0 15px 0 hsla(0, 0%, 0%, 70%);
+    box-shadow: 0 0 15px 0 black(0.7);
 
     > h2 {
       font-size: 20px;

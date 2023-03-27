@@ -3,8 +3,8 @@
 .auth-container {
   min-width: 350px;
   max-width: 525px;
-  box-shadow: 0 0 15px 5px hsla(0, 0%, 0%, 90%);
-  background-color: hsla(0, 0%, 0%, 20%);
+  box-shadow: 0 0 15px 5px black(0.9);
+  background-color: black(0.2);
   padding: 90px 70px;
 
   * {
@@ -18,13 +18,13 @@
   > label {
     font-size: 22px;
     text-transform: uppercase;
-    color: color(base);
+    color: color(secondary);
     cursor: pointer;
     padding-bottom: 5px;
     margin-right: 17px;
 
     &:hover {
-      color: color(selected);
+      color: color(base);
       transition: 0.2s ease;
     }
   }
@@ -79,7 +79,7 @@
   }
 
   input:checked + label {
-    color: color(selected);
+    color: color(base);
   }
 
   .login-form {
@@ -132,12 +132,12 @@
       > input[type="submit"] {
         cursor: pointer;
         letter-spacing: 0.5ch;
-        border: 2px solid color(selected);
+        border: 2px solid color(secondary);
         background-color: transparent;
 
         &:hover {
-          background-color: color(selected, 0.03);
-          box-shadow: 0 0 3px color(selected);
+          background-color: color(secondary, 0.03);
+          box-shadow: 0 0 3px color(secondary);
           transition: 0.2s ease-out;
         }
 
@@ -201,13 +201,14 @@
   width: 22px;
   left: 4px;
   bottom: 3px;
-  background-color: black;
+  background-color: white(0.4);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
 input:checked + .slider {
-  box-shadow: 0 0 2px 1px hsl(293, 100%, 50%);
+  // box-shadow: 0 0 2px 1px hsl(293, 100%, 50%);
+  background-color: color(secondary, 0.5);
 }
 
 input:checked + .slider:before {
