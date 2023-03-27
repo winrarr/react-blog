@@ -1,0 +1,219 @@
+@import "../helpers/colors";
+
+.auth-container {
+  min-width: 350px;
+  max-width: 525px;
+  box-shadow: 0 0 15px 5px black(0.8);
+  background-color: black(0.2);
+  padding: 90px 70px;
+
+  * {
+    color: white(0.6);
+  }
+
+  > input {
+    display: none;
+  }
+
+  > label {
+    font-size: 22px;
+    text-transform: uppercase;
+    color: color(secondary);
+    cursor: pointer;
+    padding-bottom: 5px;
+    margin-right: 17px;
+
+    &:hover {
+      color: color(base);
+      transition: 0.2s ease;
+    }
+  }
+
+  .active {
+    margin-top: 6px;
+    height: 2px;
+    background-color: color(base);
+    transition: 0.25s;
+  }
+
+  > #login-button {
+    $displacement: -2px;
+    $width: 79px;
+
+    &:checked {
+      ~ .active {
+        width: $width;
+        translate: $displacement;
+      }
+
+      ~ .login-form .login-htm {
+        transform: rotate(0);
+      }
+    }
+
+    &:not(:checked) + label:hover ~ .active {
+      width: $width;
+      translate: $displacement;
+    }
+  }
+
+  > #signup-button {
+    $displacement: 90px;
+    $width: 94px;
+
+    &:checked {
+      ~ .active {
+        width: $width;
+        translate: $displacement;
+      }
+
+      ~ .login-form .signup-htm {
+        transform: rotate(0);
+      }
+    }
+
+    &:not(:checked) + label:hover ~ .active {
+      width: $width;
+      translate: $displacement;
+    }
+  }
+
+  input:checked + label {
+    color: color(base);
+  }
+
+  .login-form {
+    margin-top: 40px;
+    position: relative;
+
+    input[type="submit"] {
+      margin-top: 30px;
+      text-transform: uppercase;
+    }
+
+    .login-htm {
+      position: absolute;
+    }
+
+    > form {
+      bottom: 0;
+      transform: rotateY(180deg);
+      backface-visibility: hidden;
+      transition: all 0.4s linear;
+
+      > input[type="submit"] {
+        width: 100%;
+        font-size: 1.2rem;
+        margin-top: 50px;
+        cursor: pointer;
+        letter-spacing: 0.5ch;
+        border: 2px solid color(secondary);
+        background-color: transparent;
+        border-radius: 30px;
+        padding: 12px;
+
+        &:hover {
+          background-color: color(secondary, 0.03);
+          box-shadow: 0 0 3px color(secondary);
+          transition: 0.2s ease-out;
+        }
+
+        &.invalid {
+          pointer-events: none;
+          filter: brightness(0.6);
+        }
+      }
+
+      > .hr {
+        height: 2px;
+        margin: 40px 0;
+        background: white(0.3);
+      }
+
+      > .footer {
+        text-align: center;
+
+        > a {
+          cursor: pointer;
+
+          &:hover {
+            color: white(0.3);
+            transition: 0.2s;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* The container */
+.remember-me {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.remember-me {
+  margin-top: 25px;
+  margin-left: 9px;
+}
+
+/* Hide the browser's default checkbox */
+.remember-me input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  margin-bottom: -1px;
+  background-color: white(0.2);
+}
+
+/* On mouse-over, add a grey background color */
+.remember-me:hover input ~ .checkmark {
+  background-color: white(0.3);
+}
+
+/* When the checkbox is checked, add a blue background */
+.remember-me input:checked ~ .checkmark {
+  background-color: white(0.4);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.remember-me input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.remember-me .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

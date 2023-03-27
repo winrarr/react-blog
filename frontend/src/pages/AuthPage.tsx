@@ -5,20 +5,10 @@ import axios from "../axios/axios"
 import useAuth from "../hooks/useAuth"
 import { HttpStatusCode } from "axios"
 import useInput from "../hooks/useInput"
-
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  placeholder: string,
-}
-
-const FormField = ({ placeholder, ...props }: Props) => (
-  <>
-    <input className="form-field-input" required {...props} />
-    <label className="form-field-label">{placeholder}</label>
-  </>
-)
+import FormField from "../components/FormField"
 
 const AuthPage = () => {
-  const { setAuth, persist, setPersist } = useAuth()
+  const { setAuth, setPersist } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -80,14 +70,14 @@ const AuthPage = () => {
   }
 
   return (
-    <div className="login-container">
+    <div className="auth-container">
 
       {/* switch buttons */}
-      <input id="login" type="radio" name="item" defaultChecked />
-      <label htmlFor="login">Log In</label>
+      <input id="login-button" type="radio" name="item" defaultChecked />
+      <label htmlFor="login-button">Log In</label>
 
-      <input id="signup" type="radio" name="item" />
-      <label htmlFor="signup">Sign Up</label>
+      <input id="signup-button" type="radio" name="item" />
+      <label htmlFor="signup-button">Sign Up</label>
 
       <div className="active"></div>
 
@@ -96,15 +86,12 @@ const AuthPage = () => {
 
         {/* log in */}
         <form className="login-htm" onSubmit={handleLogin}>
-          <div className="hej">
-            <label className="switch">
-              <input type="checkbox" onChange={togglePersist} checked={persist} />
-              <span className="slider round" />
-            </label>
-            <label>Remember me</label>
-          </div>
           <FormField placeholder="Username" name="password" {...loginUsernameAttr} />
           <FormField placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
+          <label className="remember-me">Remember me
+            <input type="checkbox" defaultChecked onChange={togglePersist} />
+            <span className="checkmark"></span>
+          </label>
           <input type="submit" value="Sign In" className={`${signInValid() ? "" : "invalid"}`} />
 
           <div className="hr"></div>

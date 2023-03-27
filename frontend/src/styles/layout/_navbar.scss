@@ -1,0 +1,23 @@
+@import "../helpers/colors";
+
+.navbar {
+  background-color: white(0.13);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 0 5px 0 black(0.6);
+
+  > a {
+    float: left;
+    padding: 16px 24px;
+
+    &:hover {
+      background-color: white(0.1);
+    }
+  }
+
+  > a:last-child {
+    float: right;
+    margin-right: 0;
+  }
+}
