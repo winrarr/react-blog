@@ -1,7 +1,3 @@
-# IMPORTANT
-
-Nothing to see here :)
-
 # Main quest
 
 - Add Google login
