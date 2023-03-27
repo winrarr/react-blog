@@ -38,11 +38,13 @@ const NewBlog = () => {
     return (
         <>
             <iframe name="dummyframe" style={{ display: "none" }} />
-            <form onSubmit={handleSubmit}>
-                <label>Blog title</label>
-                <input placeholder="Blog title" name="title" {...titleAttr} /><br />
+            <form className="new-blog" onSubmit={handleSubmit}>
+                <div>
+                    <label>Blog title</label>
+                    <input name="title" {...titleAttr} /><br />
+                </div>
                 <label>Blog body</label>
-                <input placeholder="Blog body" name="body" {...bodyAttr} /><br />
+                <textarea name="body" {...bodyAttr} /><br />
                 <input type="submit" value="Submit" />
             </form>
         </>

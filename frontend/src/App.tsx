@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage'
 import AuthPage from './pages/AuthPage'
 import NoMatch from './pages/NoMatch'
 import Unauthorized from './pages/Unauthorized'
-import NewBlog from './pages/NewBlog'
+import NewBlog from './pages/NewBlogPage'
 import PersistLogin from './components/PersistLogin'
 
 function App() {

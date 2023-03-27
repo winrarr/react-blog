@@ -1,16 +1,16 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, ChangeEventHandler, useState } from "react"
 
 type attr = {
     value: string,
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void,
+    onChange: (e: { target: { value: string } }) => void,
 }
 
 const useInput = (): [string, attr] => {
     const [value, setValue] = useState("")
 
-    const attributeObj = {
+    const attributeObj: attr = {
         value,
-        onChange: (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)
+        onChange: (e: { target: { value: string } }) => setValue(e.target.value)
     }
 
     return [value, attributeObj]

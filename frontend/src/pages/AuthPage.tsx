@@ -5,20 +5,10 @@ import axios from "../axios/axios"
 import useAuth from "../hooks/useAuth"
 import { HttpStatusCode } from "axios"
 import useInput from "../hooks/useInput"
-
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  placeholder: string,
-}
-
-const FormField = ({ placeholder, ...props }: Props) => (
-  <>
-    <input className="form-field-input" required {...props} />
-    <label className="form-field-label">{placeholder}</label>
-  </>
-)
+import FormField from "../components/FormField"
 
 const AuthPage = () => {
-  const { setAuth, persist, setPersist } = useAuth()
+  const { setAuth, setPersist } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()

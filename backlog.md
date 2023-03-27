@@ -1,12 +1,12 @@
 # Main quest
 
-- Add Google login
 - Make proper logout
 
 # Side quests
 
+- Add docker container for running the application
+- Clean up and extend styles
 - Maybe make axios implementation better
-- Look into git submodules for project structure
 
 # Completed main quests
 

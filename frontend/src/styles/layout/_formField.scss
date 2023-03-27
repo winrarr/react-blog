@@ -1,0 +1,32 @@
+.form-field-input {
+  font-size: 1.2rem;
+  margin-top: 5px;
+  padding: 8px 9px;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid white(0.3);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.form-field-label {
+  color: white(0.35);
+  position: relative;
+  margin-left: 10px;
+  top: -28px;
+  width: 100%;
+  font-size: 15px;
+  user-select: none;
+  pointer-events: none;
+  transition: 0.4s ease-out;
+}
+
+.form-field-input:focus + .form-field-label,
+.form-field-input:valid + .form-field-label {
+  top: -58px;
+  font-size: 13px;
+  color: color(base);
+}

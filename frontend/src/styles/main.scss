@@ -2,7 +2,7 @@
 @import "base/reset", "base/base";
 
 // layout
-@import "layout/navbar";
+@import "layout/navbar", "layout/formField";
 
 // pages
-@import "pages/authPage", "pages/homePage", "pages/newBlog";
+@import "pages/authPage", "pages/homePage", "pages/newBlogPage";

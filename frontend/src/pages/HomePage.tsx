@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Blog } from "../@types/blog"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
+import MockBlogPosts from "../mock/MockBlogPosts"
 
 const HomePage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([])
@@ -44,6 +45,7 @@ const HomePage = () => {
                 </article>
               </li>)}
           </ul>
+          // <MockBlogPosts />
         ) : <p>No blogs posts yet</p>
       }
     </div>
