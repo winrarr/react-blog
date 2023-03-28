@@ -175,25 +175,25 @@ func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.AccessToken
 	return &auth, Success
 }
 
-func VerifyAccessToken(tokenString string, requiredUserLevel models.UserLevel) bool {
-	_, err := ParseAccessToken(tokenString)
+func VerifyAccessToken(tokenString string, requiredUserLevel models.UserLevel) (string, bool) {
+	claims, err := ParseAccessToken(tokenString)
 	if err != nil {
-		return false
+		return "", false
 	}
 
 	sessionInfo, ok := sessions[tokenString]
 	if !ok {
-		return false
+		return "", false
 	}
 
 	if sessionInfo.expiresAt < time.Now().Unix() {
 		delete(sessions, tokenString)
-		return false
+		return "", false
 	}
 
 	if sessionInfo.userLevel < requiredUserLevel {
-		return false
+		return "", false
 	}
 
-	return true
+	return claims.StandardClaims.Subject, true
 }

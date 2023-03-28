@@ -45,7 +45,7 @@ func GetAllBlogs(c *gin.Context) {
 }
 
 // POST /newblog
-func NewBlog(c *gin.Context) {
+func NewBlog(c *gin.Context, username string) {
 	// bind request to model
 	var blog models.Blog
 	if err := c.Bind(&blog); err != nil {

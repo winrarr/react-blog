@@ -44,7 +44,6 @@ const HomePage = () => {
                 </article>
               </li>)}
           </ul>
-          // <MockBlogPosts />
         ) : <p>No blogs posts yet</p>
       }
     </div>

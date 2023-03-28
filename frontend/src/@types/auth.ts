@@ -13,7 +13,6 @@ export type AccessTokenClaims = {
 export type AuthContextType = {
     auth: Auth | null,
     setAuth: Dispatch<SetStateAction<Auth | null>>,
-    clearAuth: () => void,
     persist: boolean,
     setPersist: (dispatcher: (prev: boolean) => boolean) => void,
 }

@@ -7,6 +7,7 @@ import (
 	"api/utils"
 	"context"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -85,7 +86,14 @@ func sendAuth(authObj *models.Auth, httpStatus int, c *gin.Context) {
 
 // GET /logout
 func Logout(c *gin.Context) {
+	authHeader := c.Request.Header.Get("Authorization")
+	tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
+	if !found {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
 
+	auth.LogoutUser(tokenString)
 }
 
 // GET /refresh
