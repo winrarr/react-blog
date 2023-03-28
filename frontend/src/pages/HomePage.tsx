@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from "axios"
+import { HttpStatusCode } from "axios"
 import { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Blog } from "../@types/blog"

@@ -1,4 +1,3 @@
-import { HttpStatusCode } from "axios"
 import useAuth from "./useAuth"
 import useAxiosPrivate from "./useAxiosPrivate"
 
