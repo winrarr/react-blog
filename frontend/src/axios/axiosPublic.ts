@@ -28,7 +28,7 @@ export const signup = async (credentials: Credentials) => {
 }
 
 export const login = async (credentials: Credentials) => {
-    const { data, status } = await axiosPublic.post<Auth>("/login",credentials, {
+    const { data, status } = await axiosPublic.post<Auth>("/login", credentials, {
         withCredentials: true,
     })
     if (status === HttpStatusCode.Created) {
@@ -44,4 +44,4 @@ export const refresh = async () => {
         withCredentials: true,
     })
     status === HttpStatusCode.Ok && setAuth(data)
-  }
+}

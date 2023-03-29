@@ -3,35 +3,40 @@ import { Blog } from "../@types/blog"
 import useAuth from "../hooks/useAuth"
 import { refresh } from "./axiosPublic"
 
-const axiosPrivate = axios.create({
-  baseURL: "http://localhost:8080/",
-  headers: { 'Content-Type': 'application/json' },
-  withCredentials: true,
-  validateStatus: () => true,
-})
+const axiosPrivate = (() => {
+  const axiosPrivate = axios.create({
+    baseURL: "http://localhost:8080/",
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+    validateStatus: () => true,
+  })
 
-const { auth } = useAuth()
+  const { auth } = useAuth()
 
-const requestInterceptor = axiosPrivate.interceptors.request.use(
-config => {
-    config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
-    return config
-}, (error) => Promise.reject(error)
-)
+  axiosPrivate.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${auth?.accessToken}`
+      return config
+    },
+    (error) => Promise.reject(error)
+  )
 
-const responseInterceptor = axiosPrivate.interceptors.response.use(
-response => response,
-async (error) => {
-    const prevRequest = error?.config
-    if (error?.response?.status === 403 && !prevRequest?.sent) {
+  axiosPrivate.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const prevRequest = error?.config
+      if (error?.response?.status === 403 && !prevRequest?.sent) {
         prevRequest.sent = true
         const newAccessToken = await refresh()
-        prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+        prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
         return axiosPrivate(prevRequest)
+      }
+      return Promise.reject(error)
     }
-    return Promise.reject(error)
-}
-)
+  )
+
+  return axiosPrivate
+})()
 
 export const newBlog = async (blog: Blog) => {
   const { status } = await axiosPrivate.post<Blog>("/newblog", blog)
