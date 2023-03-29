@@ -27,7 +27,7 @@ func createAdminUser(username string, password string) {
 		Token:     "",
 		ExpiresAt: 0,
 	}
-	user := models.DBUser{
+	user := models.User{
 		Username:        "a",
 		HSPassword:      bytes,
 		UserLevel:       models.Admin,

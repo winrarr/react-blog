@@ -69,11 +69,8 @@ func NewBlog(c *gin.Context, username string) {
 
 // DELETE /deleteblog
 func DeleteBlog(c *gin.Context, username string) {
-	// make getblog return the id so we can use it for deletion and editing
-
-	// bind request to model
-	var blog models.Blog
-	if err := c.Bind(&blog); err != nil {
+	id := c.Param("id")
+	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
@@ -82,19 +79,17 @@ func DeleteBlog(c *gin.Context, username string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err := database.BlogCollection.DeleteOne()
-	if err != nil {
+	result, err := database.BlogCollection.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil || result.DeletedCount != 1 {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	c.Status(http.StatusCreated)
+	c.Status(http.StatusOK)
 }
 
 // PUT /editblog
 func EditBlog(c *gin.Context, username string) {
-	// make getblog return the id so we can use it for deletion and editing
-
 	// bind request to model
 	var blog models.Blog
 	if err := c.Bind(&blog); err != nil {
@@ -102,15 +97,15 @@ func EditBlog(c *gin.Context, username string) {
 		return
 	}
 
-	// check if user already exists
+	// update blog from database
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err := database.BlogCollection.InsertOne(ctx, blog)
-	if err != nil {
+	result, err := database.BlogCollection.UpdateByID(ctx, blog.ID, blog)
+	if err != nil || result.ModifiedCount != 1 {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	c.Status(http.StatusCreated)
+	c.Status(http.StatusOK)
 }

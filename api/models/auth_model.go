@@ -5,16 +5,9 @@ type UserLevel int
 
 const (
 	Guest UserLevel = iota
-	User
+	Standard
 	Admin
 )
-
-type DBUser struct {
-	Username        string
-	HSPassword      []byte
-	UserLevel       UserLevel
-	RefreshTokenExp RefreshTokenExp
-}
 
 type RefreshTokenExp struct {
 	Token     string
@@ -30,6 +23,14 @@ type Auth struct {
 	RefreshToken string
 	AccessToken  string
 	UserLevel    UserLevel
+}
+
+// database
+type User struct {
+	Username        string `bson:"_id,omitempty"`
+	HSPassword      []byte
+	UserLevel       UserLevel
+	RefreshTokenExp RefreshTokenExp
 }
 
 // request
