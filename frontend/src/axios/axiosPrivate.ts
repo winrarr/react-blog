@@ -1,7 +1,6 @@
 import axios, { HttpStatusCode } from "axios"
 import { Blog } from "../@types/blog"
 import useAuth from "../hooks/useAuth"
-import { refresh } from "./axiosPublic"
 
 const axiosPrivate = (() => {
   const axiosPrivate = axios.create({
@@ -35,25 +34,27 @@ const axiosPrivate = (() => {
     }
   )
 
-  return axiosPrivate
+  const newBlog = async (blog: Blog) => {
+    const { status } = await axiosPrivate.post<Blog>("/newblog", blog)
+    return status === HttpStatusCode.Created
+  }
+
+  const editBlog = async (blog: Blog) => {
+    const { status } = await axiosPrivate.put<Blog>("/editblog", blog)
+    return status === HttpStatusCode.Ok
+  }
+
+  const deleteBlog = async (id: string) => {
+    const { status } = await axiosPrivate.delete(`/deleteblog/${id}`)
+    return status === HttpStatusCode.Ok
+  }
+
+  const logout = async () => {
+    const { status } = await axiosPrivate.get("/logout")
+    return status === HttpStatusCode.Ok
+  }
+
+  return { newBlog, editBlog, deleteBlog, logout }
 })()
 
-export const newBlog = async (blog: Blog) => {
-  const { status } = await axiosPrivate.post<Blog>("/newblog", blog)
-  return status === HttpStatusCode.Created
-}
-
-export const editBlog = async (blog: Blog) => {
-  const { status } = await axiosPrivate.put<Blog>("/editblog", blog)
-  return status === HttpStatusCode.Ok
-}
-
-export const deleteBlog = async (id: string) => {
-  const { status } = await axiosPrivate.delete(`/deleteblog/${id}`)
-  return status === HttpStatusCode.Ok
-}
-
-export const logout = async () => {
-  const { status } = await axiosPrivate.get("/logout")
-  return status === HttpStatusCode.Ok
-}
+export default axiosPrivate
