@@ -1,15 +1,14 @@
 import jwtDecode from "jwt-decode"
 import { Link, useNavigate } from "react-router-dom"
 import { AccessTokenClaims, UserLevel } from "../../@types/auth"
+import { logout } from "../../axios/axiosPrivate"
 import useAuth from "../../hooks/useAuth"
 import AdminLinks from "./AdminLinks"
 import UserLinks from "./UserLinks"
-import useLogout from "../../hooks/useLogout"
 
 const Navbar = () => {
   const { auth } = useAuth()
   const navigate = useNavigate()
-  const logout = useLogout()
 
   const signout = async () => {
     await logout()

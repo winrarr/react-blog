@@ -4,12 +4,10 @@ import useAuth from "../hooks/useAuth"
 import useInput from "../hooks/useInput"
 import jwt_decode from 'jwt-decode'
 import { AccessTokenClaims } from "../@types/auth"
-import useAxiosPrivate from "../hooks/useAxiosPrivate"
+import { newBlog } from "../axios/axiosPrivate"
 
 const NewBlog = () => {
     const { auth } = useAuth()
-
-    const axiosPrivate = useAxiosPrivate()
 
     const [title, titleAttr] = useInput()
     const [body, bodyAttr] = useInput()
@@ -22,17 +20,13 @@ const NewBlog = () => {
             return
         }
 
-        const { status } = await axiosPrivate.post<Blog>("/newblog", {
+        const ok = await newBlog({
             title,
-            author: jwt_decode<AccessTokenClaims>(auth.accessToken).standardClaims.sub,
+            author: jwt_decode<AccessTokenClaims>(auth.accessToken).standardClaims.sub || "",
             body,
         })
 
-        if (status === HttpStatusCode.Created) {
-            alert("success!")
-        } else {
-            alert("no success :(")
-        }
+        ok ? alert("success!") : alert("no success :(")
     }
 
     return (

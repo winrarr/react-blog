@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import { Auth } from "../@types/auth"
-import axios from "../axios/axios"
 import useAuth from "../hooks/useAuth"
 import { HttpStatusCode } from "axios"
 import useInput from "../hooks/useInput"
 import FormField from "../components/FormField"
+import { login, signup } from "../axios/axiosPublic"
 
 const AuthPage = () => {
   const { setAuth, setPersist } = useAuth()
@@ -31,37 +31,27 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<Auth>("/login", {
+    const ok = await login({
       username: loginUsername,
       password: loginPassword,
-    }, {
-      withCredentials: true,
     })
 
-    if (status === HttpStatusCode.Ok) {
-      setAuth(data)
-      navigate(from, { replace: true })
-    } else {
-      alert("error logging in")
-    }
+    ok
+      ? navigate(from, { replace: true })
+      : alert("error logging in")
   }
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<Auth>("/signup", {
+    const ok = await signup({
       username: signupUsername,
       password: signupPassword1,
-    }, {
-      withCredentials: true,
     })
 
-    if (status === HttpStatusCode.Created) {
-      setAuth(data)
-      navigate(from, { replace: true })
-    } else {
-      alert("error signing in")
-    }
+    ok
+      ? navigate(from, { replace: true })
+      : alert("error signing in")
   }
 
   const togglePersist = () => {

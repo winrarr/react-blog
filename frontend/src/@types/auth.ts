@@ -1,6 +1,11 @@
 import { JwtPayload } from "jwt-decode";
 import { Dispatch, SetStateAction } from "react";
 
+export type Credentials = {
+    username: string,
+    password: string,
+}
+
 export type Auth = {
     accessToken: string,
 }

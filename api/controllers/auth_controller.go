@@ -94,6 +94,8 @@ func Logout(c *gin.Context) {
 	}
 
 	auth.LogoutUser(tokenString)
+
+	c.Status(http.StatusOK)
 }
 
 // GET /refresh
