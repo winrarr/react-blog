@@ -1,6 +1,6 @@
 # Main quest
 
-Nothing to see here :)
+Add ability to edit and delete blog posts for admins
 
 # Side quests
 

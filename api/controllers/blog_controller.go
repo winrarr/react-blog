@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // func init() {
@@ -24,7 +25,7 @@ func GetAllBlogs(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	results, err := database.BlogCollection.Find(ctx, bson.M{})
+	results, err := database.BlogCollection.Find(ctx, bson.M{}, options.Find().SetLimit(10))
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
@@ -46,6 +47,54 @@ func GetAllBlogs(c *gin.Context) {
 
 // POST /newblog
 func NewBlog(c *gin.Context, username string) {
+	// bind request to model
+	var blog models.Blog
+	if err := c.Bind(&blog); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	// insert new blog in database
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	_, err := database.BlogCollection.InsertOne(ctx, blog)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	c.Status(http.StatusCreated)
+}
+
+// DELETE /deleteblog
+func DeleteBlog(c *gin.Context, username string) {
+	// make getblog return the id so we can use it for deletion and editing
+
+	// bind request to model
+	var blog models.Blog
+	if err := c.Bind(&blog); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	// delete blog from database
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	_, err := database.BlogCollection.DeleteOne()
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	c.Status(http.StatusCreated)
+}
+
+// PUT /editblog
+func EditBlog(c *gin.Context, username string) {
+	// make getblog return the id so we can use it for deletion and editing
+
 	// bind request to model
 	var blog models.Blog
 	if err := c.Bind(&blog); err != nil {
