@@ -1,8 +1,6 @@
 import useAuth from "../hooks/useAuth"
 import useInput from "../hooks/useInput"
 import { newBlog } from "../axios/axiosPrivate"
-import axios from "axios"
-import { UserLevel } from "../@types/auth"
 
 const NewBlog = () => {
   const { username, userLevel } = useAuth()

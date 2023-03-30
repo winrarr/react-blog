@@ -35,7 +35,7 @@ const AuthPage = () => {
     })
       .then(userLevel => {
         setUsername(loginUsername)
-        setUserLevel(userLevel.data)
+        setUserLevel(userLevel)
         navigate(from, { replace: true })
       })
       .catch(() => alert("error signing in"))
@@ -50,7 +50,7 @@ const AuthPage = () => {
     })
       .then(userLevel => {
         setUsername(signupUsername)
-        setUserLevel(userLevel.data)
+        setUserLevel(userLevel)
         navigate(from, { replace: true })
       })
       .catch(() => alert("error signing in"))

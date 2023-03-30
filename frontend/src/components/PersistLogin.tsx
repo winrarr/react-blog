@@ -5,12 +5,15 @@ import useAuth from '../hooks/useAuth'
 
 export const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true)
-    const { userLevel: auth, persist } = useAuth()
+    const { userLevel, persist } = useAuth()
 
     useEffect(() => {
         let isMounted = true
 
-        !auth && persist ? refresh().then(() => isMounted && setIsLoading(false)) : setIsLoading(false)
+        !userLevel && persist
+            ? refresh()
+                .then(() => isMounted && setIsLoading(false))
+            : setIsLoading(false)
 
         return () => { isMounted = false }
     }, [])

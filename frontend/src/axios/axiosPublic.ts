@@ -6,22 +6,21 @@ const baseURL = "http://localhost:8080/"
 
 const axiosPublic = axios.create({
   baseURL,
-  validateStatus: () => true,
 })
 
-export const signup = (credentials: Credentials) => {
-  return axiosPublic.post<UserLevel>("/signup", credentials, {
+export const signup = (credentials: Credentials) =>
+  axiosPublic.post<UserLevel>("/signup", credentials, {
     withCredentials: true,
   })
-}
-
-export const login = (credentials: Credentials) => {
-  return axiosPublic.post<UserLevel>("/login", credentials, {
-    withCredentials: true,
-  })
-}
-
-export const getBlogs = async () => {
-  return axiosPublic.get<Blog[]>("/blogs")
     .then(response => response.data)
-}
+
+export const login = async (credentials: Credentials) => 
+  axiosPublic.post<UserLevel>("/login", credentials, {
+    withCredentials: true,
+  })
+    .then(response => response.data)
+
+
+export const getBlogs = async () => 
+  axiosPublic.get<Blog[]>("/blogs")
+    .then(response => response.data)

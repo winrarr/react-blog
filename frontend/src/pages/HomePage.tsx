@@ -13,11 +13,8 @@ const HomePage = () => {
 
     getBlogs()
       .then(blogs => isMounted && setBlogs(blogs))
-      .catch(() => navigate('/login', { state: { from: location }, replace: true }))
 
-    return () => {
-      isMounted = false
-    }
+    return () => { isMounted = false }
   }, [])
 
   return (

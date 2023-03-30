@@ -5,9 +5,7 @@ const baseURL = "http://localhost:8080/"
 
 const axiosPrivate = axios.create({
   baseURL,
-  headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
-  validateStatus: () => true,
 })
 
 axiosPrivate.interceptors.response.use(
@@ -23,14 +21,13 @@ axiosPrivate.interceptors.response.use(
   }
 )
 
-export const refresh = async () => {
-  await axiosPrivate.get("/refresh")
-}
+export const refresh = async () =>
+  axiosPrivate.get("/refresh")
 
-export const logout = async () => {
-  await axiosPrivate.get("/logout")
-}
 
-export const newBlog = (blog: Blog) => {
-  return axiosPrivate.post("/newblog", blog)
-}
+export const logout = async () => 
+  axiosPrivate.get("/logout")
+
+
+export const newBlog = (blog: Blog) =>
+  axiosPrivate.post("/newblog", blog)
