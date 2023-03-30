@@ -1,4 +1,5 @@
 import axios, { HttpStatusCode } from 'axios'
+import { UserLevel } from '../@types/auth'
 import { Blog } from '../@types/blog'
 
 const baseURL = "http://localhost:8080/"
@@ -22,12 +23,15 @@ axiosPrivate.interceptors.response.use(
 )
 
 export const refresh = async () =>
-  axiosPrivate.get("/refresh")
+  (await axiosPrivate.get<UserLevel>("/refresh")).data
 
 
-export const logout = async () => 
+export const logout = async () =>
   axiosPrivate.get("/logout")
 
 
 export const newBlog = (blog: Blog) =>
   axiosPrivate.post("/newblog", blog)
+
+export const deleteBlog = (id: string) =>
+  axiosPrivate.delete(`/deleteblog/${id}`)

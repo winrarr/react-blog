@@ -15,7 +15,7 @@ func NewUser(username string, password string) (*models.Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	err := database.UserCollection.FindOne(ctx, bson.M{"username": username}).Err()
+	err := database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Err()
 	if err == nil {
 		return nil, UserAlreadyExists
 	}
@@ -46,7 +46,7 @@ func FindUser(username string, password string) (*models.Auth, StatusMessage) {
 	defer cancel()
 
 	var DBUser models.DBUser
-	err := database.UserCollection.FindOne(ctx, bson.M{"username": username}).Decode(&DBUser)
+	err := database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&DBUser)
 	if err != nil {
 		return nil, UserDoesNotExist
 	}
@@ -99,7 +99,7 @@ func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 	defer cancel()
 
 	var DBUser models.DBUser
-	err = database.UserCollection.FindOne(ctx, bson.M{"username": username}).Decode(&DBUser)
+	err = database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&DBUser)
 	if err != nil {
 		return nil, UserDoesNotExist
 	}
@@ -120,7 +120,7 @@ func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.TokenExp) (
 	defer cancel()
 
 	// update database
-	_, err := database.UserCollection.UpdateOne(ctx, bson.M{"username": DBUser.Username}, bson.M{"$set": bson.M{"refreshtokenexp": DBUser.RefreshTokenExp}})
+	_, err := database.UserCollection.UpdateByID(ctx, DBUser.Username, bson.M{"$set": bson.M{"refreshtokenexp": DBUser.RefreshTokenExp}})
 	if err != nil {
 		return nil, UserDoesNotExist
 	}

@@ -12,6 +12,7 @@ const NewBlog = () => {
     e.preventDefault()
 
     newBlog({
+      id: "",
       title,
       author: username || "",
       body,

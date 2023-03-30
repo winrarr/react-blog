@@ -10,7 +10,7 @@ const (
 )
 
 type DBUser struct {
-	Username        string
+	Username        string `bson:"_id,omitempty"`
 	HSPassword      []byte
 	UserLevel       UserLevel
 	RefreshTokenExp TokenExp
