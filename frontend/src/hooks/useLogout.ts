@@ -1,13 +1,13 @@
+import { UserLevel } from "../@types/auth"
+import { logout } from "../axios/axiosPrivate"
 import useAuth from "./useAuth"
-import useAxiosPrivate from "./useAxiosPrivate"
 
 const useLogout = () => {
-  const { setAuth } = useAuth()
-  const axiosPrivate = useAxiosPrivate()
+  const { setUserLevel } = useAuth()
 
-  return async() => {
-    await axiosPrivate.get("/logout")
-    setAuth(null)
+  return async () => {
+    await logout()
+    setUserLevel(UserLevel.GUEST)
   }
 }
 

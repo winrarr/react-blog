@@ -22,17 +22,17 @@ func (c accessTokenClaims) Valid() error {
 
 // expiration times
 const (
-	RefreshTokenExpirationTime time.Duration = time.Hour * 24
-	AccessTokenExpirationTime  time.Duration = time.Minute * 2
+	RefreshTokenExpTime time.Duration = time.Hour * 24
+	AccessTokenExpTime  time.Duration = time.Minute * 2
 )
 
-func newTokens(username string, userLevel models.UserLevel) (models.RefreshTokenExp, models.AccessTokenExp) {
+func newTokens(username string, userLevel models.UserLevel) (models.TokenExp, models.TokenExp) {
 	return newRefreshToken(username), newAccessToken(username, userLevel)
 }
 
-func newRefreshToken(username string) models.RefreshTokenExp {
+func newRefreshToken(username string) models.TokenExp {
 	issuedAt := time.Now()
-	expiresAt := issuedAt.Add(RefreshTokenExpirationTime).Unix()
+	expiresAt := issuedAt.Add(RefreshTokenExpTime).Unix()
 	claims := jwt.StandardClaims{
 		ExpiresAt: expiresAt,
 		IssuedAt:  issuedAt.Unix(),
@@ -44,15 +44,15 @@ func newRefreshToken(username string) models.RefreshTokenExp {
 	if err != nil {
 		log.Fatal("unable to create refresh token: ", err)
 	}
-	return models.RefreshTokenExp{
+	return models.TokenExp{
 		Token:     tokenString,
 		ExpiresAt: expiresAt,
 	}
 }
 
-func newAccessToken(username string, userLevel models.UserLevel) models.AccessTokenExp {
+func newAccessToken(username string, userLevel models.UserLevel) models.TokenExp {
 	issuedAt := time.Now()
-	expiresAt := issuedAt.Add(AccessTokenExpirationTime).Unix()
+	expiresAt := issuedAt.Add(AccessTokenExpTime).Unix()
 	claims := accessTokenClaims{
 		UserLevel: userLevel,
 
@@ -68,7 +68,7 @@ func newAccessToken(username string, userLevel models.UserLevel) models.AccessTo
 	if err != nil {
 		log.Fatal("unable to create access token token: ", err)
 	}
-	return models.AccessTokenExp{
+	return models.TokenExp{
 		Token:     tokenString,
 		ExpiresAt: expiresAt,
 	}
@@ -85,6 +85,10 @@ func ParseRefreshToken(tokenString string) (*jwt.StandardClaims, error) {
 		return nil, errors.New("incorrect format for refresh token claims")
 	}
 
+	if claims.ExpiresAt <= time.Now().Unix() {
+		return nil, errors.New("token is expired")
+	}
+
 	return claims, nil
 }
 
@@ -97,6 +101,10 @@ func ParseAccessToken(tokenString string) (*accessTokenClaims, error) {
 	claims, ok := token.Claims.(*accessTokenClaims)
 	if !ok {
 		return nil, errors.New("incorrect format for access token claims")
+	}
+
+	if claims.StandardClaims.ExpiresAt <= time.Now().Unix() {
+		return nil, errors.New("token is expired")
 	}
 
 	return claims, nil

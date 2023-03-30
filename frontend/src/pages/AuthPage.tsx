@@ -1,13 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { Auth } from "../@types/auth"
-import axios from "../axios/axios"
 import useAuth from "../hooks/useAuth"
-import { HttpStatusCode } from "axios"
 import useInput from "../hooks/useInput"
 import FormField from "../components/FormField"
+import { login, signup } from "../axios/axiosPublic"
 
 const AuthPage = () => {
-  const { setAuth, setPersist } = useAuth()
+  const { setUserLevel, setUsername, setPersist } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -31,37 +29,31 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<Auth>("/login", {
+    login({
       username: loginUsername,
       password: loginPassword,
-    }, {
-      withCredentials: true,
     })
-
-    if (status === HttpStatusCode.Ok) {
-      setAuth(data)
-      navigate(from, { replace: true })
-    } else {
-      alert("error logging in")
-    }
+      .then(userLevel => {
+        setUsername(loginUsername)
+        setUserLevel(userLevel)
+        navigate(from, { replace: true })
+      })
+      .catch(() => alert("error signing in"))
   }
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { data, status } = await axios.post<Auth>("/signup", {
+    signup({
       username: signupUsername,
       password: signupPassword1,
-    }, {
-      withCredentials: true,
     })
-
-    if (status === HttpStatusCode.Created) {
-      setAuth(data)
-      navigate(from, { replace: true })
-    } else {
-      alert("error signing in")
-    }
+      .then(userLevel => {
+        setUsername(signupUsername)
+        setUserLevel(userLevel)
+        navigate(from, { replace: true })
+      })
+      .catch(() => alert("error signing in"))
   }
 
   const togglePersist = () => {

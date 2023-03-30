@@ -4,8 +4,10 @@ Add ability to edit and delete blog posts for admins
 
 # Side quests
 
+- Maybe make backend status messages enums fit the http status codes instead of converting with a util function
+- Rename userLevel to auth in frontend (auth >= requiredAuth etc.)
+- Change name of updateDBAndSessions in backend
 - Clean up and improve styles
-- Maybe make axios implementation better (maybe done?)
 
 # Completed main quests
 

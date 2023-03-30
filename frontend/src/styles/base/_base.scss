@@ -43,3 +43,15 @@ img {
     height: auto;
     max-width: 100%;
 }
+
+button,
+input[type="submit"] {
+    background-color: transparent;
+    border: none;
+    box-shadow: 0 0 4px 0 black(0.7);
+    font-size: 1rem;
+
+    &:hover {
+        background-color: white(0.1);
+    }
+}

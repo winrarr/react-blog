@@ -10,37 +10,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type sessionInfo struct {
-	expiresAt int64
-	userLevel models.UserLevel
-}
-
-var sessions = map[string]sessionInfo{}
-
-func init() {
-	go cleanupSessions()
-}
-
-func cleanupSessions() {
-	batchIndex := 0
-	for token, sessionInfo := range sessions {
-		if batchIndex > 10000 {
-			batchIndex = 0
-			time.Sleep(time.Hour)
-		}
-		if sessionInfo.expiresAt < time.Now().Unix() {
-			delete(sessions, token)
-		}
-		batchIndex++
-	}
-}
-
 func NewUser(username string, password string) (*models.Auth, StatusMessage) {
 	// check if user already exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	err := database.UserCollection.FindOne(ctx, bson.M{"username": username}).Err()
+	err := database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Err()
 	if err == nil {
 		return nil, UserAlreadyExists
 	}
@@ -70,8 +45,8 @@ func FindUser(username string, password string) (*models.Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	var user models.User
-	err := database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&user)
+	var DBUser models.DBUser
+	err := database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&DBUser)
 	if err != nil {
 		return nil, UserDoesNotExist
 	}
@@ -98,12 +73,12 @@ func LogoutUser(tokenString string) StatusMessage {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	refreshTokenExp := models.RefreshTokenExp{
+	refreshTokenExp := models.TokenExp{
 		Token:     "",
 		ExpiresAt: 0,
 	}
-	_, err = database.UserCollection.UpdateOne(ctx, bson.M{"username": claims.StandardClaims.Subject}, bson.M{"$set": bson.M{"refreshtokenexp": refreshTokenExp}})
-	if err != nil {
+	result, _ := database.UserCollection.UpdateByID(ctx, claims.StandardClaims.Subject, bson.M{"$set": bson.M{"refreshtokenexp": refreshTokenExp}})
+	if result.ModifiedCount < 1 {
 		return UserDoesNotExist
 	}
 
@@ -123,22 +98,13 @@ func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	var DBUser models.User
-	err = database.UserCollection.FindOne(ctx, bson.M{"username": username}).Decode(&DBUser)
+	var DBUser models.DBUser
+	err = database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&DBUser)
 	if err != nil {
 		return nil, UserDoesNotExist
 	}
 
-	if DBUser.RefreshTokenExp.Token == "" {
-		return nil, InvalidToken
-	}
-
-	// check that refresh token is valid
-	if DBUser.RefreshTokenExp.ExpiresAt < time.Now().Unix() {
-		return nil, RefreshTokenExpired
-	}
-
-	if DBUser.RefreshTokenExp.Token != tokenString {
+	if DBUser.RefreshTokenExp.Token == "" || DBUser.RefreshTokenExp.Token != tokenString {
 		return nil, InvalidToken
 	}
 
@@ -149,20 +115,14 @@ func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 	return updateDBAndSessions(DBUser, accessTokenExp)
 }
 
-func updateDBAndSessions(user models.User, accessTokenExp models.AccessTokenExp) (*models.Auth, StatusMessage) {
-	// update database
+func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.TokenExp) (*models.Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err := database.UserCollection.UpdateByID(ctx, user.Username, bson.M{"$set": bson.M{"refreshtokenexp": user.RefreshTokenExp}})
+	// update database
+	_, err := database.UserCollection.UpdateByID(ctx, DBUser.Username, bson.M{"$set": bson.M{"refreshtokenexp": DBUser.RefreshTokenExp}})
 	if err != nil {
 		return nil, UserDoesNotExist
-	}
-
-	// update sessions
-	sessions[accessTokenExp.Token] = sessionInfo{
-		expiresAt: accessTokenExp.ExpiresAt,
-		userLevel: user.UserLevel,
 	}
 
 	// return new auth
@@ -181,17 +141,11 @@ func VerifyAccessToken(tokenString string, requiredUserLevel models.UserLevel) (
 		return "", false
 	}
 
-	sessionInfo, ok := sessions[tokenString]
-	if !ok {
+	if claims.StandardClaims.ExpiresAt < time.Now().Unix() {
 		return "", false
 	}
 
-	if sessionInfo.expiresAt < time.Now().Unix() {
-		delete(sessions, tokenString)
-		return "", false
-	}
-
-	if sessionInfo.userLevel < requiredUserLevel {
+	if claims.UserLevel < requiredUserLevel {
 		return "", false
 	}
 

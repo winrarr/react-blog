@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-const AdminLinks = () => {
+const UserLinks = () => {
   return (
     <>
       <Link to="/dashboard">Dashboard</Link>
@@ -8,4 +8,4 @@ const AdminLinks = () => {
   )
 }
 
-export default AdminLinks
+export default UserLinks

@@ -1,40 +1,25 @@
-import { HttpStatusCode } from "axios"
 import { useState, useEffect } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
 import { Blog } from "../@types/blog"
-import useAxiosPrivate from "../hooks/useAxiosPrivate"
+import { getBlogs } from "../axios/axiosPublic"
 
 const HomePage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([])
-  const axiosPrivate = useAxiosPrivate()
-  const navigate = useNavigate()
-  const location = useLocation()
 
   useEffect(() => {
     let isMounted = true
 
-    const getBlogs = async () => {
-      const response = await axiosPrivate.get<Blog[]>("/blogs")
-
-      if (response.status == HttpStatusCode.Ok) {
-        isMounted && setBlogs(response.data)
-      } else {
-        navigate('/login', { state: { from: location }, replace: true })
-      }
-    }
-
     getBlogs()
+      .then(blogs => isMounted && setBlogs(blogs))
 
-    return () => {
-      isMounted = false
-    }
+    return () => { isMounted = false }
   }, [])
 
   return (
     <div className="home-page">
       <h1>Blog posts</h1>
-      {blogs
-        ? (
+      {!blogs
+        ? <p>No blogs posts yet</p>
+        : (
           <ul>
             {blogs.map((blog, i) =>
               <li key={i}>
@@ -43,8 +28,7 @@ const HomePage = () => {
                   <p>{blog.body}</p>
                 </article>
               </li>)}
-          </ul>
-        ) : <p>No blogs posts yet</p>
+          </ul>)
       }
     </div>
   )

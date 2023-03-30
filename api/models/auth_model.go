@@ -9,12 +9,14 @@ const (
 	Admin
 )
 
-type RefreshTokenExp struct {
-	Token     string
-	ExpiresAt int64
+type DBUser struct {
+	Username        string `bson:"_id,omitempty"`
+	HSPassword      []byte
+	UserLevel       UserLevel
+	RefreshTokenExp TokenExp
 }
 
-type AccessTokenExp struct {
+type TokenExp struct {
 	Token     string
 	ExpiresAt int64
 }
@@ -37,9 +39,4 @@ type User struct {
 type Credentials struct {
 	Username string `binding:"required" json:"username"`
 	Password string `binding:"required" json:"password"`
-}
-
-// response
-type AuthResponse struct {
-	AccessToken string `json:"accessToken"`
 }

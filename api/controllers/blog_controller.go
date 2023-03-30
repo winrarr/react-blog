@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -19,7 +20,7 @@ import (
 // }
 
 // GET /blogs
-func GetAllBlogs(c *gin.Context) {
+func GetBlogs(c *gin.Context) {
 	var blogs []models.Blog
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -69,19 +70,19 @@ func NewBlog(c *gin.Context, username string) {
 
 // DELETE /deleteblog
 func DeleteBlog(c *gin.Context, username string) {
-	id := c.Param("id")
-	if id == "" {
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	// delete blog from database
+	// check if user already exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	result, err := database.BlogCollection.DeleteOne(ctx, bson.M{"id": id})
-	if err != nil || result.DeletedCount != 1 {
-		c.AbortWithStatus(http.StatusInternalServerError)
+	result, _ := database.BlogCollection.DeleteOne(ctx, bson.M{"_id": id})
+	if result.DeletedCount == 0 {
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
@@ -101,8 +102,8 @@ func EditBlog(c *gin.Context, username string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	result, err := database.BlogCollection.UpdateByID(ctx, blog.ID, blog)
-	if err != nil || result.ModifiedCount != 1 {
+	result, _ := database.BlogCollection.UpdateByID(ctx, blog.ID, blog)
+	if result.ModifiedCount == 0 {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
