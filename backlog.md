@@ -8,6 +8,7 @@ Add ability to edit and delete blog posts for admins
 - Rename userLevel to auth in frontend (auth >= requiredAuth etc.)
 - Change name of updateDBAndSessions in backend
 - Clean up and improve styles
+- I think turn admin edit into a form and make save submit
 
 # Completed main quests
 

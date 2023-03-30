@@ -45,7 +45,8 @@ img {
 }
 
 button,
-input[type="submit"] {
+input[type="submit"],
+textarea {
     background-color: transparent;
     border: none;
     box-shadow: 0 0 4px 0 black(0.7);

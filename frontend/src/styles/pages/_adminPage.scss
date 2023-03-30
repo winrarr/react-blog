@@ -29,4 +29,8 @@
     margin-top: 30px;
     margin-right: 15px;
   }
+
+  textarea:disabled {
+    background-color: transparent;
+  }
 }

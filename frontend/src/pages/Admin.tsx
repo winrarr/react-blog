@@ -15,16 +15,17 @@ const Admin = () => {
     return () => { isMounted = false }
   }, [])
 
-  // const handleEdit: ((id: string) => MouseEventHandler<HTMLButtonElement>) = id => () => {
-  //   return deleteBlog(id)
-  //     .then(() => alert("success!"))
-  //     .catch(() => alert("no success :("))
-  // }
-
   const handleDelete: ((id: string) => MouseEventHandler<HTMLButtonElement>) = id => () => {
     return deleteBlog(id)
       .then(() => alert("success!"))
       .catch(() => alert("no success :("))
+  }
+
+  const [editing, setEditing] = useState<number | null>(null)
+
+  const handleSaveEdit = () => {
+    setEditing(null)
+
   }
 
   return (
@@ -38,14 +39,16 @@ const Admin = () => {
               <li key={i}>
                 <article className="blog-post">
                   <h2>{blog.title}</h2>
-                  <p>{blog.body}</p>
-                  {/* <button onClick={handleEdit(blog.id)}>Edit</button> */}
+                  <textarea disabled={editing !== i}>{blog.body}</textarea><br />
+                  {editing === null
+                    ? <button onClick={() => setEditing(i)}>Edit</button>
+                    : <button onClick={handleSaveEdit}>Save</button>}
                   <button onClick={handleDelete(blog.id)}>Delete</button>
                 </article>
               </li>)}
           </ul>)
       }
-    </div>
+    </div >
   )
 }
 
