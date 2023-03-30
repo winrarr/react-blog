@@ -1,10 +1,11 @@
 @import "../helpers/colors";
 
 .navbar {
-  background-color: white(0.13);
   position: fixed;
   top: 0;
   width: 100%;
+  background-color: white(0.13);
+  backdrop-filter: blur(4px);
   box-shadow: 0 0 5px 0 black(0.6);
 
   > a {

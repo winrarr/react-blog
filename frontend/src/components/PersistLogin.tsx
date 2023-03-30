@@ -12,7 +12,7 @@ export const PersistLogin = () => {
 
         !userLevel && persist
             ? refresh()
-                .then(() => isMounted && setIsLoading(false))
+                .finally(() => isMounted && setIsLoading(false))
             : setIsLoading(false)
 
         return () => { isMounted = false }
