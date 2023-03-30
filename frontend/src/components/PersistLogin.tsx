@@ -1,22 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import { refresh } from '../axios/axiosPrivate'
 import useAuth from '../hooks/useAuth'
-import useRefreshToken from '../hooks/useRefreshToken'
 
 export const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true)
-    const refreshToken = useRefreshToken()
-    const { auth, persist } = useAuth()
+    const { userLevel: auth, persist } = useAuth()
 
     useEffect(() => {
         let isMounted = true
 
-        const refresh = async () => {
-            await refreshToken()
-            isMounted && setIsLoading(false)
-        }
-
-        !auth && persist ? refresh() : setIsLoading(false)
+        !auth && persist ? refresh().then(() => isMounted && setIsLoading(false)) : setIsLoading(false)
 
         return () => { isMounted = false }
     }, [])

@@ -13,15 +13,10 @@ type DBUser struct {
 	Username        string
 	HSPassword      []byte
 	UserLevel       UserLevel
-	RefreshTokenExp RefreshTokenExp
+	RefreshTokenExp TokenExp
 }
 
-type RefreshTokenExp struct {
-	Token     string
-	ExpiresAt int64
-}
-
-type AccessTokenExp struct {
+type TokenExp struct {
 	Token     string
 	ExpiresAt int64
 }
@@ -36,9 +31,4 @@ type Auth struct {
 type Credentials struct {
 	Username string `binding:"required" json:"username"`
 	Password string `binding:"required" json:"password"`
-}
-
-// response
-type AuthResponse struct {
-	AccessToken string `json:"accessToken"`
 }

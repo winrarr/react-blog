@@ -1,8 +1,9 @@
-import { JwtPayload } from "jwt-decode";
-import { Dispatch, SetStateAction } from "react";
+import { JwtPayload } from "jwt-decode"
+import { Dispatch, SetStateAction } from "react"
 
-export type Auth = {
-    accessToken: string,
+export type Credentials = {
+    username: string,
+    password: string,
 }
 
 export type AccessTokenClaims = {
@@ -11,10 +12,12 @@ export type AccessTokenClaims = {
 }
 
 export type AuthContextType = {
-    auth: Auth | null,
-    setAuth: Dispatch<SetStateAction<Auth | null>>,
+    username: string | null,
+    setUsername: Dispatch<SetStateAction<string | null>>,
+    userLevel: UserLevel,
+    setUserLevel: Dispatch<SetStateAction<UserLevel>>,
     persist: boolean,
-    setPersist: (dispatcher: (prev: boolean) => boolean) => void,
+    setPersist: Dispatch<React.SetStateAction<boolean>>,
 }
 
 export enum UserLevel {

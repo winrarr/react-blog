@@ -7,7 +7,6 @@ import (
 	"api/utils"
 	"context"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,7 @@ func createAdminUser(username string, password string) {
 	defer cancel()
 	database.UserCollection.Drop(ctx)
 	bytes, _ := bcrypt.GenerateFromPassword([]byte("a"), bcrypt.DefaultCost)
-	refreshTokenExp := models.RefreshTokenExp{
+	refreshTokenExp := models.TokenExp{
 		Token:     "",
 		ExpiresAt: 0,
 	}
@@ -75,20 +74,16 @@ func Login(c *gin.Context) {
 }
 
 func sendAuth(authObj *models.Auth, httpStatus int, c *gin.Context) {
-	c.SetCookie("refreshToken", authObj.RefreshToken, int(auth.RefreshTokenExpirationTime), "/", "localhost", true, true)
+	c.SetCookie("refreshToken", authObj.RefreshToken, int(auth.RefreshTokenExpTime), "/", "localhost", true, true)
+	c.SetCookie("accessToken", authObj.AccessToken, int(auth.AccessTokenExpTime), "/", "localhost", true, true)
 
-	authResponse := models.AuthResponse{
-		AccessToken: authObj.AccessToken,
-	}
-
-	c.JSON(httpStatus, authResponse)
+	c.JSON(httpStatus, authObj.UserLevel)
 }
 
 // GET /logout
 func Logout(c *gin.Context) {
-	authHeader := c.Request.Header.Get("Authorization")
-	tokenString, found := strings.CutPrefix(authHeader, "Bearer ")
-	if !found {
+	tokenString, err := c.Cookie("refreshToken")
+	if err != nil {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}

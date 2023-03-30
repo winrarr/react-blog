@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// there routes are protected through the auth module
+// these routes are protected through the auth module
 func AuthRoutes(router *gin.Engine) {
 	router.POST("/signup", controllers.Signup)
 	router.POST("/login", controllers.Login)
