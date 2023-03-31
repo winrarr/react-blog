@@ -32,5 +32,8 @@
 
   textarea:disabled {
     background-color: transparent;
+    box-shadow: none;
+    resize: none;
+    cursor: auto;
   }
 }

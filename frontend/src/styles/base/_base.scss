@@ -45,7 +45,7 @@ img {
 }
 
 button,
-input[type="submit"],
+input,
 textarea {
     background-color: transparent;
     border: none;
@@ -53,6 +53,10 @@ textarea {
     font-size: 1rem;
 
     &:hover {
-        background-color: white(0.1);
+        background-color: white(0.04);
+    }
+
+    &:focus {
+        outline: none;
     }
 }

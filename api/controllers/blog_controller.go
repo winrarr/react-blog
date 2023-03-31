@@ -31,8 +31,8 @@ func GetBlogs(c *gin.Context) {
 	}
 	defer results.Close(ctx)
 
-	var blogs *[]models.Blog
-	err = results.All(ctx, blogs)
+	var blogs []models.Blog
+	err = results.All(ctx, &blogs)
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return

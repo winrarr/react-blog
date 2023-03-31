@@ -16,19 +16,6 @@
     margin-bottom: 10px;
   }
 
-  input,
-  textarea {
-    background-color: transparent;
-    border: none;
-    box-shadow: 0 0 3px 0 black(0.7);
-    font-size: 1rem;
-    content: none;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
   textarea {
     max-width: 95vh;
     max-height: 60vh;
