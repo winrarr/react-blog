@@ -23,7 +23,7 @@ func (c accessTokenClaims) Valid() error {
 // expiration times
 const (
 	RefreshTokenExpTime time.Duration = time.Hour * 24
-	AccessTokenExpTime  time.Duration = time.Minute * 2
+	AccessTokenExpTime  time.Duration = time.Minute * 10
 )
 
 func newTokens(username string, userLevel models.UserLevel) (models.TokenExp, models.TokenExp) {

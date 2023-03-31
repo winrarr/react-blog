@@ -26,7 +26,7 @@ func CheckStatusToHttpStatus(status auth.StatusMessage) (int, bool) {
 		return http.StatusOK, true
 	case auth.InternalError:
 		return http.StatusInternalServerError, false
-	case auth.UserDoesNotExist:
+	case auth.UserNotFound:
 		return http.StatusBadRequest, false
 	case auth.IncorrectPassword:
 		return http.StatusBadRequest, false
@@ -42,12 +42,26 @@ func RefreshStatusToHttpStatus(status auth.StatusMessage) (int, bool) {
 		return http.StatusOK, true
 	case auth.InternalError:
 		return http.StatusInternalServerError, false
-	case auth.UserDoesNotExist:
+	case auth.UserNotFound:
 		return http.StatusBadRequest, false
 	case auth.InvalidToken:
 		return http.StatusUnauthorized, false
 	case auth.RefreshTokenExpired:
 		return http.StatusUnauthorized, false
+	default:
+		log.Fatal("unexpected auth refresh status")
+	}
+	return -1, false
+}
+
+func LogoutStatusToHttpStatus(status auth.StatusMessage) (int, bool) {
+	switch status {
+	case auth.Success:
+		return http.StatusOK, true
+	case auth.InvalidToken:
+		return http.StatusBadRequest, false
+	case auth.UserNotFound:
+		return http.StatusBadRequest, false
 	default:
 		log.Fatal("unexpected auth refresh status")
 	}

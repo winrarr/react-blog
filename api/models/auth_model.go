@@ -9,13 +9,6 @@ const (
 	Admin
 )
 
-type DBUser struct {
-	Username        string `bson:"_id,omitempty"`
-	HSPassword      []byte
-	UserLevel       UserLevel
-	RefreshTokenExp TokenExp
-}
-
 type TokenExp struct {
 	Token     string
 	ExpiresAt int64
@@ -32,7 +25,7 @@ type User struct {
 	Username        string `bson:"_id,omitempty"`
 	HSPassword      []byte
 	UserLevel       UserLevel
-	RefreshTokenExp RefreshTokenExp
+	RefreshTokenExp TokenExp
 }
 
 // request

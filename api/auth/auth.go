@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func NewUser(username string, password string) (*models.Auth, StatusMessage) {
+func Signup(username string, password string) (*models.Auth, StatusMessage) {
 	// check if user already exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -21,34 +21,40 @@ func NewUser(username string, password string) (*models.Auth, StatusMessage) {
 	}
 
 	// hash and salt password
-	HSPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hspassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, InternalError
 	}
 
-	// save in database and return auth
-	userLevel := models.Standard
-	refreshTokenExp, accessTokenExp := newTokens(username, userLevel)
-
-	DBUser := models.User{
+	refreshTokenExp, accessTokenExp := newTokens(username, models.Standard)
+	user := models.User{
 		Username:        username,
-		HSPassword:      HSPassword,
-		UserLevel:       userLevel,
+		HSPassword:      hspassword,
+		UserLevel:       models.Standard,
 		RefreshTokenExp: refreshTokenExp,
 	}
 
-	return updateDBAndSessions(DBUser, accessTokenExp)
+	_, err = database.UserCollection.InsertOne(ctx, user)
+	if err != nil {
+		return nil, InternalError
+	}
+
+	return &models.Auth{
+		RefreshToken: refreshTokenExp.Token,
+		AccessToken:  accessTokenExp.Token,
+		UserLevel:    user.UserLevel,
+	}, Success
 }
 
-func FindUser(username string, password string) (*models.Auth, StatusMessage) {
+func Login(username string, password string) (*models.Auth, StatusMessage) {
 	// check if user exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	var DBUser models.DBUser
-	err := database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&DBUser)
+	var user models.User
+	err := database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&user)
 	if err != nil {
-		return nil, UserDoesNotExist
+		return nil, UserNotFound
 	}
 
 	// check if given password is correct
@@ -57,14 +63,10 @@ func FindUser(username string, password string) (*models.Auth, StatusMessage) {
 		return nil, IncorrectPassword
 	}
 
-	// update refresh token and return auth
-	refreshTokenExp, accessTokenExp := newTokens(username, user.UserLevel)
-
-	user.RefreshTokenExp = refreshTokenExp
-	return updateDBAndSessions(user, accessTokenExp)
+	return refreshUser(username, user.UserLevel)
 }
 
-func LogoutUser(tokenString string) StatusMessage {
+func Logout(tokenString string) StatusMessage {
 	claims, err := ParseAccessToken(tokenString)
 	if err != nil {
 		return InvalidToken
@@ -78,14 +80,14 @@ func LogoutUser(tokenString string) StatusMessage {
 		ExpiresAt: 0,
 	}
 	result, _ := database.UserCollection.UpdateByID(ctx, claims.StandardClaims.Subject, bson.M{"$set": bson.M{"refreshtokenexp": refreshTokenExp}})
-	if result.ModifiedCount < 1 {
-		return UserDoesNotExist
+	if result.ModifiedCount != 1 {
+		return UserNotFound
 	}
 
 	return Success
 }
 
-func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
+func Refresh(tokenString string) (*models.Auth, StatusMessage) {
 	// validate and parse refresh token
 	claims, err := ParseRefreshToken(tokenString)
 	if err != nil {
@@ -98,41 +100,37 @@ func RefreshAccessToken(tokenString string) (*models.Auth, StatusMessage) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	var DBUser models.DBUser
-	err = database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&DBUser)
+	var user models.User
+	err = database.UserCollection.FindOne(ctx, bson.M{"_id": username}).Decode(&user)
 	if err != nil {
-		return nil, UserDoesNotExist
+		return nil, UserNotFound
 	}
 
-	if DBUser.RefreshTokenExp.Token == "" || DBUser.RefreshTokenExp.Token != tokenString {
+	if user.RefreshTokenExp.Token == "" || user.RefreshTokenExp.Token != tokenString {
 		return nil, InvalidToken
 	}
 
 	// update refresh token and return auth
-	refreshTokenExp, accessTokenExp := newTokens(username, DBUser.UserLevel)
-
-	DBUser.RefreshTokenExp = refreshTokenExp
-	return updateDBAndSessions(DBUser, accessTokenExp)
+	return refreshUser(username, user.UserLevel)
 }
 
-func updateDBAndSessions(DBUser models.DBUser, accessTokenExp models.TokenExp) (*models.Auth, StatusMessage) {
+func refreshUser(username string, userLevel models.UserLevel) (*models.Auth, StatusMessage) {
+	refreshTokenExp, accessTokenExp := newTokens(username, userLevel)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// update database
-	_, err := database.UserCollection.UpdateByID(ctx, DBUser.Username, bson.M{"$set": bson.M{"refreshtokenexp": DBUser.RefreshTokenExp}})
+	_, err := database.UserCollection.UpdateByID(ctx, username, bson.M{"$set": bson.M{"refreshtokenexp": refreshTokenExp}})
 	if err != nil {
-		return nil, UserDoesNotExist
+		return nil, UserNotFound
 	}
 
-	// return new auth
-	auth := models.Auth{
-		RefreshToken: user.RefreshTokenExp.Token,
+	return &models.Auth{
+		RefreshToken: refreshTokenExp.Token,
 		AccessToken:  accessTokenExp.Token,
-		UserLevel:    user.UserLevel,
-	}
-
-	return &auth, Success
+		UserLevel:    userLevel,
+	}, Success
 }
 
 func VerifyAccessToken(tokenString string, requiredUserLevel models.UserLevel) (string, bool) {

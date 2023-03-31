@@ -44,10 +44,10 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	auth, status := auth.NewUser(credentials.Username, credentials.Password)
-	httpStatus, created := utils.CreateStatusToHttpStatus(status)
+	auth, status := auth.Signup(credentials.Username, credentials.Password)
+	httpStatus, ok := utils.CreateStatusToHttpStatus(status)
 
-	if created {
+	if ok {
 		sendAuth(auth, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)
@@ -63,10 +63,10 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	auth, status := auth.FindUser(credentials.Username, credentials.Password)
-	httpStatus, authed := utils.CheckStatusToHttpStatus(status)
+	auth, status := auth.Login(credentials.Username, credentials.Password)
+	httpStatus, ok := utils.CheckStatusToHttpStatus(status)
 
-	if authed {
+	if ok {
 		sendAuth(auth, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)
@@ -76,7 +76,6 @@ func Login(c *gin.Context) {
 func sendAuth(authObj *models.Auth, httpStatus int, c *gin.Context) {
 	c.SetCookie("refreshToken", authObj.RefreshToken, int(auth.RefreshTokenExpTime), "/", "localhost", true, true)
 	c.SetCookie("accessToken", authObj.AccessToken, int(auth.AccessTokenExpTime), "/", "localhost", true, true)
-
 	c.JSON(httpStatus, authObj.UserLevel)
 }
 
@@ -88,7 +87,14 @@ func Logout(c *gin.Context) {
 		return
 	}
 
-	auth.LogoutUser(tokenString)
+	status := auth.Logout(tokenString)
+	httpStatus, ok := utils.LogoutStatusToHttpStatus(status)
+
+	if ok {
+		c.Status(http.StatusOK)
+	} else {
+		c.AbortWithStatus(httpStatus)
+	}
 }
 
 // GET /refresh
@@ -99,10 +105,10 @@ func Refresh(c *gin.Context) {
 		return
 	}
 
-	auth, status := auth.RefreshAccessToken(tokenString)
-	httpStatus, authed := utils.RefreshStatusToHttpStatus(status)
+	auth, status := auth.Refresh(tokenString)
+	httpStatus, ok := utils.RefreshStatusToHttpStatus(status)
 
-	if authed {
+	if ok {
 		sendAuth(auth, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)

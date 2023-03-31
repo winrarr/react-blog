@@ -2,7 +2,7 @@ package models
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
-// response
+// request, response
 type Blog struct {
 	ID     primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	Title  string             `binding:"required" form:"title" json:"title"`

@@ -21,8 +21,6 @@ import (
 
 // GET /blogs
 func GetBlogs(c *gin.Context) {
-	var blogs []models.Blog
-
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -31,16 +29,13 @@ func GetBlogs(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-
 	defer results.Close(ctx)
-	for results.Next(ctx) {
-		var blog models.Blog
-		if err = results.Decode(&blog); err != nil {
-			c.AbortWithStatus(http.StatusInternalServerError)
-			return
-		}
 
-		blogs = append(blogs, blog)
+	var blogs *[]models.Blog
+	err = results.All(ctx, blogs)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, blogs)
@@ -81,7 +76,7 @@ func DeleteBlog(c *gin.Context, username string) {
 	defer cancel()
 
 	result, _ := database.BlogCollection.DeleteOne(ctx, bson.M{"_id": id})
-	if result.DeletedCount == 0 {
+	if result.DeletedCount != 1 {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
@@ -103,8 +98,8 @@ func EditBlog(c *gin.Context, username string) {
 	defer cancel()
 
 	result, _ := database.BlogCollection.UpdateByID(ctx, blog.ID, blog)
-	if result.ModifiedCount == 0 {
-		c.AbortWithStatus(http.StatusInternalServerError)
+	if result.ModifiedCount != 1 {
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 

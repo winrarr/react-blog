@@ -6,7 +6,7 @@ const (
 	Success StatusMessage = iota
 	InternalError
 	UserAlreadyExists
-	UserDoesNotExist
+	UserNotFound
 	IncorrectPassword
 	InvalidToken
 	RefreshTokenExpired
