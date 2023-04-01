@@ -3,7 +3,7 @@ import useInput from "../hooks/useInput"
 import { newBlog } from "../axios/axiosPrivate"
 
 const NewBlog = () => {
-  const { username, userLevel } = useAuth()
+  const { username } = useAuth()
 
   const [title, titleAttr] = useInput()
   const [body, bodyAttr] = useInput()
@@ -23,7 +23,6 @@ const NewBlog = () => {
 
   return (
     <>
-      <iframe name="dummyframe" style={{ display: "none" }} />
       <form className="new-blog" onSubmit={handleSubmit}>
         <div>
           <label>Blog title</label>

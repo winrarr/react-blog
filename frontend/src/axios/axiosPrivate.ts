@@ -26,7 +26,7 @@ export const refresh = async () =>
   (await axiosPrivate.get<UserLevel>("/refresh")).data
 
 
-export const logout = async () =>
+export const logout = () =>
   axiosPrivate.get("/logout")
 
 

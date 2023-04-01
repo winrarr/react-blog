@@ -30,7 +30,7 @@
     margin-right: 15px;
   }
 
-  textarea:disabled {
+  *:disabled {
     background-color: transparent;
     box-shadow: none;
     resize: none;

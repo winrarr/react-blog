@@ -2,6 +2,7 @@ import { useState, useEffect, MouseEventHandler, EventHandler } from "react"
 import { Blog } from "../@types/blog"
 import { deleteBlog } from "../axios/axiosPrivate"
 import { getBlogs } from "../axios/axiosPublic"
+import useInput from "../hooks/useInput"
 
 const Admin = () => {
   const [blogs, setBlogs] = useState<Blog[]>([])
@@ -37,14 +38,14 @@ const Admin = () => {
           <ul>
             {blogs.map((blog, i) =>
               <li key={i}>
-                <article className="blog-post">
-                  <h2>{blog.title}</h2>
-                  <textarea disabled={editing !== i}>{blog.body}</textarea><br />
-                  {editing === null
-                    ? <button onClick={() => setEditing(i)}>Edit</button>
-                    : <button onClick={handleSaveEdit}>Save</button>}
+                <form className="blog-post">
+                  <input name="title" disabled={editing !== i} defaultValue={blog.title} /><br />
+                  <textarea disabled={editing !== i} defaultValue={blog.body} /><br />
+                  {editing === i
+                    ? <button onClick={handleSaveEdit}>Save</button>
+                    : <button onClick={() => setEditing(i)}>Edit</button>}
                   <button onClick={handleDelete(blog.id)}>Delete</button>
-                </article>
+                </form>
               </li>)}
           </ul>)
       }
