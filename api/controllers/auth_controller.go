@@ -81,7 +81,7 @@ func sendAuth(authObj *models.Auth, httpStatus int, c *gin.Context) {
 
 // GET /logout
 func Logout(c *gin.Context) {
-	tokenString, err := c.Cookie("refreshToken")
+	tokenString, err := c.Cookie("accessToken")
 	if err != nil {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
