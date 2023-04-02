@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -97,8 +98,9 @@ func EditBlog(c *gin.Context, username string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	result, _ := database.BlogCollection.UpdateByID(ctx, blog.ID, blog)
-	if result.ModifiedCount != 1 {
+	result, err := database.BlogCollection.UpdateByID(ctx, primitive.ObjectIDFromHex(blog.ID), blog)
+	spew.Dump(err)
+	if result.MatchedCount == 0 || result.ModifiedCount != 1 {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}

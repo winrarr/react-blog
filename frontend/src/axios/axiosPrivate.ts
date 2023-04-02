@@ -35,3 +35,6 @@ export const newBlog = (blog: Blog) =>
 
 export const deleteBlog = (id: string) =>
   axiosPrivate.delete(`/deleteblog/${id}`)
+
+export const editBlog = (blog: Blog) =>
+  axiosPrivate.put("/editblog", blog)

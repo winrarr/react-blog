@@ -1,6 +1,6 @@
-import { useState, useEffect, MouseEventHandler, EventHandler } from "react"
+import { useState, useEffect, MouseEventHandler, EventHandler, FormEventHandler, FormEvent } from "react"
 import { Blog } from "../@types/blog"
-import { deleteBlog } from "../axios/axiosPrivate"
+import { deleteBlog, editBlog } from "../axios/axiosPrivate"
 import { getBlogs } from "../axios/axiosPublic"
 import useInput from "../hooks/useInput"
 
@@ -16,17 +16,32 @@ const Admin = () => {
     return () => { isMounted = false }
   }, [])
 
+  const [editing, setEditing] = useState<number | null>(null)
+  const [title, setTitle] = useState<string | null>(null)
+  const [body, setBody] = useState<string | null>(null)
+
+  const handleEdit: ((index: number, title: string, body: string) => MouseEventHandler<HTMLButtonElement>) = (index, title, body) => () => {
+    setEditing(index)
+    setTitle(title)
+    setBody(body)
+  }
+
+  const handleSubmit: ((id: string, author: string) => MouseEventHandler<HTMLButtonElement>) = (id: string, author: string) => () => {
+    title && body &&
+      editBlog({
+        id,
+        title,
+        author,
+        body,
+      })
+
+    setEditing(null)
+  }
+
   const handleDelete: ((id: string) => MouseEventHandler<HTMLButtonElement>) = id => () => {
     return deleteBlog(id)
       .then(() => alert("success!"))
       .catch(() => alert("no success :("))
-  }
-
-  const [editing, setEditing] = useState<number | null>(null)
-
-  const handleSaveEdit = () => {
-    setEditing(null)
-
   }
 
   return (
@@ -38,14 +53,18 @@ const Admin = () => {
           <ul>
             {blogs.map((blog, i) =>
               <li key={i}>
-                <form className="blog-post">
-                  <input name="title" disabled={editing !== i} defaultValue={blog.title} /><br />
-                  <textarea disabled={editing !== i} defaultValue={blog.body} /><br />
+                <div className="blog-post">
+                  <div>
+                    <label>Blog title</label>
+                    <input name="title" disabled={editing !== i} defaultValue={blog.title} onChange={e => setTitle(e.target.value)} /><br />
+                  </div>
+                  <label>Blog body</label>
+                  <textarea name="body" disabled={editing !== i} defaultValue={blog.body} onChange={e => setBody(e.target.value)} /><br />
                   {editing === i
-                    ? <button onClick={handleSaveEdit}>Save</button>
-                    : <button onClick={() => setEditing(i)}>Edit</button>}
-                  <button onClick={handleDelete(blog.id)}>Delete</button>
-                </form>
+                    ? <button type="submit" onClick={handleSubmit(blog.id, blog.author)}>Save</button>
+                    : <button type="button" onClick={handleEdit(i, blog.title, blog.body)}>Edit</button>}
+                  <button type="button" onClick={handleDelete(blog.id)}>Delete</button>
+                </div>
               </li>)}
           </ul>)
       }
