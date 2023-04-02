@@ -29,7 +29,6 @@ export const refresh = async () =>
 export const logout = () =>
   axiosPrivate.get("/logout")
 
-
 export const newBlog = (blog: Blog) =>
   axiosPrivate.post("/newblog", blog)
 

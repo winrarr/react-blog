@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	createAdminUser("a", "a")
+	// createAdminUser("a", "a")
 }
 
 func createAdminUser(username string, password string) {

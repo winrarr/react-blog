@@ -5,9 +5,9 @@ import useAuth from "./useAuth"
 const useLogout = () => {
   const { setUserLevel } = useAuth()
 
-  return async () => {
-    await logout()
-    setUserLevel(UserLevel.GUEST)
+  return () => {
+    logout()
+      .finally(() => setUserLevel(UserLevel.GUEST))
   }
 }
 
