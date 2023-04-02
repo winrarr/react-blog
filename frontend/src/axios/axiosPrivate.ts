@@ -12,11 +12,11 @@ const axiosPrivate = axios.create({
 axiosPrivate.interceptors.response.use(
   response => response,
   async (error) => {
-    const originalConfig = error.config
-    if (error?.response.status === HttpStatusCode.Forbidden && !originalConfig._retry) {
-      originalConfig._retry = true
+    const prevRequest = error.config
+    console.log(prevRequest)
+    if (error?.response.status === HttpStatusCode.Forbidden && prevRequest.url !== "/refresh") {
       await refresh()
-      return axiosPrivate(originalConfig)
+      return axiosPrivate(prevRequest)
     }
     return Promise.reject(error)
   }

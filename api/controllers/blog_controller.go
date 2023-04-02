@@ -98,7 +98,7 @@ func EditBlog(c *gin.Context, username string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	result, err := database.BlogCollection.UpdateByID(ctx, primitive.ObjectIDFromHex(blog.ID), blog)
+	result, err := database.BlogCollection.UpdateByID(ctx, blog.ID, blog)
 	spew.Dump(err)
 	if result.MatchedCount == 0 || result.ModifiedCount != 1 {
 		c.AbortWithStatus(http.StatusBadRequest)
