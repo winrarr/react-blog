@@ -1,11 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import useAuth from "../hooks/useAuth"
 import useInput from "../hooks/useInput"
-import FormField from "../components/FormField"
-import { login, signup } from "../axios/axiosPublic"
+import { InputHTMLAttributes, useState } from 'react'
+import { useAuth } from "../context/AuthProvider"
+
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  placeholder: string,
+}
+
+const FormField = ({ placeholder, ...props }: Props) => (
+  <>
+    <input className="form-field-input" required {...props} />
+    <label className="form-field-label">{placeholder}</label>
+  </>
+)
 
 const AuthPage = () => {
-  const { setUserLevel, setUsername, setPersist } = useAuth()
+  const { login, signup } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -13,6 +23,7 @@ const AuthPage = () => {
 
   const [loginUsername, loginUsernameAttr] = useInput()
   const [loginPassword, loginPasswordAttr] = useInput()
+  const [persist, setPersist] = useState(false)
   const [signupUsername, signupUsernameAttr] = useInput()
   const [signupPassword1, signupPassword1Attr] = useInput()
   const [signupPassword2, signupPassword2Attr] = useInput()
@@ -29,35 +40,23 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    login({
-      username: loginUsername,
-      password: loginPassword,
-    })
-      .then(userLevel => {
-        setUsername(loginUsername)
-        setUserLevel(userLevel)
-        navigate(from, { replace: true })
-      })
-      .catch(() => alert("error signing in"))
+    try {
+      await login(loginUsername, loginPassword, persist)
+      navigate(from, { replace: true })
+    } catch (error) {
+      alert("error loggin in: " + error)
+    }
   }
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    signup({
-      username: signupUsername,
-      password: signupPassword1,
-    })
-      .then(userLevel => {
-        setUsername(signupUsername)
-        setUserLevel(userLevel)
-        navigate(from, { replace: true })
-      })
-      .catch(() => alert("error signing in"))
-  }
-
-  const togglePersist = () => {
-    setPersist(prev => !prev)
+    try {
+      await signup(loginUsername, loginPassword)
+      navigate(from, { replace: true })
+    } catch (error) {
+      alert("error signing up: " + error)
+    }
   }
 
   return (
@@ -80,7 +79,7 @@ const AuthPage = () => {
           <FormField placeholder="Username" name="password" {...loginUsernameAttr} />
           <FormField placeholder="Password" name="password" type="password" {...loginPasswordAttr} />
           <label className="remember-me">Remember me
-            <input type="checkbox" defaultChecked onChange={togglePersist} />
+            <input type="checkbox" defaultChecked onChange={() => setPersist(!persist)} />
             <span className="checkmark"></span>
           </label>
           <input type="submit" value="Sign In" className={`${signInValid() ? "" : "invalid"}`} />

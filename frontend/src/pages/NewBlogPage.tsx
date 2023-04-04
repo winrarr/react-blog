@@ -1,6 +1,6 @@
-import useAuth from "../hooks/useAuth"
 import useInput from "../hooks/useInput"
 import { newBlog } from "../axios/axiosPrivate"
+import { useAuth } from "../context/AuthProvider"
 
 const NewBlog = () => {
   const { username } = useAuth()

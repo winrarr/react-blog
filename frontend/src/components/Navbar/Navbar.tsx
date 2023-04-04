@@ -1,14 +1,12 @@
 import { Link, useNavigate } from "react-router-dom"
 import { UserLevel } from "../../@types/auth"
-import useAuth from "../../hooks/useAuth"
 import AdminLinks from "./AdminLinks"
 import UserLinks from "./UserLinks"
-import useLogout from "../../hooks/useLogout"
+import { useAuth } from "../../context/AuthProvider"
 
 const Navbar = () => {
-  const { userLevel } = useAuth()
+  const { userLevel, logout } = useAuth()
   const navigate = useNavigate()
-  const logout = useLogout()
 
   const signout = async () => {
     await logout()

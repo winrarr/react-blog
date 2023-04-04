@@ -2,7 +2,6 @@ import { useState, useEffect, MouseEventHandler, EventHandler, FormEventHandler,
 import { Blog } from "../@types/blog"
 import { deleteBlog, editBlog } from "../axios/axiosPrivate"
 import { getBlogs } from "../axios/axiosPublic"
-import useInput from "../hooks/useInput"
 
 const Admin = () => {
   const [blogs, setBlogs] = useState<Blog[]>([])

@@ -1,5 +1,4 @@
 import { JwtPayload } from "jwt-decode"
-import { Dispatch, SetStateAction } from "react"
 
 export type Credentials = {
     username: string,
@@ -13,11 +12,12 @@ export type AccessTokenClaims = {
 
 export type AuthContextType = {
     username: string | null,
-    setUsername: Dispatch<SetStateAction<string | null>>,
     userLevel: UserLevel,
-    setUserLevel: Dispatch<SetStateAction<UserLevel>>,
     persist: boolean,
-    setPersist: Dispatch<React.SetStateAction<boolean>>,
+    login: (username: string, password: string, persist: boolean) => Promise<void>,
+    signup: (username: string, password: string) => Promise<void>,
+    logout: () => Promise<void>,
+    refresh: () => Promise<void>,
 }
 
 export enum UserLevel {

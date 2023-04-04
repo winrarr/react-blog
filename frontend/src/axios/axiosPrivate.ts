@@ -22,8 +22,9 @@ axiosPrivate.interceptors.response.use(
   }
 )
 
-export const refresh = async () =>
-  (await axiosPrivate.get<UserLevel>("/refresh")).data
+export const refresh = () =>
+  axiosPrivate.get<UserLevel>("/refresh")
+    .then(response => response.data)
 
 
 export const logout = () =>
