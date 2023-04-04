@@ -1,6 +1,6 @@
 # Main quest
 
-Nothing to see here :)
+Allow regular users to comment on blog posts
 
 # Side quests
 
