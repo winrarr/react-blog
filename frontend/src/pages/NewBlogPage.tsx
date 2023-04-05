@@ -11,14 +11,17 @@ const NewBlog = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    newBlog({
-      id: "",
-      title,
-      author: username || "",
-      body,
-    })
-      .then(() => alert("success!"))
-      .catch(() => alert("no success :("))
+    try {
+      await newBlog({
+        id: "",
+        title,
+        author: username!,
+        body,
+      })
+      alert("success!")
+    } catch (error) {
+      alert("no success :(")
+    }
   }
 
   return (
