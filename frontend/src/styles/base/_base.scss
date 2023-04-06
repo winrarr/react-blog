@@ -3,7 +3,8 @@
 :root {
     font-family: "Poppins", sans-serif;
 
-    background-image: linear-gradient(0deg, hsl(208, 28%, 20%) 0%, hsl(208, 28%, 30%) 40%, hsl(207, 28%, 35%) 100%);
+    background-color: hsl(0, 0%, 10%);
+    // background-image: linear-gradient(0deg, hsl(208, 28%, 20%) 0%, hsl(208, 28%, 30%) 40%, hsl(207, 28%, 35%) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
 
@@ -42,21 +43,4 @@ a {
 img {
     height: auto;
     max-width: 100%;
-}
-
-button,
-input,
-textarea {
-    background-color: transparent;
-    border: none;
-    box-shadow: 0 0 4px 0 black(0.7);
-    font-size: 1rem;
-
-    &:hover {
-        background-color: white(0.04);
-    }
-
-    &:focus {
-        outline: none;
-    }
 }
