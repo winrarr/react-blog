@@ -1,3 +1,4 @@
+import { CredentialResponse } from "@react-oauth/google"
 import { JwtPayload } from "jwt-decode"
 
 export type Credentials = {
@@ -10,11 +11,18 @@ export type AccessTokenClaims = {
     userLevel: UserLevel,
 }
 
+export type UserInfo = {
+    email: string,
+    name: string,
+    userLevel: UserLevel,
+}
+
 export type AuthContextType = {
     username: string | null,
     userLevel: UserLevel,
     persist: boolean,
     login: (username: string, password: string, persist: boolean) => Promise<void>,
+    oauth2: (token: string) => Promise<void>,
     signup: (username: string, password: string) => Promise<void>,
     logout: () => Promise<void>,
     refresh: () => Promise<void>,

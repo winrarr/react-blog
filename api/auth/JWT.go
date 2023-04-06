@@ -26,11 +26,11 @@ const (
 	AccessTokenExpTime  time.Duration = time.Minute * 10
 )
 
-func newTokens(username string, userLevel models.UserLevel) (models.TokenExp, models.TokenExp) {
-	return newRefreshToken(username), newAccessToken(username, userLevel)
+func NewTokens(username string, userLevel models.UserLevel) (models.TokenExp, models.TokenExp) {
+	return NewRefreshToken(username), NewAccessToken(username, userLevel)
 }
 
-func newRefreshToken(username string) models.TokenExp {
+func NewRefreshToken(username string) models.TokenExp {
 	issuedAt := time.Now()
 	expiresAt := issuedAt.Add(RefreshTokenExpTime).Unix()
 	claims := jwt.StandardClaims{
@@ -50,7 +50,7 @@ func newRefreshToken(username string) models.TokenExp {
 	}
 }
 
-func newAccessToken(username string, userLevel models.UserLevel) models.TokenExp {
+func NewAccessToken(username string, userLevel models.UserLevel) models.TokenExp {
 	issuedAt := time.Now()
 	expiresAt := issuedAt.Add(AccessTokenExpTime).Unix()
 	claims := accessTokenClaims{

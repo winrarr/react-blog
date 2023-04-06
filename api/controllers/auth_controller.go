@@ -11,8 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
+	"google.golang.org/api/idtoken"
 )
 
 func init() {
@@ -117,16 +116,34 @@ func Refresh(c *gin.Context) {
 	}
 }
 
-var conf = &oauth2.Config{
-	ClientID:     "159781938590-0nivkjv9f0iscnm9nvdsa9h4c3hl4hl8.apps.googleusercontent.com",
-	ClientSecret: "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",
-	Endpoint:     google.Endpoint,
-	RedirectURL:  "http://localhost:5173/oauth2",
-	Scopes: []string{
-		"https://www.googleapis.com/auth/userinfo.profile",
-	},
-}
+// GET /oauth2
+func Oauth2(c *gin.Context) {
+	token := c.Query("token")
 
-func hej() {
-	conf.
+	if token == "" {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	payload, err := idtoken.Validate(context.Background(), token, "159781938590-0nivkjv9f0iscnm9nvdsa9h4c3hl4hl8.apps.googleusercontent.com")
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	userInfo := models.UserInfo{
+		Email:     payload.Claims["email"].(string),
+		Name:      payload.Claims["given_name"].(string) + payload.Claims["family_name"].(string),
+		UserLevel: models.Standard,
+	}
+
+	refreshTokenExp, accessTokenExp := auth.NewTokens(
+		payload.Claims["given_name"].(string)+payload.Claims["family_name"].(string),
+		models.Standard,
+	)
+
+	c.SetCookie("refreshToken", refreshTokenExp.Token, int(auth.RefreshTokenExpTime), "/", "localhost", true, true)
+	c.SetCookie("accessToken", accessTokenExp.Token, int(auth.AccessTokenExpTime), "/", "localhost", true, true)
+
+	c.JSON(http.StatusOK, userInfo)
 }

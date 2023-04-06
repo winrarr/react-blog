@@ -26,7 +26,7 @@ func Signup(username string, password string) (*models.Auth, StatusMessage) {
 		return nil, InternalError
 	}
 
-	refreshTokenExp, accessTokenExp := newTokens(username, models.Standard)
+	refreshTokenExp, accessTokenExp := NewTokens(username, models.Standard)
 	user := models.User{
 		Username:        username,
 		HSPassword:      hspassword,
@@ -115,7 +115,7 @@ func Refresh(tokenString string) (*models.Auth, StatusMessage) {
 }
 
 func refreshUser(username string, userLevel models.UserLevel) (*models.Auth, StatusMessage) {
-	refreshTokenExp, accessTokenExp := newTokens(username, userLevel)
+	refreshTokenExp, accessTokenExp := NewTokens(username, userLevel)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

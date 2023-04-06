@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useContext, useState } from "react"
 import { AuthContextType, UserLevel } from "../@types/auth"
 import { logout, refresh } from "../axios/axiosPrivate"
-import { login, signup } from "../axios/axiosPublic"
+import { login, oauth2, signup } from "../axios/axiosPublic"
 import useLocalStorage from "../hooks/useLocalStorage"
+import { CredentialResponse } from "@react-oauth/google"
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
@@ -19,6 +20,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUsername(username)
     setUserLevel(userLevel)
     setPersist(persist)
+  }
+
+  const oauth2Const = async (token: string) => {
+    const userInfo = await oauth2(token)
+    setUsername(userInfo.name)
+    setUserLevel(userInfo.userLevel)
+    setPersist(true)
   }
 
   const signupConst = async (username: string, password: string) => {
@@ -49,6 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       userLevel,
       persist,
       login: loginConst,
+      oauth2: oauth2Const,
       signup: signupConst,
       logout: logoutConst,
       refresh: refreshConst

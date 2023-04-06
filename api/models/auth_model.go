@@ -33,3 +33,10 @@ type Credentials struct {
 	Username string `binding:"required" json:"username"`
 	Password string `binding:"required" json:"password"`
 }
+
+// response
+type UserInfo struct {
+	Email     string    `json:"email"`
+	Name      string    `json:"name"`
+	UserLevel UserLevel `json:"userLevel"`
+}

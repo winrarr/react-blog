@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import useInput from "../hooks/useInput"
 import { InputHTMLAttributes, useState } from 'react'
 import { useAuth } from "../context/AuthProvider"
+import { GoogleLogin } from "@react-oauth/google"
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   placeholder: string,
@@ -15,7 +16,7 @@ const FormField = ({ placeholder, ...props }: Props) => (
 )
 
 const AuthPage = () => {
-  const { login, signup } = useAuth()
+  const { login, oauth2, signup } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -104,6 +105,21 @@ const AuthPage = () => {
             <label htmlFor="sign-in">Already have an account?</label>
           </div>
         </form>
+
+        <GoogleLogin
+          width="386"
+          onSuccess={credentialResponse => {
+            credentialResponse.credential && oauth2(credentialResponse.credential)
+            navigate(from, { replace: true })
+          }}
+          theme="filled_black"
+          shape="circle"
+          onError={() => {
+            console.log('Login Failed')
+          }}
+          useOneTap
+        />
+
       </div>
     </div>
   )
