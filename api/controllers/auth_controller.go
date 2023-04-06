@@ -11,6 +11,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 func init() {
@@ -113,4 +115,18 @@ func Refresh(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(httpStatus)
 	}
+}
+
+var conf = &oauth2.Config{
+	ClientID:     "159781938590-0nivkjv9f0iscnm9nvdsa9h4c3hl4hl8.apps.googleusercontent.com",
+	ClientSecret: "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",
+	Endpoint:     google.Endpoint,
+	RedirectURL:  "http://localhost:5173/oauth2",
+	Scopes: []string{
+		"https://www.googleapis.com/auth/userinfo.profile",
+	},
+}
+
+func hej() {
+	conf.
 }
