@@ -44,3 +44,15 @@ img {
     height: auto;
     max-width: 100%;
 }
+
+input {
+    background-color: white(0.15);
+
+    &[type="submit"] {
+        cursor: pointer;
+
+        &:hover {
+            background-color: white(0.2);
+        }
+    }
+}

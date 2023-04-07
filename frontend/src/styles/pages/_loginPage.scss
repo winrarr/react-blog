@@ -1,0 +1,19 @@
+.auth-container {
+  padding: 30px;
+  border: 1px solid gray;
+  display: flex;
+  flex-direction: column;
+
+  input {
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+  }
+
+  .error-div {
+    height: 1rem;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    align-self: flex-end;
+  }
+}

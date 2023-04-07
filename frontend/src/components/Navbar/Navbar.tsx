@@ -3,6 +3,7 @@ import { UserLevel } from "../../@types/auth"
 import AdminLinks from "./AdminLinks"
 import UserLinks from "./UserLinks"
 import { useAuth } from "../../context/AuthProvider"
+import "../../styles/layout/_navbar.scss"
 
 const Navbar = () => {
   const { userLevel, logout } = useAuth()

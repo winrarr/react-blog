@@ -5,11 +5,12 @@ import RequireAuth from './components/RequireAuth'
 import Admin from './pages/Admin'
 import Dashboard from './pages/Dashboard'
 import HomePage from './pages/HomePage'
-import AuthPage from './pages/AuthPage'
+import LoginPage from './pages/auth/LoginPage'
 import NoMatch from './pages/NoMatch'
 import Unauthorized from './pages/Unauthorized'
 import NewBlog from './pages/NewBlogPage'
 import PersistLogin from './components/PersistLogin'
+import SignupPage from './pages/auth/SignupPage'
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
         <Route element={<PersistLogin />}>
           {/* public routes */}
           <Route index element={<HomePage />} />
-          <Route path="login" element={<AuthPage />} />
+          <Route path="signup" element={<SignupPage />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="unauthorised" element={<Unauthorized />} />
 
           {/* private routes */}
