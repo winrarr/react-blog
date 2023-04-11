@@ -78,6 +78,9 @@ func sendAuth(response any, refreshTokenExp models.TokenExp, accessTokenExp mode
 	c.SetCookie("refreshToken", refreshTokenExp.Token, int(refreshTokenExp.ExpiresAt-time.Now().Unix()), "/", "localhost", true, true)
 	c.SetCookie("accessToken", accessTokenExp.Token, int(accessTokenExp.ExpiresAt)-int(time.Now().Unix()), "/", "localhost", true, true)
 
+	println("refreshToken: ", refreshTokenExp.Token, int(refreshTokenExp.ExpiresAt-time.Now().Unix()))
+	println("accessToken: ", accessTokenExp.Token, int(accessTokenExp.ExpiresAt-time.Now().Unix()))
+
 	c.JSON(httpStatus, response)
 }
 
@@ -104,6 +107,9 @@ func Logout(c *gin.Context) {
 
 // GET /refresh
 func Refresh(c *gin.Context) {
+	for _, cookie := range c.Request.Cookies() {
+		println(cookie.Name, cookie.Value)
+	}
 	tokenString, err := c.Cookie("refreshToken")
 	if err != nil {
 		c.AbortWithStatus(http.StatusForbidden)

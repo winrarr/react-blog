@@ -1,5 +1,6 @@
 # Main quest
 
+Figure out why refresh isnt working
 Allow regular users to comment on blog posts
 
 # Side quests

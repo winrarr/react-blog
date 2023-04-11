@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { Credentials, LoginResponse, Oauth2Response, UserLevel } from '../@types/auth'
 import { Blog } from '../@types/blog'
-import { CredentialResponse } from '@react-oauth/google'
 
 const baseURL = "http://localhost:8080/"
 

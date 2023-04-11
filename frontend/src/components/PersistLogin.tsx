@@ -9,10 +9,16 @@ export const PersistLogin = () => {
     useEffect(() => {
         let isMounted = true
 
-        !userLevel && persist
-            ? refresh()
-                .finally(() => isMounted && setIsLoading(false))
-            : setIsLoading(false)
+        const verifyRefreshToken = async () => {
+            try {
+                await refresh()
+            }
+            finally {
+                isMounted && setIsLoading(false)
+            }
+        }
+
+        !userLevel && persist ? verifyRefreshToken() : setIsLoading(false)
 
         return () => { isMounted = false }
     }, [])

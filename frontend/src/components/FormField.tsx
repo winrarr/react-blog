@@ -1,14 +1,16 @@
-import { InputHTMLAttributes } from 'react'
+import { DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react'
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+  innerRef?: RefObject<HTMLInputElement>,
   placeholder: string,
   marginBottom?: number,
 }
 
-const FormField = ({ placeholder, marginBottom = 0, ...rest }: Props) => {
+const FormField = ({ innerRef, placeholder, marginBottom = 0, ...rest }: Props) => {
   return (
     <div className="form-field" style={{ marginBottom: -16 + marginBottom }}>
       <input
+        ref={innerRef}
         {...rest}
         placeholder=" "
       />

@@ -1,5 +1,5 @@
 import { GoogleLogin } from "@react-oauth/google"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useAuth } from "../../context/AuthProvider"
 import FormField from "../../components/FormField"
 import Checkbox from "../../components/Checkbox"
@@ -16,14 +16,13 @@ const LoginPage = () => {
   const location = useLocation()
   const from = location.state?.from?.pathname || "/"
 
-  const [username, usernameAttr] = useInput()
-  const [password, passwordAttr] = useInput()
-
-  const [persist, persistAttr] = useToggleCheckbox(false)
+  const usernameRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
+  const persistRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
-    await login(username, password, persist)
+    await login(usernameRef.current!.value, passwordRef.current!.value, persistRef.current!.checked)
     navigate(from, { replace: true })
   }
 
@@ -40,7 +39,7 @@ const LoginPage = () => {
           maxLength={16}
           placeholder={"Username"}
           marginBottom={20}
-          {...usernameAttr}
+          innerRef={usernameRef}
         />
         <FormField
           type="password"
@@ -50,12 +49,12 @@ const LoginPage = () => {
           maxLength={50}
           placeholder="Password"
           marginBottom={20}
-          {...passwordAttr}
+          innerRef={passwordRef}
         />
         <Checkbox
           label="Remember me"
           marginBottom={20}
-          {...persistAttr}
+          innerRef={persistRef}
         />
         <input type="submit" value="Log in" />
 
