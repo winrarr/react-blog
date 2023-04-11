@@ -18,13 +18,13 @@ func EnvMongoURI() string {
 	return os.Getenv("MONGOURI")
 }
 
-func EnvSecret(secretName string) []byte {
+func EnvGoogleOauth2ClientID() string {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	return []byte(os.Getenv(secretName + "_SECRET"))
+	return os.Getenv("GOOGLE_OAUTH2_CLIENTID")
 }
 
 func EnvIsProductionMode() bool {

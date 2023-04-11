@@ -1,32 +1,43 @@
-.form-field-input {
-  font-size: 1.2rem;
-  margin-top: 5px;
-  padding: 8px 9px;
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid white(0.3);
+.form-field {
+  display: flex;
+  flex-direction: column;
 
-  &:focus {
-    outline: none;
+  > input {
+    color: color(primary, 50%);
+    font-size: 16px;
+    background-color: transparent;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid color(tertiary, 30%);
+
+    &:focus {
+      outline: none;
+    }
+
+    // move placeholder above field when typing
+    &:is(:focus, :not(:placeholder-shown)) + label {
+      color: color(primary, 17%);
+      font-size: 13px;
+      top: -48px;
+    }
+
+    &[type="submit"] {
+      border: none;
+      background-color: color(secondary);
+
+      &:hover {
+        background-color: color(tertiary);
+      }
+    }
   }
-}
 
-.form-field-label {
-  color: white(0.35);
-  position: relative;
-  margin-left: 10px;
-  top: -28px;
-  width: 100%;
-  font-size: 15px;
-  user-select: none;
-  pointer-events: none;
-  transition: 0.4s ease-out;
-}
-
-.form-field-input:focus + .form-field-label,
-.form-field-input:valid + .form-field-label {
-  top: -58px;
-  font-size: 13px;
-  color: color(base);
+  > label {
+    color: color(primary, 20%);
+    font-size: 16px;
+    position: relative;
+    top: -28px;
+    user-select: none;
+    pointer-events: none;
+    transition: 0.4s ease-out;
+  }
 }

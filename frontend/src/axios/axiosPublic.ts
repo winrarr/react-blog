@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Credentials, UserInfo, UserLevel } from '../@types/auth'
+import { Credentials, LoginResponse, Oauth2Response, UserLevel } from '../@types/auth'
 import { Blog } from '../@types/blog'
 import { CredentialResponse } from '@react-oauth/google'
 
@@ -10,19 +10,19 @@ const axiosPublic = axios.create({
 })
 
 export const signup = (credentials: Credentials) =>
-  axiosPublic.post<UserLevel>("/signup", credentials, {
+  axiosPublic.post<LoginResponse>("/signup", credentials, {
     withCredentials: true,
   })
     .then(response => response.data)
 
 export const login = async (credentials: Credentials) =>
-  axiosPublic.post<UserLevel>("/login", credentials, {
+  axiosPublic.post<LoginResponse>("/login", credentials, {
     withCredentials: true,
   })
     .then(response => response.data)
 
 export const oauth2 = async (token: string) =>
-  axiosPublic.get<UserInfo>(`/oauth2?token=${token}`, {
+  axiosPublic.get<Oauth2Response>(`/oauth2?token=${token}`, {
     withCredentials: true,
   })
     .then(response => response.data)

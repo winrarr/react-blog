@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { ChangeEventHandler, useState } from "react"
 
 type attr = {
     value: string,
-    onChange: (e: { target: { value: string } }) => void,
+    onChange: ChangeEventHandler<HTMLInputElement>,
 }
 
 const useInput = (): [string, attr] => {
@@ -10,7 +10,7 @@ const useInput = (): [string, attr] => {
 
     const attributeObj: attr = {
         value,
-        onChange: (e: { target: { value: string } }) => setValue(e.target.value)
+        onChange: e => setValue(e.target.value)
     }
 
     return [value, attributeObj]

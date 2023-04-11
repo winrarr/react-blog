@@ -14,9 +14,9 @@ type TokenExp struct {
 	ExpiresAt int64
 }
 
-type Auth struct {
-	RefreshToken string
-	AccessToken  string
+type AuthInfo struct {
+	RefreshToken TokenExp
+	AccessToken  TokenExp
 	UserLevel    UserLevel
 }
 
@@ -35,7 +35,11 @@ type Credentials struct {
 }
 
 // response
-type UserInfo struct {
+type LoginResponse struct {
+	UserLevel UserLevel `json:"userLevel"`
+}
+
+type Oauth2Response struct {
 	Email     string    `json:"email"`
 	Name      string    `json:"name"`
 	UserLevel UserLevel `json:"userLevel"`

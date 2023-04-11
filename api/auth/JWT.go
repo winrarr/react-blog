@@ -1,13 +1,18 @@
 package auth
 
 import (
-	"api/configs"
 	"api/models"
+	"api/utils"
 	"errors"
 	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt"
+)
+
+var (
+	REFRESH_TOKEN_SECRET = utils.RandomBytes(50)
+	ACCESS_TOKEN_SECRET  = utils.RandomBytes(50)
 )
 
 // claims
@@ -40,7 +45,7 @@ func NewRefreshToken(username string) models.TokenExp {
 		Subject:   username,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(configs.EnvSecret("REFRESH_TOKEN"))
+	tokenString, err := token.SignedString(REFRESH_TOKEN_SECRET)
 	if err != nil {
 		log.Fatal("unable to create refresh token: ", err)
 	}
@@ -64,7 +69,7 @@ func NewAccessToken(username string, userLevel models.UserLevel) models.TokenExp
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(configs.EnvSecret("ACCESS_TOKEN"))
+	tokenString, err := token.SignedString(ACCESS_TOKEN_SECRET)
 	if err != nil {
 		log.Fatal("unable to create access token token: ", err)
 	}
@@ -75,7 +80,7 @@ func NewAccessToken(username string, userLevel models.UserLevel) models.TokenExp
 }
 
 func ParseRefreshToken(tokenString string) (*jwt.StandardClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyFunc("REFRESH_TOKEN"))
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, keyFunc(REFRESH_TOKEN_SECRET))
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +98,7 @@ func ParseRefreshToken(tokenString string) (*jwt.StandardClaims, error) {
 }
 
 func ParseAccessToken(tokenString string) (*accessTokenClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &accessTokenClaims{}, keyFunc("ACCESS_TOKEN"))
+	token, err := jwt.ParseWithClaims(tokenString, &accessTokenClaims{}, keyFunc(ACCESS_TOKEN_SECRET))
 	if err != nil {
 		return nil, err
 	}
@@ -110,12 +115,12 @@ func ParseAccessToken(tokenString string) (*accessTokenClaims, error) {
 	return claims, nil
 }
 
-func keyFunc(secretName string) jwt.Keyfunc {
+func keyFunc(secret interface{}) jwt.Keyfunc {
 	return func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected jwt signing method")
 		}
 
-		return configs.EnvSecret(secretName), nil
+		return secret, nil
 	}
 }

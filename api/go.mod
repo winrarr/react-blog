@@ -11,6 +11,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	google.golang.org/api v0.116.0 // indirect
@@ -42,7 +43,7 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	go.mongodb.org/mongo-driver v1.11.3
+	go.mongodb.org/mongo-driver v1.11.4
 	golang.org/x/crypto v0.6.0
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/oauth2 v0.6.0

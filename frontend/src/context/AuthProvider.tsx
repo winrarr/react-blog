@@ -12,13 +12,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userLevel, setUserLevel] = useState<UserLevel>(UserLevel.GUEST)
   const [persist, setPersist] = useLocalStorage("persist", false)
 
-  const loginConst = async (username: string, password: string, persist: boolean) => {
-    const userLevel = await login({
+  const signupConst = async (username: string, password: string) => {
+    const loginResponse = await signup({
       username,
       password,
     })
     setUsername(username)
-    setUserLevel(userLevel)
+    setUserLevel(loginResponse.userLevel)
+    setPersist(persist)
+  }
+
+  const loginConst = async (username: string, password: string, persist: boolean = false) => {
+    const loginResponse = await login({
+      username,
+      password,
+    })
+    setUsername(username)
+    setUserLevel(loginResponse.userLevel)
     setPersist(persist)
   }
 
@@ -27,16 +37,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUsername(userInfo.name)
     setUserLevel(userInfo.userLevel)
     setPersist(true)
-  }
-
-  const signupConst = async (username: string, password: string) => {
-    const userLevel = await signup({
-      username,
-      password,
-    })
-    setUsername(username)
-    setUserLevel(userLevel)
-    setPersist(persist)
   }
 
   const logoutConst = async () => {

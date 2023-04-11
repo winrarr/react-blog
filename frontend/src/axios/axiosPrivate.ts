@@ -13,7 +13,6 @@ axiosPrivate.interceptors.response.use(
   response => response,
   async (error) => {
     const prevRequest = error.config
-    console.log(prevRequest)
     if (error?.response.status === HttpStatusCode.Forbidden && prevRequest.url !== "/refresh") {
       await refresh()
       return axiosPrivate(prevRequest)

@@ -3,10 +3,7 @@
 :root {
     font-family: "Poppins", sans-serif;
 
-    background-color: hsl(0, 0%, 10%);
-    // background-image: linear-gradient(0deg, hsl(208, 28%, 20%) 0%, hsl(208, 28%, 30%) 40%, hsl(207, 28%, 35%) 100%);
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-color: color(base);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -19,7 +16,7 @@
 *:before,
 *:after {
     box-sizing: border-box;
-    color: color(base);
+    color: color(text);
 }
 
 html,
@@ -46,13 +43,7 @@ img {
 }
 
 input {
-    background-color: white(0.15);
-
     &[type="submit"] {
         cursor: pointer;
-
-        &:hover {
-            background-color: white(0.2);
-        }
     }
 }

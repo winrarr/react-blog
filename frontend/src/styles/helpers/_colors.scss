@@ -1,22 +1,19 @@
 $palette: (
-    base: hsl(267, 18%, 88%),
-    secondary: hsl(267, 18%, 73%),
+    base: hsl(200, 20%, 9%),
+    primary: hsl(200, 11%, 20%),
+    secondary: hsl(200, 11%, 26%),
+    tertiary: hsl(200, 11%, 29%),
+    accent: hsl(13, 89%, 56%),
+    text: hsl(0, 0%, 75%),
+    disabled: hsl(0, 0%, 35%),
 );
 
-@function color($color, $alpha: 100%) {
+@function color($color, $lightness: 0%) {
     @if map-has-key($palette, $color) {
         $color: map-get($palette, $color);
-        @return rgba($color, $alpha);
+        @return lighten($color, $lightness);
     }
 
     @error "unknown color `#{$color}` in palette";
     @return null;
-}
-
-@function black($alpha) {
-    @return rgba(0, 0, 0, $alpha);
-}
-
-@function white($alpha) {
-    @return rgba(255, 255, 255, $alpha);
 }

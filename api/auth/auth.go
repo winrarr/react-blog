@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Signup(username string, password string) (*models.Auth, StatusMessage) {
+func Signup(username string, password string) (*models.AuthInfo, StatusMessage) {
 	// check if user already exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -39,14 +39,14 @@ func Signup(username string, password string) (*models.Auth, StatusMessage) {
 		return nil, InternalError
 	}
 
-	return &models.Auth{
-		RefreshToken: refreshTokenExp.Token,
-		AccessToken:  accessTokenExp.Token,
+	return &models.AuthInfo{
+		RefreshToken: refreshTokenExp,
+		AccessToken:  accessTokenExp,
 		UserLevel:    user.UserLevel,
 	}, Success
 }
 
-func Login(username string, password string) (*models.Auth, StatusMessage) {
+func Login(username string, password string) (*models.AuthInfo, StatusMessage) {
 	// check if user exists
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -63,6 +63,7 @@ func Login(username string, password string) (*models.Auth, StatusMessage) {
 		return nil, IncorrectPassword
 	}
 
+	// update refresh token and return auth
 	return refreshUser(username, user.UserLevel)
 }
 
@@ -87,7 +88,7 @@ func Logout(tokenString string) StatusMessage {
 	return Success
 }
 
-func Refresh(tokenString string) (*models.Auth, StatusMessage) {
+func Refresh(tokenString string) (*models.AuthInfo, StatusMessage) {
 	// validate and parse refresh token
 	claims, err := ParseRefreshToken(tokenString)
 	if err != nil {
@@ -114,7 +115,7 @@ func Refresh(tokenString string) (*models.Auth, StatusMessage) {
 	return refreshUser(username, user.UserLevel)
 }
 
-func refreshUser(username string, userLevel models.UserLevel) (*models.Auth, StatusMessage) {
+func refreshUser(username string, userLevel models.UserLevel) (*models.AuthInfo, StatusMessage) {
 	refreshTokenExp, accessTokenExp := NewTokens(username, userLevel)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -126,9 +127,9 @@ func refreshUser(username string, userLevel models.UserLevel) (*models.Auth, Sta
 		return nil, UserNotFound
 	}
 
-	return &models.Auth{
-		RefreshToken: refreshTokenExp.Token,
-		AccessToken:  accessTokenExp.Token,
+	return &models.AuthInfo{
+		RefreshToken: refreshTokenExp,
+		AccessToken:  accessTokenExp,
 		UserLevel:    userLevel,
 	}, Success
 }
