@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const refreshConst = async () => {
-    const userLevel = await refresh()
-    setUserLevel(userLevel)
+    const loginResponse = await refresh()
+    setUserLevel(loginResponse.userLevel)
   }
 
   return (

@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode } from 'axios'
-import { UserLevel } from '../@types/auth'
+import { LoginResponse, UserLevel } from '../@types/auth'
 import { Blog } from '../@types/blog'
 
 const baseURL = "http://localhost:8080/"
@@ -22,7 +22,7 @@ axiosPrivate.interceptors.response.use(
 )
 
 export const refresh = () =>
-  axiosPrivate.get<UserLevel>("/refresh")
+  axiosPrivate.get<LoginResponse>("/refresh")
     .then(response => response.data)
 
 
