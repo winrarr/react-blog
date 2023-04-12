@@ -17,7 +17,7 @@ type TokenExp struct {
 type AuthInfo struct {
 	RefreshToken TokenExp
 	AccessToken  TokenExp
-	UserLevel    UserLevel
+	Response     AuthResponse
 }
 
 // database
@@ -35,12 +35,8 @@ type Credentials struct {
 }
 
 // response
-type LoginResponse struct {
-	UserLevel UserLevel `json:"userLevel"`
-}
 
-type Oauth2Response struct {
-	Email     string    `json:"email"`
-	Name      string    `json:"name"`
+type AuthResponse struct {
+	Username  string    `json:"username"`
 	UserLevel UserLevel `json:"userLevel"`
 }

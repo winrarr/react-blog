@@ -42,7 +42,10 @@ func Signup(username string, password string) (*models.AuthInfo, StatusMessage) 
 	return &models.AuthInfo{
 		RefreshToken: refreshTokenExp,
 		AccessToken:  accessTokenExp,
-		UserLevel:    user.UserLevel,
+		Response: models.AuthResponse{
+			Username:  username,
+			UserLevel: user.UserLevel,
+		},
 	}, Success
 }
 
@@ -130,7 +133,10 @@ func refreshUser(username string, userLevel models.UserLevel) (*models.AuthInfo,
 	return &models.AuthInfo{
 		RefreshToken: refreshTokenExp,
 		AccessToken:  accessTokenExp,
-		UserLevel:    userLevel,
+		Response: models.AuthResponse{
+			Username:  username,
+			UserLevel: userLevel,
+		},
 	}, Success
 }
 

@@ -23,19 +23,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const loginConst = async (username: string, password: string, persist: boolean = false) => {
-    const loginResponse = await login({
+    const authResponse = await login({
       username,
       password,
     })
-    setUsername(username)
-    setUserLevel(loginResponse.userLevel)
+    setUsername(authResponse.username)
+    setUserLevel(authResponse.userLevel)
     setPersist(persist)
   }
 
   const oauth2Const = async (token: string) => {
-    const userInfo = await oauth2(token)
-    setUsername(userInfo.name)
-    setUserLevel(userInfo.userLevel)
+    const authResponse = await oauth2(token)
+    setUsername(authResponse.username)
+    setUserLevel(authResponse.userLevel)
     setPersist(true)
   }
 
@@ -47,8 +47,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const refreshConst = async () => {
-    const userLevel = await refresh()
-    setUserLevel(userLevel)
+    const authResponse = await refresh()
+    setUsername(authResponse.username)
+    setUserLevel(authResponse.userLevel)
   }
 
   return (

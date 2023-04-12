@@ -26,12 +26,7 @@ export type Credentials = {
 }
 
 // response
-export type LoginResponse = {
-    userLevel: UserLevel,
-}
-
-export type Oauth2Response = {
-    email: string,
-    name: string,
+export type AuthResponse = {
+    username: string,
     userLevel: UserLevel,
 }

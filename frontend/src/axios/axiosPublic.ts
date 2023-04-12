@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Credentials, LoginResponse, Oauth2Response, UserLevel } from '../@types/auth'
+import { AuthResponse, Credentials } from '../@types/auth'
 import { Blog } from '../@types/blog'
 
 const baseURL = "http://localhost:8080/"
@@ -9,19 +9,19 @@ const axiosPublic = axios.create({
 })
 
 export const signup = (credentials: Credentials) =>
-  axiosPublic.post<LoginResponse>("/signup", credentials, {
+  axiosPublic.post<AuthResponse>("/signup", credentials, {
     withCredentials: true,
   })
     .then(response => response.data)
 
 export const login = async (credentials: Credentials) =>
-  axiosPublic.post<LoginResponse>("/login", credentials, {
+  axiosPublic.post<AuthResponse>("/login", credentials, {
     withCredentials: true,
   })
     .then(response => response.data)
 
 export const oauth2 = async (token: string) =>
-  axiosPublic.get<Oauth2Response>(`/oauth2?token=${token}`, {
+  axiosPublic.get<AuthResponse>(`/oauth2?token=${token}`, {
     withCredentials: true,
   })
     .then(response => response.data)

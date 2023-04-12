@@ -49,7 +49,7 @@ func Signup(c *gin.Context) {
 	httpStatus, ok := auth.CreateStatusToHttpStatus(status)
 
 	if ok {
-		sendAuth(models.LoginResponse{UserLevel: authInfo.UserLevel}, authInfo.RefreshToken, authInfo.AccessToken, httpStatus, c)
+		sendAuth(authInfo.Response, authInfo.RefreshToken, authInfo.AccessToken, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)
 	}
@@ -68,18 +68,18 @@ func Login(c *gin.Context) {
 	httpStatus, ok := auth.CheckStatusToHttpStatus(status)
 
 	if ok {
-		sendAuth(models.LoginResponse{UserLevel: authInfo.UserLevel}, authInfo.RefreshToken, authInfo.AccessToken, httpStatus, c)
+		sendAuth(authInfo.Response, authInfo.RefreshToken, authInfo.AccessToken, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)
 	}
 }
 
-func sendAuth(response any, refreshTokenExp models.TokenExp, accessTokenExp models.TokenExp, httpStatus int, c *gin.Context) {
+func sendAuth(response models.AuthResponse, refreshTokenExp models.TokenExp, accessTokenExp models.TokenExp, httpStatus int, c *gin.Context) {
 	c.SetCookie("refreshToken", refreshTokenExp.Token, int(refreshTokenExp.ExpiresAt-time.Now().Unix()), "/", "localhost", true, true)
 	c.SetCookie("accessToken", accessTokenExp.Token, int(accessTokenExp.ExpiresAt)-int(time.Now().Unix()), "/", "localhost", true, true)
 
-	println("refreshToken: ", refreshTokenExp.Token, int(refreshTokenExp.ExpiresAt-time.Now().Unix()))
-	println("accessToken: ", accessTokenExp.Token, int(accessTokenExp.ExpiresAt-time.Now().Unix()))
+	println("sending: refreshToken:", refreshTokenExp.Token, int(refreshTokenExp.ExpiresAt-time.Now().Unix()))
+	println("sending: accessToken:", accessTokenExp.Token, int(accessTokenExp.ExpiresAt-time.Now().Unix()))
 
 	c.JSON(httpStatus, response)
 }
@@ -107,8 +107,9 @@ func Logout(c *gin.Context) {
 
 // GET /refresh
 func Refresh(c *gin.Context) {
+	println(len(c.Request.Cookies()))
 	for _, cookie := range c.Request.Cookies() {
-		println(cookie.Name, cookie.Value)
+		println("received:", cookie.Name+":", cookie.Value)
 	}
 	tokenString, err := c.Cookie("refreshToken")
 	if err != nil {
@@ -120,7 +121,7 @@ func Refresh(c *gin.Context) {
 	httpStatus, ok := auth.RefreshStatusToHttpStatus(status)
 
 	if ok {
-		sendAuth(models.LoginResponse{UserLevel: authInfo.UserLevel}, authInfo.RefreshToken, authInfo.AccessToken, httpStatus, c)
+		sendAuth(authInfo.Response, authInfo.RefreshToken, authInfo.AccessToken, httpStatus, c)
 	} else {
 		c.AbortWithStatus(httpStatus)
 	}
@@ -141,12 +142,6 @@ func Oauth2(c *gin.Context) {
 		return
 	}
 
-	email, ok := payload.Claims["email"].(string)
-	if !ok {
-		c.AbortWithStatus(http.StatusUnauthorized)
-		return
-	}
-
 	name, ok := payload.Claims["given_name"].(string)
 	if !ok {
 		c.AbortWithStatus(http.StatusUnauthorized)
@@ -158,9 +153,8 @@ func Oauth2(c *gin.Context) {
 		models.Standard,
 	)
 
-	response := models.Oauth2Response{
-		Email:     email,
-		Name:      name,
+	response := models.AuthResponse{
+		Username:  name,
 		UserLevel: models.Standard,
 	}
 
