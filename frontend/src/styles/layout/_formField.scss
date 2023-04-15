@@ -3,12 +3,11 @@
   flex-direction: column;
 
   > input {
-    color: color(primary, 50%);
     font-size: 16px;
     background-color: transparent;
     padding: 10px 0;
     border: none;
-    border-bottom: 1px solid color(tertiary, 30%);
+    border-bottom: 1px solid $disabled;
 
     &:focus {
       outline: none;
@@ -32,7 +31,7 @@
   }
 
   > label {
-    color: color(primary, 20%);
+    color: $disabled;
     font-size: 16px;
     position: relative;
     top: -28px;

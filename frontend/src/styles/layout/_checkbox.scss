@@ -9,27 +9,28 @@
 
     // Box.
     & + label:before {
+      border-radius: 4px;
       content: "";
       margin-right: 10px;
       display: inline-block;
       vertical-align: text-top;
       width: 20px;
       height: 20px;
-      background: color(secondary);
+      background: $disabled;
     }
 
     // Box hover
     &:hover + label:before {
-      background: color(tertiary);
+      filter: brightness(110%);
     }
 
     // Box checked
     &:checked + label:before {
-      background: color(tertiary);
+      filter: brightness(110%);
     }
 
     // Checkmark. Could be replaced with an image
-    $checkmark-color: color(text);
+    $checkmark-color: $on-surface;
 
     &:checked + label:after {
       content: "";
@@ -49,5 +50,6 @@
     position: relative;
     cursor: pointer;
     padding: 0;
+    user-select: none;
   }
 }

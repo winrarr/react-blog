@@ -3,7 +3,7 @@
 :root {
     font-family: "Poppins", sans-serif;
 
-    background-color: color(base);
+    background-color: $background;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -16,7 +16,7 @@
 *:before,
 *:after {
     box-sizing: border-box;
-    color: color(text);
+    color: $on-surface;
 }
 
 html,

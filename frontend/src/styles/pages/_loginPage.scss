@@ -1,7 +1,8 @@
 @import "../helpers/colors";
 
 .auth-container {
-  background-color: color(primary);
+  @include lift(0);
+  border-radius: 8px;
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -17,7 +18,8 @@
   }
 
   input[type="submit"] {
-    background-color: color(secondary);
+    @include primary;
+    border-radius: 8px;
     border: none;
     font-size: 16px;
     padding: 10px;

@@ -11,13 +11,12 @@
   }
 
   .blog-post {
+    @include lift(0);
     line-height: 1.5;
     width: 100%;
     margin-top: 50px;
     padding: 30px;
-    background: white(0.05);
     border-radius: 16px;
-    box-shadow: 0 0 15px 0 black(0.7);
 
     > h2 {
       font-size: 20px;

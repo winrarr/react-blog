@@ -1,19 +1,25 @@
-$palette: (
-    base: hsl(200, 20%, 9%),
-    primary: hsl(200, 11%, 20%),
-    secondary: hsl(200, 11%, 26%),
-    tertiary: hsl(200, 11%, 29%),
-    accent: hsl(13, 89%, 56%),
-    text: hsl(0, 0%, 75%),
-    disabled: hsl(0, 0%, 35%),
-);
+$background: hsl(0, 0%, 7%);
+$surface: hsl(0, 0%, 12%);
+$primary: hsl(268, 100%, 78%);
+$secondary: hsl(174, 97%, 43%);
+$on-background: hsl(0, 0%, 77%);
+$on-surface: hsl(0, 0%, 88%);
+$on-primary: hsl(264, 29%, 3%);
+$on-secondary: hsl(180, 100%, 0%);
+$disabled: hsl(0, 0%, 40%);
 
-@function color($color, $lightness: 0%) {
-    @if map-has-key($palette, $color) {
-        $color: map-get($palette, $color);
-        @return lighten($color, $lightness);
-    }
+@mixin lift($level) {
+    $bg: hsla(0, 0%, 100%, 5% + $level * 2%);
+    background-color: $bg;
+    box-shadow: 0 0 8px hsl(0, 0%, 3%);
+}
 
-    @error "unknown color `#{$color}` in palette";
-    @return null;
+@mixin primary {
+    background-color: $primary;
+    color: $on-primary;
+}
+
+@mixin disabled {
+    border-color: $disabled;
+    color: $disabled;
 }
