@@ -13,12 +13,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [persist, setPersist] = useLocalStorage("persist", false)
 
   const signupConst = async (username: string, password: string) => {
-    const loginResponse = await signup({
+    const authResponse = await signup({
       username,
       password,
     })
-    setUsername(username)
-    setUserLevel(loginResponse.userLevel)
+    setUsername(authResponse.username)
+    setUserLevel(authResponse.userLevel)
     setPersist(persist)
   }
 
