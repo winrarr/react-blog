@@ -1,13 +1,10 @@
 import { GoogleLogin } from "@react-oauth/google"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { useAuth } from "../../context/AuthProvider"
 import FormField from "../../components/FormField"
 import Checkbox from "../../components/Checkbox"
 import Hr from "../../components/Hr"
 import { useLocation, useNavigate } from "react-router-dom"
-import useInput from "../../hooks/useInput"
-import useToggle from "../../hooks/useToggle"
-import useToggleCheckbox from "../../hooks/useToggleCheckbox"
 
 const LoginPage = () => {
   const { login, oauth2 } = useAuth()

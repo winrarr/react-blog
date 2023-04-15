@@ -15,7 +15,6 @@
 
     // move placeholder above field when typing
     &:is(:focus, :not(:placeholder-shown)) + label {
-      color: color(primary, 17%);
       font-size: 13px;
       top: -48px;
     }

@@ -7,16 +7,21 @@ $on-surface: hsl(0, 0%, 88%);
 $on-primary: hsl(264, 29%, 3%);
 $on-secondary: hsl(180, 100%, 0%);
 $disabled: hsl(0, 0%, 40%);
+$shadow: hsl(0, 0%, 3%);
 
 @mixin lift($level) {
     $bg: hsla(0, 0%, 100%, 5% + $level * 2%);
     background-color: $bg;
-    box-shadow: 0 0 8px hsl(0, 0%, 3%);
+    box-shadow: 0 0 8px $shadow;
 }
 
 @mixin primary {
     background-color: $primary;
     color: $on-primary;
+
+    &:hover {
+        filter: brightness(110%);
+    }
 }
 
 @mixin disabled {

@@ -1,10 +1,10 @@
 @import "../helpers/colors";
 
 .navbar {
+  @include lift(0);
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: color(primary);
   backdrop-filter: blur(4px);
   box-shadow: 0 0 5px 0 black(0.6);
 

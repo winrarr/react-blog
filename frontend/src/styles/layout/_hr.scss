@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: color(disabled);
+  color: $disabled;
   pointer-events: none;
   user-select: none;
 
@@ -12,7 +12,7 @@
   &::after {
     content: "";
     flex: 1;
-    border-bottom: 1px solid color(disabled);
+    border-bottom: 1px solid $disabled;
   }
 
   &:not(:empty)::before {
