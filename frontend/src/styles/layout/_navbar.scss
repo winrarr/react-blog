@@ -5,15 +5,13 @@
   position: fixed;
   top: 0;
   width: 100%;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 0 5px 0 black(0.6);
 
   a {
     float: left;
     padding: 16px 24px;
 
     &:hover {
-      backdrop-filter: brightness(125%);
+      backdrop-filter: brightness(140%);
     }
   }
 

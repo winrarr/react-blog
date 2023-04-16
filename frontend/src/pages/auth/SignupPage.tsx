@@ -1,7 +1,6 @@
 import { GoogleLogin } from "@react-oauth/google"
 import { useRef } from "react"
 import { useAuth } from "../../context/AuthProvider"
-import FormField from "../../components/FormField"
 import Checkbox from "../../components/Checkbox"
 import Hr from "../../components/Hr"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -28,29 +27,28 @@ const LoginPage = () => {
       <form className="auth-container"
         onSubmit={handleSubmit}
       >
-        <h1>Log in</h1>
-        <FormField
+        <h1>Sign up</h1>
+        <label>Username:</label>
+        <input
           name="username"
+          placeholder="Username"
           required
           minLength={5}
           maxLength={16}
-          placeholder={"Username"}
-          marginBottom={20}
-          innerRef={usernameRef}
+          ref={usernameRef}
         />
-        <FormField
+        <label>Password:</label>
+        <input
           type="password"
           name="password"
+          placeholder="Password"
           required
           minLength={6}
           maxLength={50}
-          placeholder="Password"
-          marginBottom={20}
-          innerRef={passwordRef}
+          ref={passwordRef}
         />
         <Checkbox
           label="Remember me"
-          marginBottom={20}
           innerRef={persistRef}
         />
         <input type="submit" value="Log in" />
@@ -62,7 +60,7 @@ const LoginPage = () => {
             credentialResponse.credential && oauth2(credentialResponse.credential)
           }}
           useOneTap
-          theme="filled_black"
+          theme="filled_blue"
           shape="circle"
           containerProps={{ style: { lineHeight: 2 } }}
         />

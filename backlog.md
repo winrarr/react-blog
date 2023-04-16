@@ -5,6 +5,7 @@ Allow regular users to comment on blog posts
 # Side quests
 
 - Clean up and improve styles (half done)
+- Maybe make blogs load at initial load and keep them in context
 
 # Completed main quests
 

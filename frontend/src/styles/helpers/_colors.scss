@@ -1,12 +1,12 @@
 $background: hsl(0, 0%, 7%);
 $surface: hsl(0, 0%, 12%);
-$primary: hsl(268, 100%, 78%);
+$primary: hsl(267, 95%, 76%);
 $secondary: hsl(174, 97%, 43%);
-$on-background: hsl(0, 0%, 77%);
-$on-surface: hsl(0, 0%, 88%);
-$on-primary: hsl(264, 29%, 3%);
-$on-secondary: hsl(180, 100%, 0%);
-$disabled: hsl(0, 0%, 40%);
+$text: hsl(0, 0%, 87%);
+$text2: hsl(0, 0%, 60%);
+$disabled: hsl(0, 0%, 38%);
+$text-on-primary: hsl(264, 29%, 3%);
+$text-on-secondary: hsl(180, 100%, 0%);
 $shadow: hsl(0, 0%, 3%);
 
 @mixin lift($level) {
@@ -17,7 +17,7 @@ $shadow: hsl(0, 0%, 3%);
 
 @mixin primary {
     background-color: $primary;
-    color: $on-primary;
+    color: $text-on-primary;
 
     &:hover {
         filter: brightness(110%);

@@ -1,12 +1,12 @@
-import useInput from "../hooks/useInput"
 import { newBlog } from "../axios/axiosPrivate"
 import { useAuth } from "../context/AuthProvider"
+import { useRef } from "react"
 
 const NewBlog = () => {
   const { username } = useAuth()
 
-  const [title, titleAttr] = useInput()
-  const [body, bodyAttr] = useInput()
+  const titleRef = useRef<HTMLInputElement>(null)
+  const bodyRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -14,9 +14,9 @@ const NewBlog = () => {
     try {
       await newBlog({
         id: "",
-        title,
+        title: titleRef.current!.value,
         author: username!,
-        body,
+        body: bodyRef.current!.value,
       })
       alert("success!")
     } catch (error) {
@@ -29,11 +29,11 @@ const NewBlog = () => {
       <form className="new-blog" onSubmit={handleSubmit}>
         <div>
           <label>Blog title</label>
-          <input name="title" {...titleAttr} /><br />
+          <input name="title" placeholder="Title" ref={titleRef} /><br />
         </div>
         <label>Blog body</label>
-        <textarea name="body" {...bodyAttr} /><br />
-        <input type="submit" value="Submit" />
+        <textarea name="body" placeholder="Body" /><br />
+        <input type="submit" value="Submit" ref={bodyRef} />
       </form>
     </>
   )

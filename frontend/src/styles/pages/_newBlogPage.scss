@@ -6,10 +6,7 @@
   padding: 30px;
   display: flex;
   flex-direction: column;
-
-  div {
-    margin-bottom: 25px;
-  }
+  @include lift(0);
 
   label {
     margin-right: 20px;
@@ -22,10 +19,5 @@
     min-width: 100%;
     width: 95vh;
     height: 60vh;
-  }
-
-  input[type="submit"] {
-    height: 35px;
-    padding: 10px;
   }
 }

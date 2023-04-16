@@ -1,16 +1,14 @@
-import { DetailedHTMLProps, InputHTMLAttributes, RefObject } from "react"
+import { DetailedHTMLProps, RefObject } from "react"
 
-interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+interface Props {
   innerRef?: RefObject<HTMLInputElement>,
   label: string,
-  marginTop?: number,
-  marginBottom?: number,
 }
 
-const Checkbox = ({ innerRef, label, marginTop, marginBottom, ...rest }: Props) => {
+const Checkbox = ({ innerRef, label }: Props) => {
   return (
-    <div className="checkbox-div" style={{ marginTop, marginBottom }}>
-      <input ref={innerRef} className="checkbox" id="checkbox" type="checkbox" {...rest} />
+    <div className="checkbox-div" >
+      <input ref={innerRef} className="checkbox" id="checkbox" type="checkbox" />
       <label htmlFor="checkbox">{label}</label>
     </div>
   )
