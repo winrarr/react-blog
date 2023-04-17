@@ -6,7 +6,7 @@ const NewBlog = () => {
   const { username } = useAuth()
 
   const titleRef = useRef<HTMLInputElement>(null)
-  const bodyRef = useRef<HTMLInputElement>(null)
+  const bodyRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,13 +27,11 @@ const NewBlog = () => {
   return (
     <>
       <form className="new-blog" onSubmit={handleSubmit}>
-        <div>
-          <label>Blog title</label>
-          <input name="title" placeholder="Title" ref={titleRef} /><br />
-        </div>
-        <label>Blog body</label>
-        <textarea name="body" placeholder="Body" /><br />
-        <input type="submit" value="Submit" ref={bodyRef} />
+        <label>Blog title:</label>
+        <input name="title" placeholder="Title" ref={titleRef} /><br />
+        <label>Blog body:</label>
+        <textarea name="body" placeholder="Body" ref={bodyRef} /><br />
+        <input type="submit" value="Submit" />
       </form>
     </>
   )

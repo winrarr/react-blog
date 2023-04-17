@@ -25,6 +25,9 @@ $shadow: hsl(0, 0%, 3%);
 }
 
 @mixin disabled {
+    resize: none;
+    cursor: auto;
+    background-color: hsla(0, 0%, 100%, 8%);
     border-color: $disabled;
     color: $disabled;
 }

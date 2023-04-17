@@ -13,11 +13,19 @@
     margin-bottom: 10px;
   }
 
+  input {
+    width: 100%;
+  }
+
   textarea {
     max-width: 95vh;
     max-height: 60vh;
     min-width: 100%;
     width: 95vh;
     height: 60vh;
+  }
+
+  > input[type="submit"] {
+    @include primary;
   }
 }

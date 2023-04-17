@@ -1,0 +1,11 @@
+.scrollbar {
+  background-color: gray;
+  opacity: 0.6;
+  border-radius: 10px;
+  width: 6px;
+  margin-left: 2px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

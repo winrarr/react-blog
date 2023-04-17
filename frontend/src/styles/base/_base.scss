@@ -43,8 +43,9 @@ img {
 }
 
 input,
-textarea {
-    background-color: hsla(0, 0%, 100%, 5% + 8%);
+textarea,
+button {
+    background-color: hsla(0, 0%, 100%, 13%);
     border-radius: 8px;
     padding: 8px;
     border: none;
@@ -53,5 +54,16 @@ textarea {
 
     &[type="submit"] {
         cursor: pointer;
+
+        &:hover {
+            backdrop-filter: brightness(125%);
+        }
+    }
+}
+
+.danger {
+    background-color: hsl(0, 35%, 40%);
+    &:hover {
+        filter: brightness(125%);
     }
 }
